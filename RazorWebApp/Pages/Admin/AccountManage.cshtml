@@ -38,8 +38,8 @@
     <main class="bg-light" style="/*padding-bottom: 2rem;*/min-height: 80vh;">
         <div class="d-flex">
             <div style="min-height: 80vh;background: var(--bs-white);">
-                <div class="p-4 pb-2 pt-2"><a href="AllClubManage" style="text-decoration: none;color: var(--bs-black);">Quản lý club</a></div>
-                <div class="p-4 pb-2 pt-2"><a href="AccountManage" style="text-decoration: none;color: var(--bs-black);">Quản lý tài khoản</a></div>
+                <div class="p-4 pb-2 pt-2"><a asp-page="./AllClubManage" style="text-decoration: none;color: var(--bs-black);">Quản lý club</a></div>
+                <div class="p-4 pb-2 pt-2"><a asp-page="./AccountManage" style="text-decoration: none;color: var(--bs-black);">Quản lý tài khoản</a></div>
             </div>
             <div style="flex: 1;" class="p-4">
                 <h2 class="fs-4 text-center mt-0">Quản lý tài khoản nhân viên</h2>
@@ -88,11 +88,33 @@
                                 <td class="text-center">0982333333</td>
                                 <td class="text-center"><span style="color: rgb(26, 32, 44);">1</span></td>
                                 <td class="text-center">SpringBoot</td>
-                                <td class="text-center"><a class="btn btn-light" role="button">Cập nhật</a><a class="btn btn-danger ms-4" role="button">Xóa</a></td>
+                                <td class="text-center">
+                                    <a asp-page="./AccountUpdate" class="btn btn-light" role="button">Cập nhật</a>
+                                    <a asp-page="./AccountDelete" class="btn btn-danger ms-4" role="button">Xóa</a>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" aria-label="Previous" href="#">
+                                <span aria-hidden="true">«</span>
+                            </a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">4</a></li>
+                        <li class="page-item"><a class="page-link" href="#">5</a></li>
+                        <li class="page-item">
+                            <a class="page-link" aria-label="Next" href="#">
+                                <span aria-hidden="true">»</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
         <div class="modal fade" role="dialog" tabindex="-1" id="modal-1">
@@ -131,6 +153,13 @@
     <script src="~/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/assets/js/Simple-Slider-swiper-bundle.min.js"></script>
     <script src="~/assets/js/Simple-Slider.js"></script>
+    <script src="~/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/assets/js/Simple-Slider-swiper-bundle.min.js"></script>
+    <script src="~/assets/js/Simple-Slider.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
 
 </html>
