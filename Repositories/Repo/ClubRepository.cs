@@ -7,9 +7,36 @@ namespace Repositories.Repo;
 
 public class ClubRepository : IClubRepository
 {
-    public List<Club> GetClubs()
+    private Club GetClubByIdNoInclude(int id)
     {
-        return ClubDao.GetAll().ToList();
+        return ClubDao.FindByCondition(e => e.ClubId == id).FirstOrDefault();
+    }
+
+    public List<Club> GetAllClubs()
+    {
+        return ClubDao.GetAll().Include(e => e.District).ThenInclude(e => e.City).OrderByDescending(e => e.ClubId).Where(e => e.Status != false).ToList();
+    }
+
+    public Club GetClubById(int id)
+    {
+        return GetAllClubs().Where(e => e.ClubId == id).FirstOrDefault();
+    }
+
+    public void DeleteClub(int id)
+    {
+        var club = GetClubByIdNoInclude(id);
+        club.Status = false;
+        ClubDao.Update(club);
+    }
+
+    public void UpdateClub(Club club)
+    {
+        ClubDao.Update(club);
+    }
+
+    public void AddClub(Club club)
+    {
+        ClubDao.Add(club);
     }
 
     public List<Club> GetMostRatingClubs()

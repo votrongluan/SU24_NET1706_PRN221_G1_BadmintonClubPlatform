@@ -1,8 +1,8 @@
 ﻿using BusinessObjects.Entities;
 
-namespace Repositories.IRepo;
+namespace Services.IService;
 
-public interface ICityRepository
+public interface ICityService
 {
     List<City> GetAllCities();
 }

@@ -30,7 +30,7 @@
                         <li class="nav-item"></li>
                         <li class="nav-item"></li>
                         <li class="nav-item"></li>
-                    </ul><a class="btn btn-secondary" role="button" href="../authentication.html">Đăng xuất</a>
+                    </ul><a class="btn btn-secondary" role="button" href="../Authentication">Đăng xuất</a>
                 </div>
             </div>
         </nav>
@@ -38,14 +38,33 @@
     <main class="bg-light" style="/*padding-bottom: 2rem;*/min-height: 80vh;">
         <div class="d-flex">
             <div style="min-height: 80vh;background: var(--bs-white);">
-                <div class="p-4 pb-2 pt-2"><a href="clubs-all-manage.html" style="text-decoration: none;color: var(--bs-black);">Quản lý club</a></div>
-                <div class="p-4 pb-2 pt-2"><a href="account-manage.html" style="text-decoration: none;color: var(--bs-black);">Quản lý tài khoản</a></div>
+                <div class="p-4 pb-2 pt-2"><a href="AllClubManage" style="text-decoration: none;color: var(--bs-black);">Quản lý club</a></div>
+                <div class="p-4 pb-2 pt-2"><a href="AccountManage" style="text-decoration: none;color: var(--bs-black);">Quản lý tài khoản</a></div>
             </div>
             <div style="flex: 1;" class="p-4">
                 <h2 class="fs-4 text-center mt-0">Xác nhận xóa câu lạc bộ</h2>
-                <form>
-                    <label class="form-label d-block mt-4">Mã câu lạc bộ<input class="form-control mt-2" type="text" readonly=""></label><label class="form-label d-block mt-4">Tên câu lạc bộ<input class="form-control mt-2" type="text" readonly=""></label><label class="form-label d-block mt-4">Địa chỉ<input class="form-control mt-2" type="text" readonly=""></label><label class="form-label d-block mt-4">Số điện thoại<input class="form-control mt-2" type="text" readonly=""></label>
-                    <div class="d-flex justify-content-between mt-4"><a class="btn btn-secondary" role="button" href="Admin/AccountManage">Quay lại</a><a class="btn btn-primary" role="button">Xác nhận</a></div>
+                <form method="post">
+                    <input name="clubId" type="hidden" asp-for="DeleteClub.ClubId" />
+                    <label class="form-label d-block mt-4">
+                        Mã câu lạc bộ
+                        <input value="@Model.ClubDto.ClubId" class="form-control mt-2" type="text" readonly="">
+                    </label>
+                    <label class="form-label d-block mt-4">
+                        Tên câu lạc bộ
+                        <input value="@Model.ClubDto.ClubName" class="form-control mt-2" type="text" readonly="">
+                    </label>
+                    <label class="form-label d-block mt-4">
+                        Địa chỉ
+                        <input value="@Model.ClubDto.Address" class="form-control mt-2" type="text" readonly="">
+                    </label>
+                    <label class="form-label d-block mt-4">
+                        Số điện thoại
+                        <input value="@Model.ClubDto.ClubPhone" class="form-control mt-2" type="text" readonly="">
+                    </label>
+                    <div class="d-flex justify-content-between mt-4">
+                        <a class="btn btn-secondary" role="button" href="AllClubManage">Quay lại</a>
+                        <button class="btn btn-primary" type="submit">Xác nhận</button>
+                    </div>
                 </form>
             </div>
         </div>
