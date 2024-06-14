@@ -50,51 +50,69 @@
                     <div style="/*position: static;*//*left: 50%;*//*transform: translateX(30%);*/margin-top: 16px;width: 60%;">
                         <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link active" role="tab"
-                                   data-bs-toggle="tab" href="#tab-1" style="color: var(--bs-body-color);">
-                                    Đăng
-                                    nhập
+                                <a class="nav-link active" role="tab" data-bs-toggle="tab" href="#tab-1"
+                                   style="color: var(--bs-body-color);">
+                                    Đăng nhập
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link" role="tab" data-bs-toggle="tab"
-                                   href="#tab-2" style="color: var(--bs-body-color);">Đăng ký</a>
+                                <a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-2"
+                                   style="color: var(--bs-body-color);">Đăng ký</a>
                             </li>
                         </ul>
                         <div class="tab-content" style="margin-top: 16px;">
+
+                            @* LOGIN FORM *@
                             <div class="tab-pane active" role="tabpanel" id="tab-1">
-                                <form>
-                                    <div class="mt-4">
-                                        <p>Tài khoản</p><input class="form-control" type="text">
+                                <form method="POST">
+                                    <div class="message-container mt-4">
+                                        @if (!string.IsNullOrEmpty(Model.Message))
+                                        {
+                                            <div class="alert alert-danger" role="alert">
+                                                @Model.Message
+                                            </div>
+                                        }
                                     </div>
                                     <div class="mt-4">
-                                        <p style="margin-top: 8px;">Mật khẩu</p><input class="form-control" type="text">
-                                    </div><input class="btn btn-primary mt-4" type="submit"
-                                                 style="width: 100%;margin-top: 16px;" value="Đăng nhập">
+                                        <p>Tài khoản</p>
+                                        <input asp-for="AccountLogin.UserName" class="form-control" type="text">
+                                        <span asp-validation-for="AccountLogin.UserName" class="text-danger"></span>
+                                    </div>
+                                    <div class="mt-4">
+                                        <p style="margin-top: 8px;">Mật khẩu</p>
+                                        <input asp-for="AccountLogin.Password" class="form-control" type="password">
+                                        <span asp-validation-for="AccountLogin.Password" class="text-danger"></span>
+                                    </div>
+                                    <input class="btn btn-primary mt-4" type="submit"
+                                           style="width: 100%;margin-top: 16px;" value="Đăng nhập">
                                 </form>
                             </div>
+
+                            @* REGISTER PAGE *@
                             <div class="tab-pane" role="tabpanel" id="tab-2">
                                 <form>
                                     <div class="mt-4">
-                                        <p>Tài khoản</p><input class="form-control" type="text">
+                                        <p>Tài khoản</p>
+                                        <input class="form-control" type="text">
                                     </div>
                                     <div class="mt-4">
-                                        <p style="margin-top: 8px;">Nhập mật khẩu</p><input class="form-control"
-                                                                                            type="text">
+                                        <p style="margin-top: 8px;">Nhập mật khẩu</p>
+                                        <input class="form-control" type="text">
                                     </div>
                                     <div class="mt-4">
-                                        <p style="margin-top: 8px;">Nhập lại mật khẩu</p><input class="form-control"
-                                                                                                type="text">
+                                        <p style="margin-top: 8px;">Nhập lại mật khẩu</p>
+                                        <input class="form-control" type="text">
                                     </div>
                                     <div class="mt-4">
-                                        <p class="mt-2">Nhập số điện thoại&nbsp;</p><input class="form-control"
-                                                                                           type="text">
+                                        <p class="mt-2">Nhập số điện thoại&nbsp;</p>
+                                        <input class="form-control" type="text">
                                     </div>
                                     <div class="mt-4">
-                                        <p class="mt-2">Nhập email (Không bắt buộc)</p><input class="form-control"
-                                                                                              type="text">
-                                    </div><input class="btn btn-primary mt-4" type="submit"
-                                                 style="width: 100%;margin-top: 16px;" value="Đăng ký">
+                                        <p class="mt-2">Nhập email (Không bắt buộc)</p>
+                                        <input class="form-control" type="text">
+                                    </div>
+                                    <input class="btn btn-primary mt-4" type="submit"
+                                           style="width: 100%;margin-top: 16px;" value="Đăng ký">
                                 </form>
                             </div>
                         </div>
