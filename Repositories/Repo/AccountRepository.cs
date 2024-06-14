@@ -9,7 +9,7 @@ public class AccountRepository:IAccountRepository
 {
     public List<Account> GetAllStaffAccount()
     {
-        return AccountDao.FindByCondition(e => e.Role.Equals(AccountRole.Staff.ToString())).ToList();
+        return AccountDao.FindByCondition(e => e.Role.Equals(AccountRoleEnum.Staff.ToString())).ToList();
     }
 
     public Account GetAccountById(int id)

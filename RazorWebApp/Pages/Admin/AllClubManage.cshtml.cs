@@ -11,6 +11,7 @@ using BusinessObjects.Dtos;
 using BusinessObjects.Dtos.Club;
 using RazorWebApp.Mappers;
 using Azure;
+using BusinessObjects.Enums;
 using Microsoft.Data.SqlClient;
 
 namespace RazorWebApp.Pages.Admin
@@ -82,32 +83,46 @@ namespace RazorWebApp.Pages.Admin
             FilterClubsDto = FilterClubsDto.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
         }
 
-        public void OnGet(string searchString, string searchProperty, string sortProperty, int sortOrder)
+        public IActionResult OnGet(string searchString, string searchProperty, string sortProperty, int sortOrder)
         {
-            string msg = Request.Query["msg"];
+            var role = HttpContext.Session.GetString("role");
 
-            if (!string.IsNullOrEmpty(msg))
+            if (!string.IsNullOrEmpty(role))
             {
-                Message = msg;
-            }
-            else
-            {
-                Message = string.Empty;
+                if (!role.Equals(AccountRoleEnum.Admin.ToString()))
+                {
+                    return RedirectToPage("/NotFound");
+                }
+
+                string msg = Request.Query["msg"];
+
+                if (!string.IsNullOrEmpty(msg))
+                {
+                    Message = msg;
+                }
+                else
+                {
+                    Message = string.Empty;
+                }
+
+                InitializeData();
+
+                int page = Convert.ToInt32(Request.Query["page"]);
+                Paging(searchString, searchProperty, sortProperty, sortOrder, page);
+
+                return Page();
             }
 
-            InitializeData();
-
-            int page = Convert.ToInt32(Request.Query["page"]);
-            Paging(searchString, searchProperty, sortProperty, sortOrder, page);
+            return RedirectToPage("/Authentication");
         }
 
-        public void OnPost()
+        public IActionResult OnPost()
         {
             Message = string.Empty;
 
             if (!ModelState.IsValid)
             {
-                return;
+                return Page();
             }
 
             try
@@ -134,6 +149,8 @@ namespace RazorWebApp.Pages.Admin
                 Paging("", "", "", 0);
                 Message = "Câu lạc bộ không được tạo do lỗi hệ thống vui lòng liên hệ đội ngũ hỗ trợ";
             }
+
+            return Page();
         }
 
         public JsonResult OnGetDistrictsByCityId(int cityId)
