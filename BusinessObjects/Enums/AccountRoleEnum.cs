@@ -1,6 +1,6 @@
 ﻿namespace BusinessObjects.Enums;
 
-public enum AccountRole
+public enum AccountRoleEnum
 {
     Admin,
     Staff,
