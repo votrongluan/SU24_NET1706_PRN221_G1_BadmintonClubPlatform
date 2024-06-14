@@ -47,543 +47,143 @@
             <section>
                 <h2 class="fs-4 text-center">Câu lạc bộ</h2>
                 <form style="margin-top: 16px;">
-                    <input class="form-control" type="search" placeholder="Tên câu lạc bộ">
+                    <input name="searchString" class="form-control" type="search" placeholder="Từ khóa để tìm kiếm">
                     <div class="d-flex flex-column justify-content-between flex-wrap flex-lg-row"
                          style="column-gap: 32px;">
                         <div>
-                            <p style="margin-bottom: 8px;margin-top: 8px;">Thành phố</p><select class="form-select">
-                                <optgroup label="This is a group">
-                                    <option value="12" selected="">This is item 1</option>
-                                    <option value="13">This is item 2</option>
-                                    <option value="14">This is item 3</option>
-                                </optgroup>
+                            <p style="margin-bottom: 8px;margin-top: 8px;">Thành phố</p>
+
+                            <select name="cityId" id="CityId" class="form-control form-select mt-2" asp-items="ViewBag.CityId"></select>
+                        </div>
+
+                        <div>
+                            <p style="margin-bottom: 8px;margin-top: 8px;">Quận / huyện</p>
+                            <select name="districtId" id="DistrictId" class="form-select mt-2">
+                                <!-- Dynamic loading from AJAX -->
                             </select>
                         </div>
                         <div>
-                            <p style="margin-bottom: 8px;margin-top: 8px;">Quận / huyện</p><select class="form-select">
-                                <optgroup label="This is a group">
-                                    <option value="12" selected="">This is item 1</option>
-                                    <option value="13">This is item 2</option>
-                                    <option value="14">This is item 3</option>
-                                </optgroup>
+                            <p style="margin-bottom: 8px;margin-top: 8px;">Thời gian bắt đầu chơi</p>
+                            <input name="startTime" class="form-control" type="text" placeholder="hh:mm">
+                        </div>
+                        <div>
+                            <p style="margin-bottom: 8px;margin-top: 8px;">Thời gian kết thúc chơi</p>
+                            <input name="endTime" class="form-control" type="text" placeholder="hh:mm">
+                        </div>
+                        <div>
+                            <p style="margin-bottom: 8px;margin-top: 8px;">Tìm kiếm theo</p>
+                            <select name="searchProperty" class="form-select">
+                                <option value="ClubName" selected="">Tên câu lạc bộ</option>
+                                <option value="Address">Địa chỉ</option>
                             </select>
                         </div>
                         <div>
-                            <p style="margin-bottom: 8px;margin-top: 8px;">Thời gian bắt đầu chơi</p><input class="form-control" type="text" placeholder="hh:mm">
-                        </div>
-                        <div>
-                            <p style="margin-bottom: 8px;margin-top: 8px;">Thời gian kết thúc chơi</p><input class="form-control" type="text" placeholder="hh:mm">
-                        </div>
-                        <div>
-                            <p style="margin-bottom: 8px;margin-top: 8px;">Sắp xếp theo</p><select class="form-select">
-                                <optgroup label="This is a group">
-                                    <option value="12" selected="">This is item 1</option>
-                                    <option value="13">This is item 2</option>
-                                    <option value="14">This is item 3</option>
-                                </optgroup>
+                            <p style="margin-bottom: 8px;margin-top: 8px;">Sắp xếp theo</p>
+                            <select name="sortProperty" class="form-select">
+                                <option value="Default" selected="">Mặc định</option>
+                                <option value="Star">Số sao đánh giá</option>
+                                <option value="Review">Lượt đánh giá</option>
+                                <option value="Book">Lượt đặt sân</option>
                             </select>
                         </div>
                         <div>
-                            <p style="margin-bottom: 8px;margin-top: 8px;">Thứ tự sắp xếp</p><select class="form-select">
-                                <optgroup label="This is a group">
-                                    <option value="12" selected="">This is item 1</option>
-                                    <option value="13">This is item 2</option>
-                                    <option value="14">This is item 3</option>
-                                </optgroup>
+                            <p style="margin-bottom: 8px;margin-top: 8px;">Thứ tự sắp xếp</p>
+                            <select name="sortOrder" class="form-select">
+                                <option value="0" selected="">Mặc định</option>
+                                <option value="1">Tăng dần</option>
+                                <option value="-1">Giảm dần</option>
                             </select>
-                        </div><input class="btn btn-primary align-self-end mt-4" type="submit"
-                                     style="margin-top: 8px;height: fit-content;" value="Tìm kiếm">
+                        </div>
+                        <input class="btn btn-primary align-self-end mt-4" type="submit"
+                               style="margin-top: 8px;height: fit-content;" value="Tìm kiếm">
                     </div>
                 </form>
             </section>
             <section style="padding-top: 2rem;">
-                <p class="text-secondary">Tìm thấy 100 câu lạc bộ</p>
+                <p class="text-secondary">Tìm thấy @Model.FindCount câu lạc bộ</p>
                 <div class="row gx-2 gy-2 row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4">
-                    <div class="col" style="margin-top: 1rem;">
-                        <div class="border rounded shadow" style="padding: 1rem;">
-                            <img class="img-fluid" alt="white flowers in shallow focus photography"
-                                 style="width: 100%;height: 200px;"
-                                 src="assets/img/photo-1503919483171-9ffc1debc390.jpg">
-                            <h3 class="fs-5" style="margin-bottom: 0px;margin-top: 8px;">SpringBoot</h3>
-                            <p style="margin-bottom: 16px;margin-top: 8px;height: 50px;">
-                                8/33 đường CMT8, quận 11,
-                                TP.HCM
-                            </p>
-                            <p class="text-light-emphasis d-lg-flex align-items-lg-center" style="margin-bottom: 0px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
-                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z">
-                                    </path>
-                                </svg>&nbsp;5.0 (1 đánh giá)
-                            </p>
-                            <div class="d-flex d-md-flex justify-content-between align-items-md-center"
-                                 style="margin-top: 16px;">
-                                <a class="btn btn-primary" role="button" href="ClubDetail">
-                                    Chi
-                                    tiết
-                                </a><a class="btn btn-primary" role="button" href="Customer/Book">
-                                    Đặt
-                                    sân
-                                </a>
+                    @foreach (var club in Model.FilterClubs)
+                    {
+                        <div class="col" style="margin-top: 1rem;">
+                            <div class="border rounded shadow" style="padding: 1rem;">
+                                <img class="img-fluid" alt="white flowers in shallow focus photography"
+                                     style="width: 100%;height: 200px;"
+                                     src="@club.AvatarLink">
+                                <h3 class="fs-5" style="margin-bottom: 0px;margin-top: 8px;">@club.ClubName</h3>
+                                <p style="margin-bottom: 16px;margin-top: 8px;height: 50px;">
+                                    @club.Address, @club.District.DistrictName, @club.District.City.CityName
+                                </p>
+                                @if (club.TotalReview == 0)
+                                {
+                                    <p class="text-light-emphasis d-lg-flex align-items-lg-center" style="margin-bottom: 0px;">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
+                                             viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
+                                            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z">
+                                            </path>
+                                        </svg>&nbsp;Chưa có đánh giá
+                                    </p>
+                                }
+                                else
+                                {
+                                    double totalStar = (double)club.TotalStar;
+                                    double totalReview = (double)club.TotalReview;
+                                    double averageRating = totalStar / totalReview;
+                                    string roundedAverageRating = averageRating.ToString("0.0");
+
+                                    <p class="text-light-emphasis d-lg-flex align-items-lg-center" style="margin-bottom: 0px;">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
+                                             viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
+                                            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z">
+                                            </path>
+                                        </svg>&nbsp;@roundedAverageRating (@club.TotalReview đánh giá)
+                                    </p>
+                                }
+
+                                <div class="d-flex d-md-flex justify-content-between align-items-md-center"
+                                     style="margin-top: 16px;">
+                                    <a class="btn btn-primary" role="button" asp-page="ClubDetail" asp-route-id="@club.ClubId">
+                                        Chi tiết
+                                    </a>
+                                    <a class="btn btn-primary" role="button" asp-page="Customer/Book" asp-route-id="@club.ClubId">
+                                        Đặt
+                                        sân
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col" style="margin-top: 1rem;">
-                        <div class="border rounded shadow" style="padding: 1rem;">
-                            <img class="img-fluid" alt="white flowers in shallow focus photography"
-                                 style="width: 100%;height: 200px;"
-                                 src="assets/img/photo-1503919483171-9ffc1debc390.jpg">
-                            <h3 class="fs-5" style="margin-bottom: 0px;margin-top: 8px;">SpringBoot</h3>
-                            <p style="margin-bottom: 16px;margin-top: 8px;height: 50px;">
-                                8/33 đường CMT8, quận 11,
-                                TP.HCM
-                            </p>
-                            <p class="text-light-emphasis d-lg-flex align-items-lg-center" style="margin-bottom: 0px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
-                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z">
-                                    </path>
-                                </svg>&nbsp;5.0 (1 đánh giá)
-                            </p>
-                            <div class="d-flex d-md-flex justify-content-between align-items-md-center"
-                                 style="margin-top: 16px;">
-                                <a class="btn btn-primary" role="button" href="ClubDetail">
-                                    Chi
-                                    tiết
-                                </a><a class="btn btn-primary" role="button" href="Customer/Book">
-                                    Đặt
-                                    sân
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col" style="margin-top: 1rem;">
-                        <div class="border rounded shadow" style="padding: 1rem;">
-                            <img class="img-fluid" alt="white flowers in shallow focus photography"
-                                 style="width: 100%;height: 200px;"
-                                 src="assets/img/photo-1503919483171-9ffc1debc390.jpg">
-                            <h3 class="fs-5" style="margin-bottom: 0px;margin-top: 8px;">SpringBoot</h3>
-                            <p style="margin-bottom: 16px;margin-top: 8px;height: 50px;">
-                                8/33 đường CMT8, quận 11,
-                                TP.HCM
-                            </p>
-                            <p class="text-light-emphasis d-lg-flex align-items-lg-center" style="margin-bottom: 0px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
-                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z">
-                                    </path>
-                                </svg>&nbsp;5.0 (1 đánh giá)
-                            </p>
-                            <div class="d-flex d-md-flex justify-content-between align-items-md-center"
-                                 style="margin-top: 16px;">
-                                <a class="btn btn-primary" role="button" href="ClubDetail">
-                                    Chi
-                                    tiết
-                                </a><a class="btn btn-primary" role="button" href="Customer/Book">
-                                    Đặt
-                                    sân
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col" style="margin-top: 1rem;">
-                        <div class="border rounded shadow" style="padding: 1rem;">
-                            <img class="img-fluid" alt="white flowers in shallow focus photography"
-                                 style="width: 100%;height: 200px;"
-                                 src="assets/img/photo-1503919483171-9ffc1debc390.jpg">
-                            <h3 class="fs-5" style="margin-bottom: 0px;margin-top: 8px;">SpringBoot</h3>
-                            <p style="margin-bottom: 16px;margin-top: 8px;height: 50px;">
-                                8/33 đường CMT8, quận 11,
-                                TP.HCM
-                            </p>
-                            <p class="text-light-emphasis d-lg-flex align-items-lg-center" style="margin-bottom: 0px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
-                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z">
-                                    </path>
-                                </svg>&nbsp;5.0 (1 đánh giá)
-                            </p>
-                            <div class="d-flex d-md-flex justify-content-between align-items-md-center"
-                                 style="margin-top: 16px;">
-                                <a class="btn btn-primary" role="button" href="ClubDetail">
-                                    Chi
-                                    tiết
-                                </a><a class="btn btn-primary" role="button" href="Customer/Book">
-                                    Đặt
-                                    sân
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col" style="margin-top: 1rem;">
-                        <div class="border rounded shadow" style="padding: 1rem;">
-                            <img class="img-fluid" alt="white flowers in shallow focus photography"
-                                 style="width: 100%;height: 200px;"
-                                 src="assets/img/photo-1503919483171-9ffc1debc390.jpg">
-                            <h3 class="fs-5" style="margin-bottom: 0px;margin-top: 8px;">SpringBoot</h3>
-                            <p style="margin-bottom: 16px;margin-top: 8px;height: 50px;">
-                                8/33 đường CMT8, quận 11,
-                                TP.HCM
-                            </p>
-                            <p class="text-light-emphasis d-lg-flex align-items-lg-center" style="margin-bottom: 0px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
-                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z">
-                                    </path>
-                                </svg>&nbsp;5.0 (1 đánh giá)
-                            </p>
-                            <div class="d-flex d-md-flex justify-content-between align-items-md-center"
-                                 style="margin-top: 16px;">
-                                <a class="btn btn-primary" role="button" href="ClubDetail">
-                                    Chi
-                                    tiết
-                                </a><a class="btn btn-primary" role="button" href="Customer/Book">
-                                    Đặt
-                                    sân
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col" style="margin-top: 1rem;">
-                        <div class="border rounded shadow" style="padding: 1rem;">
-                            <img class="img-fluid" alt="white flowers in shallow focus photography"
-                                 style="width: 100%;height: 200px;"
-                                 src="assets/img/photo-1503919483171-9ffc1debc390.jpg">
-                            <h3 class="fs-5" style="margin-bottom: 0px;margin-top: 8px;">SpringBoot</h3>
-                            <p style="margin-bottom: 16px;margin-top: 8px;height: 50px;">
-                                8/33 đường CMT8, quận 11,
-                                TP.HCM
-                            </p>
-                            <p class="text-light-emphasis d-lg-flex align-items-lg-center" style="margin-bottom: 0px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
-                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z">
-                                    </path>
-                                </svg>&nbsp;5.0 (1 đánh giá)
-                            </p>
-                            <div class="d-flex d-md-flex justify-content-between align-items-md-center"
-                                 style="margin-top: 16px;">
-                                <a class="btn btn-primary" role="button" href="ClubDetail">
-                                    Chi
-                                    tiết
-                                </a><a class="btn btn-primary" role="button" href="Customer/Book">
-                                    Đặt
-                                    sân
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col" style="margin-top: 1rem;">
-                        <div class="border rounded shadow" style="padding: 1rem;">
-                            <img class="img-fluid" alt="white flowers in shallow focus photography"
-                                 style="width: 100%;height: 200px;"
-                                 src="assets/img/photo-1503919483171-9ffc1debc390.jpg">
-                            <h3 class="fs-5" style="margin-bottom: 0px;margin-top: 8px;">SpringBoot</h3>
-                            <p style="margin-bottom: 16px;margin-top: 8px;height: 50px;">
-                                8/33 đường CMT8, quận 11,
-                                TP.HCM
-                            </p>
-                            <p class="text-light-emphasis d-lg-flex align-items-lg-center" style="margin-bottom: 0px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
-                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z">
-                                    </path>
-                                </svg>&nbsp;5.0 (1 đánh giá)
-                            </p>
-                            <div class="d-flex d-md-flex justify-content-between align-items-md-center"
-                                 style="margin-top: 16px;">
-                                <a class="btn btn-primary" role="button" href="ClubDetail">
-                                    Chi
-                                    tiết
-                                </a><a class="btn btn-primary" role="button" href="Customer/Book">
-                                    Đặt
-                                    sân
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col" style="margin-top: 1rem;">
-                        <div class="border rounded shadow" style="padding: 1rem;">
-                            <img class="img-fluid" alt="white flowers in shallow focus photography"
-                                 style="width: 100%;height: 200px;"
-                                 src="assets/img/photo-1503919483171-9ffc1debc390.jpg">
-                            <h3 class="fs-5" style="margin-bottom: 0px;margin-top: 8px;">SpringBoot</h3>
-                            <p style="margin-bottom: 16px;margin-top: 8px;height: 50px;">
-                                8/33 đường CMT8, quận 11,
-                                TP.HCM
-                            </p>
-                            <p class="text-light-emphasis d-lg-flex align-items-lg-center" style="margin-bottom: 0px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
-                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z">
-                                    </path>
-                                </svg>&nbsp;5.0 (1 đánh giá)
-                            </p>
-                            <div class="d-flex d-md-flex justify-content-between align-items-md-center"
-                                 style="margin-top: 16px;">
-                                <a class="btn btn-primary" role="button" href="ClubDetail">
-                                    Chi
-                                    tiết
-                                </a><a class="btn btn-primary" role="button" href="Customer/Book">
-                                    Đặt
-                                    sân
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col" style="margin-top: 1rem;">
-                        <div class="border rounded shadow" style="padding: 1rem;">
-                            <img class="img-fluid" alt="white flowers in shallow focus photography"
-                                 style="width: 100%;height: 200px;"
-                                 src="assets/img/photo-1503919483171-9ffc1debc390.jpg">
-                            <h3 class="fs-5" style="margin-bottom: 0px;margin-top: 8px;">SpringBoot</h3>
-                            <p style="margin-bottom: 16px;margin-top: 8px;height: 50px;">
-                                8/33 đường CMT8, quận 11,
-                                TP.HCM
-                            </p>
-                            <p class="text-light-emphasis d-lg-flex align-items-lg-center" style="margin-bottom: 0px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
-                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z">
-                                    </path>
-                                </svg>&nbsp;5.0 (1 đánh giá)
-                            </p>
-                            <div class="d-flex d-md-flex justify-content-between align-items-md-center"
-                                 style="margin-top: 16px;">
-                                <a class="btn btn-primary" role="button" href="ClubDetail">
-                                    Chi
-                                    tiết
-                                </a><a class="btn btn-primary" role="button" href="Customer/Book">
-                                    Đặt
-                                    sân
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col" style="margin-top: 1rem;">
-                        <div class="border rounded shadow" style="padding: 1rem;">
-                            <img class="img-fluid" alt="white flowers in shallow focus photography"
-                                 style="width: 100%;height: 200px;"
-                                 src="assets/img/photo-1503919483171-9ffc1debc390.jpg">
-                            <h3 class="fs-5" style="margin-bottom: 0px;margin-top: 8px;">SpringBoot</h3>
-                            <p style="margin-bottom: 16px;margin-top: 8px;height: 50px;">
-                                8/33 đường CMT8, quận 11,
-                                TP.HCM
-                            </p>
-                            <p class="text-light-emphasis d-lg-flex align-items-lg-center" style="margin-bottom: 0px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
-                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z">
-                                    </path>
-                                </svg>&nbsp;5.0 (1 đánh giá)
-                            </p>
-                            <div class="d-flex d-md-flex justify-content-between align-items-md-center"
-                                 style="margin-top: 16px;">
-                                <a class="btn btn-primary" role="button" href="ClubDetail">
-                                    Chi
-                                    tiết
-                                </a><a class="btn btn-primary" role="button" href="Customer/Book">
-                                    Đặt
-                                    sân
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col" style="margin-top: 1rem;">
-                        <div class="border rounded shadow" style="padding: 1rem;">
-                            <img class="img-fluid" alt="white flowers in shallow focus photography"
-                                 style="width: 100%;height: 200px;"
-                                 src="assets/img/photo-1503919483171-9ffc1debc390.jpg">
-                            <h3 class="fs-5" style="margin-bottom: 0px;margin-top: 8px;">SpringBoot</h3>
-                            <p style="margin-bottom: 16px;margin-top: 8px;height: 50px;">
-                                8/33 đường CMT8, quận 11,
-                                TP.HCM
-                            </p>
-                            <p class="text-light-emphasis d-lg-flex align-items-lg-center" style="margin-bottom: 0px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
-                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z">
-                                    </path>
-                                </svg>&nbsp;5.0 (1 đánh giá)
-                            </p>
-                            <div class="d-flex d-md-flex justify-content-between align-items-md-center"
-                                 style="margin-top: 16px;">
-                                <a class="btn btn-primary" role="button" href="ClubDetail">
-                                    Chi
-                                    tiết
-                                </a><a class="btn btn-primary" role="button" href="Customer/Book">
-                                    Đặt
-                                    sân
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col" style="margin-top: 1rem;">
-                        <div class="border rounded shadow" style="padding: 1rem;">
-                            <img class="img-fluid" alt="white flowers in shallow focus photography"
-                                 style="width: 100%;height: 200px;"
-                                 src="assets/img/photo-1503919483171-9ffc1debc390.jpg">
-                            <h3 class="fs-5" style="margin-bottom: 0px;margin-top: 8px;">SpringBoot</h3>
-                            <p style="margin-bottom: 16px;margin-top: 8px;height: 50px;">
-                                8/33 đường CMT8, quận 11,
-                                TP.HCM
-                            </p>
-                            <p class="text-light-emphasis d-lg-flex align-items-lg-center" style="margin-bottom: 0px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
-                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z">
-                                    </path>
-                                </svg>&nbsp;5.0 (1 đánh giá)
-                            </p>
-                            <div class="d-flex d-md-flex justify-content-between align-items-md-center"
-                                 style="margin-top: 16px;">
-                                <a class="btn btn-primary" role="button" href="ClubDetail">
-                                    Chi
-                                    tiết
-                                </a><a class="btn btn-primary" role="button" href="Customer/Book">
-                                    Đặt
-                                    sân
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col" style="margin-top: 1rem;">
-                        <div class="border rounded shadow" style="padding: 1rem;">
-                            <img class="img-fluid" alt="white flowers in shallow focus photography"
-                                 style="width: 100%;height: 200px;"
-                                 src="assets/img/photo-1503919483171-9ffc1debc390.jpg">
-                            <h3 class="fs-5" style="margin-bottom: 0px;margin-top: 8px;">SpringBoot</h3>
-                            <p style="margin-bottom: 16px;margin-top: 8px;height: 50px;">
-                                8/33 đường CMT8, quận 11,
-                                TP.HCM
-                            </p>
-                            <p class="text-light-emphasis d-lg-flex align-items-lg-center" style="margin-bottom: 0px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
-                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z">
-                                    </path>
-                                </svg>&nbsp;5.0 (1 đánh giá)
-                            </p>
-                            <div class="d-flex d-md-flex justify-content-between align-items-md-center"
-                                 style="margin-top: 16px;">
-                                <a class="btn btn-primary" role="button" href="ClubDetail">
-                                    Chi
-                                    tiết
-                                </a><a class="btn btn-primary" role="button" href="Customer/Book">
-                                    Đặt
-                                    sân
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col" style="margin-top: 1rem;">
-                        <div class="border rounded shadow" style="padding: 1rem;">
-                            <img class="img-fluid" alt="white flowers in shallow focus photography"
-                                 style="width: 100%;height: 200px;"
-                                 src="assets/img/photo-1503919483171-9ffc1debc390.jpg">
-                            <h3 class="fs-5" style="margin-bottom: 0px;margin-top: 8px;">SpringBoot</h3>
-                            <p style="margin-bottom: 16px;margin-top: 8px;height: 50px;">
-                                8/33 đường CMT8, quận 11,
-                                TP.HCM
-                            </p>
-                            <p class="text-light-emphasis d-lg-flex align-items-lg-center" style="margin-bottom: 0px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
-                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z">
-                                    </path>
-                                </svg>&nbsp;5.0 (1 đánh giá)
-                            </p>
-                            <div class="d-flex d-md-flex justify-content-between align-items-md-center"
-                                 style="margin-top: 16px;">
-                                <a class="btn btn-primary" role="button" href="ClubDetail">
-                                    Chi
-                                    tiết
-                                </a><a class="btn btn-primary" role="button" href="Customer/Book">
-                                    Đặt
-                                    sân
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col" style="margin-top: 1rem;">
-                        <div class="border rounded shadow" style="padding: 1rem;">
-                            <img class="img-fluid" alt="white flowers in shallow focus photography"
-                                 style="width: 100%;height: 200px;"
-                                 src="assets/img/photo-1503919483171-9ffc1debc390.jpg">
-                            <h3 class="fs-5" style="margin-bottom: 0px;margin-top: 8px;">SpringBoot</h3>
-                            <p style="margin-bottom: 16px;margin-top: 8px;height: 50px;">
-                                8/33 đường CMT8, quận 11,
-                                TP.HCM
-                            </p>
-                            <p class="text-light-emphasis d-lg-flex align-items-lg-center" style="margin-bottom: 0px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
-                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z">
-                                    </path>
-                                </svg>&nbsp;5.0 (1 đánh giá)
-                            </p>
-                            <div class="d-flex d-md-flex justify-content-between align-items-md-center"
-                                 style="margin-top: 16px;">
-                                <a class="btn btn-primary" role="button" href="ClubDetail">
-                                    Chi
-                                    tiết
-                                </a><a class="btn btn-primary" role="button" href="Customer/Book">
-                                    Đặt
-                                    sân
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col" style="margin-top: 1rem;">
-                        <div class="border rounded shadow" style="padding: 1rem;">
-                            <img class="img-fluid" alt="white flowers in shallow focus photography"
-                                 style="width: 100%;height: 200px;"
-                                 src="assets/img/photo-1503919483171-9ffc1debc390.jpg">
-                            <h3 class="fs-5" style="margin-bottom: 0px;margin-top: 8px;">SpringBoot</h3>
-                            <p style="margin-bottom: 16px;margin-top: 8px;height: 50px;">
-                                8/33 đường CMT8, quận 11,
-                                TP.HCM
-                            </p>
-                            <p class="text-light-emphasis d-lg-flex align-items-lg-center" style="margin-bottom: 0px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
-                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z">
-                                    </path>
-                                </svg>&nbsp;5.0 (1 đánh giá)
-                            </p>
-                            <div class="d-flex d-md-flex justify-content-between align-items-md-center"
-                                 style="margin-top: 16px;">
-                                <a class="btn btn-primary" role="button" href="ClubDetail">
-                                    Chi
-                                    tiết
-                                </a><a class="btn btn-primary" role="button" href="Customer/Book">
-                                    Đặt
-                                    sân
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    }
                 </div>
             </section>
-            <nav style="margin-top: 16px;">
+            
+            <nav class="mt-4">
                 <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" aria-label="Previous" href="#">
-                            <span aria-hidden="true">«</span>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">4</a></li>
-                    <li class="page-item"><a class="page-link" href="#">5</a></li>
-                    <li class="page-item">
-                        <a class="page-link" aria-label="Next" href="#">
-                            <span aria-hidden="true">»</span>
-                        </a>
-                    </li>
+                    @if (Model.CurrentPage > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" aria-label="Previous" href="?page=@(Model.CurrentPage - 1)&searchString=@Request.Query["searchString"]&searchProperty=@Request.Query["searchProperty"]&sortProperty=@Request.Query["sortProperty"]&sortOrder=@Request.Query["sortOrder"]&cityId=@Request.Query["cityId"]&districtId=@Request.Query["districtId"]&startTime=@Request.Query["startTime"]&endTime=@Request.Query["endTime"]">
+                                <span aria-hidden="true">«</span>
+                            </a>
+                        </li>
+                    }
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                            <a class="page-link" href="?page=@i&searchString=@Request.Query["searchString"]&searchProperty=@Request.Query["searchProperty"]&sortProperty=@Request.Query["sortProperty"]&sortOrder=@Request.Query["sortOrder"]&cityId=@Request.Query["cityId"]&districtId=@Request.Query["districtId"]&startTime=@Request.Query["startTime"]&endTime=@Request.Query["endTime"]">@i</a>
+                        </li>
+                    }
+                    @if (Model.CurrentPage < Model.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" aria-label="Next" href="?page=@(Model.CurrentPage + 1)&searchString=@Request.Query["searchString"]&searchProperty=@Request.Query["searchProperty"]&sortProperty=@Request.Query["sortProperty"]&sortOrder=@Request.Query["sortOrder"]&cityId=@Request.Query["cityId"]&districtId=@Request.Query["districtId"]&startTime=@Request.Query["startTime"]&endTime=@Request.Query["endTime"]">
+                                <span aria-hidden="true">»</span>
+                            </a>
+                        </li>
+                    }
                 </ul>
             </nav>
+
         </div>
     </main>
     <footer class="text-center bg-dark" style="padding-top: 1rem;padding-bottom: 1rem;">
@@ -614,10 +214,37 @@
     <script src="~/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/assets/js/Simple-Slider-swiper-bundle.min.js"></script>
     <script src="~/assets/js/Simple-Slider.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        const citySelect = document.getElementById("CityId");
+        citySelect.addEventListener("change", handleCitySelectChange);
+
+        handleCitySelectChange();
+
+        function handleCitySelectChange() {
+            var cityId = citySelect.value;
+            var districtSelect = document.getElementById("DistrictId");
+
+            fetch(`/AllClub?handler=DistrictsByCityId&cityId=${cityId}`)
+                .then(response => response.json())
+                .then(data => {
+                    districtSelect.innerHTML = '';
+                    data.forEach(district => {
+                        var option = document.createElement("option");
+                        option.value = district.districtId;
+                        option.text = district.districtName;
+                        districtSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching districts:', error));
+        }
+    </script>
 </body>
 
 </html>

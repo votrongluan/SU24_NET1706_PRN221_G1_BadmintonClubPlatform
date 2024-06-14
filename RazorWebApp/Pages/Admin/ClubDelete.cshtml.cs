@@ -2,6 +2,7 @@
 using BusinessObjects.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.VisualBasic;
 using RazorWebApp.Mappers;
 using Services.IService;
 
@@ -31,7 +32,7 @@ namespace RazorWebApp.Pages.Admin
             }
 
             if (DeleteClub == null)
-            {
+            { 
                 return RedirectToPage("AllClubManage", new { msg = "Không tìm thấy câu lạc bộ với id cần xóa" });
             }
 

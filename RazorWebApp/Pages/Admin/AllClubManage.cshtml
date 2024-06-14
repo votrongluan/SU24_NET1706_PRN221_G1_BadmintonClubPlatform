@@ -30,24 +30,30 @@
                         <li class="nav-item"></li>
                         <li class="nav-item"></li>
                         <li class="nav-item"></li>
-                    </ul><a class="btn btn-secondary" role="button" asp-page="../Authentication">Đăng xuất</a>
+                    </ul><a class="btn btn-secondary" role="button" asp-page="/Authentication">Đăng xuất</a>
                 </div>
             </div>
         </nav>
     </header>
+
     <main class="bg-light" style="/*padding-bottom: 2rem;*/min-height: 80vh;">
         <div class="d-flex">
             <div style="min-height: 80vh;background: var(--bs-white);">
                 <div class="p-4 pb-2 pt-2"><a asp-page="AllClubManage" style="text-decoration: none;color: var(--bs-black);">Quản lý club</a></div>
                 <div class="p-4 pb-2 pt-2"><a asp-page="AccountManage" style="text-decoration: none;color: var(--bs-black);">Quản lý tài khoản</a></div>
             </div>
+
             <div style="flex: 1;" class="p-4">
                 @if (!string.IsNullOrWhiteSpace(Model.Message))
                 {
                     <span class="text-center mb-4 d-block text-info">@Model.Message</span>
                 }
                 <h2 class="fs-4 text-center mt-0">Quản lý câu lạc bộ</h2>
-                <div class="d-flex mt-4"><button class="btn btn-primary" type="button" style="margin-left: auto;" data-bs-target="#modal-1" data-bs-toggle="modal">Thêm</button></div>
+
+                <div class="d-flex mt-4">
+                    <button class="btn btn-primary" type="button" style="margin-left: auto;" data-bs-target="#modal-1" data-bs-toggle="modal">Thêm</button>
+                </div>
+
                 <form method="get" style="margin-top: 16px;" class="mt-4">
                     <input name="searchString" class="form-control" type="search" placeholder="Nhập từ khóa để tìm kiếm">
                     <div class="d-flex flex-lg-row">
@@ -82,31 +88,35 @@
                         </div>
                     </div>
                 </form>
+
                 <div class="table-responsive mt-4">
                     <table class="table">
                         <thead>
-                        <tr>
-                            <th class="text-center">Mã câu lạc bộ</th>
-                            <th class="text-center">Tên</th>
-                            <th class="text-center">Địa chỉ</th>
-                            <th class="text-center">Số điện thoại</th>
-                            <th class="text-center">Thao tác</th>
-                        </tr>
+                            <tr>
+                                <th class="text-center">Mã câu lạc bộ</th>
+                                <th class="text-center">Tên</th>
+                                <th class="text-center">Địa chỉ</th>
+                                <th class="text-center">Số điện thoại</th>
+                                <th class="text-center">Thao tác</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        @foreach (var club in Model.FilterClubsDto)
-                        {
-                            <tr class="text-center">
-                                <td class="text-center">@club.ClubId</td>
-                                <td class="text-center">@club.ClubName</td>
-                                <td class="text-center"><span style="color: rgb(26, 32, 44);">@club.Address</span></td>
-                                <td class="text-center">@club.ClubPhone</td>
-                                <td class="text-center"><a asp-route-id=@club.ClubId asp-page="./ClubDelete" class="btn btn-danger" role="button">Xóa</a></td>
-                            </tr>
-                        }
+                            @foreach (var club in Model.FilterClubsDto)
+                            {
+                                <tr class="text-center">
+                                    <td class="text-center">@club.ClubId</td>
+                                    <td class="text-center">@club.ClubName</td>
+                                    <td class="text-center"><span style="color: rgb(26, 32, 44);">@club.Address</span></td>
+                                    <td class="text-center">@club.ClubPhone</td>
+                                    <td class="text-center">
+                                        <a asp-route-id=@club.ClubId asp-page="./ClubDelete" class="btn btn-danger" role="button">Xóa</a>
+                                    </td> 
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
+
                 <nav>
                     <ul class="pagination">
                         @if (Model.CurrentPage > 1)
@@ -136,6 +146,7 @@
 
             </div>
         </div>
+
         <div class="modal fade" role="dialog" tabindex="-1" id="modal-1">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -183,6 +194,7 @@
             </div>
         </div>
     </main>
+
     <footer class="text-center bg-dark" style="padding-top: 1rem;padding-bottom: 1rem;">
         <ul class="list-inline">
             <li class="list-inline-item me-4">
