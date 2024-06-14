@@ -45,11 +45,11 @@ namespace RazorWebApp.Pages.Admin
             try
             {
                 _service.ClubService.DeleteClub(clubId);
-                return RedirectToPage("AllClubManage", new { msg = "Xóa câu lạc bộ thành công" });
+                return RedirectToPage("AllClubManage", new { msg = $"Xóa câu lạc bộ với mã {clubId} thành công" });
             }
             catch (Exception ex) 
             {
-                return RedirectToPage("AllClubManage", new { msg = $"Xóa câu lạc bộ thất bại do lỗi hệ thống: {ex.Message}" });
+                return RedirectToPage("AllClubManage", new { msg = $"Xóa câu lạc bộ thất bại do lỗi hệ thống liên hệ đội ngũ để được hỗ trợ" });
             }
         }
     }

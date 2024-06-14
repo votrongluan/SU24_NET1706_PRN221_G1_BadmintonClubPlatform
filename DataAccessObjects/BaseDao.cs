@@ -12,6 +12,7 @@ public class BaseDao<T> where T : class
     {
         _dbSet.Add(entity);
         _context.SaveChanges();
+        _context.Entry(entity).State = EntityState.Detached;
     }
 
     public static IQueryable<T> GetAll()
@@ -30,6 +31,7 @@ public class BaseDao<T> where T : class
         var tracker = _context.Attach(entity);
         tracker.State = EntityState.Modified;
         _context.SaveChanges();
+        _context.Entry(entity).State = EntityState.Detached;
     }
 
     public static IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
