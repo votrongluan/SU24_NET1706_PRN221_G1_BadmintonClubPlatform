@@ -22,7 +22,6 @@ namespace RazorWebApp.Pages.Admin
         [BindProperty] public CreateClubDto CreatedClub { get; set; }
         public string Message { get; set; } = string.Empty;
         public List<City> Cities { get; set; }
-        public List<District> Districts { get; set; }
         public List<Club> Clubs { get; set; }
         public List<ResponseClubDto> ClubsDto { get; set; }
         public List<ResponseClubDto> FilterClubsDto { get; set; }
@@ -35,7 +34,6 @@ namespace RazorWebApp.Pages.Admin
         {
             Clubs = _service.ClubService.GetAllClubs();
             Cities = _service.CityService.GetAllCities();
-            Districts = _service.DistrictService.GetAllDistricts();
 
             ClubsDto = Clubs.Select(e => e.ToResponseClubDto()).ToList();
             FilterClubsDto = ClubsDto;
