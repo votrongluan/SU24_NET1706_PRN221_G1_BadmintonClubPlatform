@@ -37,4 +37,19 @@ public class AccountRepository : IAccountRepository
         var account = GetAccountById(id);
         AccountDao.Delete(account);
     }
+
+    public bool CheckUsernameExisted (string username)
+    {
+        return AccountDao.FindByCondition(e => e.Username.Equals(username)).Any();
+    }
+
+    public bool CheckPhoneExisted (string phone)
+    {
+        return AccountDao.FindByCondition(e => e.UserPhone.Equals(phone)).Any();
+    }
+
+    public bool CheckEmailExisted (string email)
+    {
+        return AccountDao.FindByCondition(e => e.Email.Equals(email)).Any();
+    }
 }

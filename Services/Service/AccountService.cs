@@ -17,4 +17,24 @@ public class AccountService : IAccountService
     {
         return _repo.Account.GetAccount(username, password);
     }
+
+    public void RegisterAccount (Account account)
+    {
+        _repo.Account.AddAccount(account);
+    }
+
+    public bool CheckUsernameExisted (string username)
+    {
+        return _repo.Account.CheckUsernameExisted(username);
+    }
+
+    public bool CheckPhoneExisted (string phone)
+    {
+        return _repo.Account.CheckPhoneExisted(phone);
+    }
+
+    public bool CheckEmailExisted (string email)
+    {
+        return _repo.Account.CheckEmailExisted(email);
+    }
 }
