@@ -16,8 +16,8 @@ To get started with this project, follow these steps:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/quangtrandinhminh/PetHealthCareSystemAPI.git
-   cd pet-health-care-system
+   git clone https://github.com/votrongluan/badminton-booking-razor-page
+   cd RazorWebApp
    ```
 
 2. Install dependencies:
@@ -51,15 +51,15 @@ To get started with this project, follow these steps:
    dotnet run
    ```
 
-2. Navigate to `https://localhost:5001` in your web browser to see the application in action.
+2. Navigate to `https://localhost:5004` in your web browser to see the application in action.
 
 ### Examples
 
 Here are some example usages of the application:
 
-- Create a new pet profile.
-- Schedule a veterinary appointment.
-- Manage pet medical history.
+- View all clubs
+- Book a court
+- View your book history
 
 ## Collaborate with Your Team
 
@@ -125,8 +125,8 @@ Use built-in continuous integration and continuous deployment (CI/CD) pipelines 
 
 If you need help, you can reach out via:
 
-- [Issue Tracker](https://github.com/quangtrandinhminh/pet-health-care-system-API/issues)
-- [Email](mailto:support@pethealthcaresystem.com)
+- [Issue Tracker](https://github.com/votrongluan/badminton-booking-razor-page/issues)
+- [Email](mailto:support@razorpage.com)
 
 ## Roadmap
 
