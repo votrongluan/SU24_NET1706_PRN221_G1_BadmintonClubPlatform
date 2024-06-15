@@ -45,34 +45,35 @@
     <main class="bg-light" style="padding-bottom: 2rem;min-height: 80vh;">
         <div class="container bg-light">
             <section>
-                <h2 class="fs-4 text-center">Đăng nhập</h2>
+                <h2 class="fs-4 text-center">Tài khoản</h2>
                 <div class="d-flex justify-content-center">
                     <div style="/*position: static;*//*left: 50%;*//*transform: translateX(30%);*/margin-top: 16px;width: 60%;">
                         <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link active" role="tab" data-bs-toggle="tab" href="#tab-1"
+                                <a class="nav-link @(Model.TabIndex == 1 ? "active": "")" role="tab" data-bs-toggle="tab" href="#tab-1"
                                    style="color: var(--bs-body-color);">
                                     Đăng nhập
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-2"
+                                <a class="nav-link @(Model.TabIndex == 2 ? "active": "")" role="tab" data-bs-toggle="tab" href="#tab-2"
                                    style="color: var(--bs-body-color);">Đăng ký</a>
                             </li>
                         </ul>
                         <div class="tab-content" style="margin-top: 16px;">
 
                             @* LOGIN FORM *@
-                            <div class="tab-pane active" role="tabpanel" id="tab-1">
-                                <form method="POST">
-                                    <div class="message-container mt-4">
-                                        @if (!string.IsNullOrEmpty(Model.Message))
-                                        {
-                                            <div class="alert alert-danger" role="alert">
-                                                @Model.Message
-                                            </div>
-                                        }
-                                    </div>
+                            <div class="tab-pane @(Model.TabIndex == 1 ? "active" : "")" role="tabpanel" id="tab-1">
+                                <form method="POST" asp-page-handler="Login">
+                                    @if (Model.Message != null && Model.Message.Count > 0)
+                                    {
+                                        <div class="alert alert-danger" role="alert">
+                                            @foreach (var message in Model.Message)
+                                            {
+                                                <p class="m-0 p-1">@message</p>
+                                            }
+                                        </div>
+                                    }
                                     <div class="mt-4">
                                         <p>Tài khoản</p>
                                         <input asp-for="AccountLogin.UserName" class="form-control" type="text">
@@ -83,36 +84,54 @@
                                         <input asp-for="AccountLogin.Password" class="form-control" type="password">
                                         <span asp-validation-for="AccountLogin.Password" class="text-danger"></span>
                                     </div>
-                                    <input class="btn btn-primary mt-4" type="submit"
-                                           style="width: 100%;margin-top: 16px;" value="Đăng nhập">
+                                    <button class="btn btn-primary mt-4" type="submit"
+                                           style="width: 100%;margin-top: 16px;">Đăng nhập</button>
                                 </form>
                             </div>
 
                             @* REGISTER PAGE *@
-                            <div class="tab-pane" role="tabpanel" id="tab-2">
-                                <form>
+                            <div class="tab-pane @(Model.TabIndex == 2 ? "active" : "")" role="tabpanel" id="tab-2">
+                                <form method="POST" asp-page-handler="Register" asp-route-action="register">
+                                    @if (Model.Message != null && Model.Message.Count > 0)
+                                    {
+                                        <div class="alert alert-danger" role="alert">
+                                            @foreach (var message in Model.Message)
+                                            {
+                                                <p class="m-0 p-1">@message</p>
+                                            }
+                                        </div>
+                                    }
                                     <div class="mt-4">
                                         <p>Tài khoản</p>
-                                        <input class="form-control" type="text">
+                                        <input class="form-control" type="text" asp-for="AccountRegister.Username">
+                                        <span asp-validation-for="AccountRegister.Username" class="text-danger"></span>
                                     </div>
                                     <div class="mt-4">
                                         <p style="margin-top: 8px;">Nhập mật khẩu</p>
-                                        <input class="form-control" type="text">
+                                        <input class="form-control" type="text" asp-for="AccountRegister.Password">
+                                        <span asp-validation-for="AccountRegister.Password" class="text-danger"></span>
                                     </div>
                                     <div class="mt-4">
                                         <p style="margin-top: 8px;">Nhập lại mật khẩu</p>
-                                        <input class="form-control" type="text">
+                                        <input class="form-control" type="text" asp-for="AccountRegister.ConfirmPassword">
+                                        <span asp-validation-for="AccountRegister.ConfirmPassword" class="text-danger"></span>
                                     </div>
                                     <div class="mt-4">
                                         <p class="mt-2">Nhập số điện thoại&nbsp;</p>
-                                        <input class="form-control" type="text">
+                                        <input class="form-control" type="text" asp-for="AccountRegister.UserPhone">
+                                        <span asp-validation-for="AccountRegister.UserPhone" class="text-danger"></span>
                                     </div>
                                     <div class="mt-4">
                                         <p class="mt-2">Nhập email (Không bắt buộc)</p>
-                                        <input class="form-control" type="text">
+                                        <input class="form-control" type="text" asp-for="AccountRegister.Email">
+                                        <span asp-validation-for="AccountRegister.Email" class="text-danger"></span>
                                     </div>
-                                    <input class="btn btn-primary mt-4" type="submit"
-                                           style="width: 100%;margin-top: 16px;" value="Đăng ký">
+
+                                    @* BUTTON *@
+                                    <button class="btn btn-primary mt-4" type="submit"
+                                            style="width: 100%;margin-top: 16px;">
+                                        Đăng ký
+                                    </button>
                                 </form>
                             </div>
                         </div>
