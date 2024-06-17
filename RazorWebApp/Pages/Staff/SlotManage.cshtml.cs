@@ -37,11 +37,6 @@ namespace RazorWebApp.Pages.Staff
 
         public IActionResult OnPostSaveSlot()
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             try
             {
                 _context.Slots.Add(Slot);
