@@ -1,5 +1,6 @@
 ﻿using BusinessObjects.Dtos.Account;
 using BusinessObjects.Entities;
+using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -18,6 +19,7 @@ namespace RazorWebApp.Pages
 
         public AccountRegisterDto AccountRegister { get; set; }
         public List<string> Message { get; set; } = new List<string>();
+        public string SuccessMessage { get; set; }
         public int TabIndex { get; set; }
 
         public AuthenticationModel (IServiceManager service)
@@ -28,6 +30,7 @@ namespace RazorWebApp.Pages
 
         public void OnGet ()
         {
+            InitialData();
         }
 
         public IActionResult OnPostLogin ([Bind("UserName, Password")] AccountLoginDto AccountLogin)
@@ -35,6 +38,7 @@ namespace RazorWebApp.Pages
             if (!ModelState.IsValid)
             {
                 TabIndex = 1;
+
                 // Return to page with errors
                 return Page();
             }
@@ -63,6 +67,7 @@ namespace RazorWebApp.Pages
             return Page();
         }
 
+        // ON POST REGISTER
         public IActionResult OnPostRegister ([Bind("Username, Password, ConfirmPassword, UserPhone, Email")] AccountRegisterDto AccountRegister)
         {
             // Check if model state is valid
@@ -74,31 +79,31 @@ namespace RazorWebApp.Pages
 
             try
             {
-                List<bool> checkingConditin = new List<bool>
+                List<bool> checkingCondition = new List<bool>
                 {
                     _service.AccountService.CheckUsernameExisted(AccountRegister.Username),
-                    AccountRegister.ConfirmPassword == AccountRegister.Password,
+                    AccountRegister.ConfirmPassword != AccountRegister.Password,
                     _service.AccountService.CheckPhoneExisted(AccountRegister.UserPhone),
                     _service.AccountService.CheckEmailExisted(AccountRegister.Email)
                 };
 
                 // If any checking conditions fail, add appropriate error messages and return page
-                if (checkingConditin.Contains(false))
+                if (checkingCondition.Contains(true))
                 {
-                    if (checkingConditin[0])
+                    if (checkingCondition[0])
                     {
                         Message.Add("Tên đăng nhập đã tồn tại!");
 
                     }
-                    if (checkingConditin[1])
+                    if (checkingCondition[1])
                     {
                         Message.Add("Mật khẩu không khớp!");
                     }
-                    if (checkingConditin[2])
+                    if (checkingCondition[2])
                     {
                         Message.Add("Số điện thoại đã tồn tại!");
                     }
-                    if (!checkingConditin[3])
+                    if (AccountRegister.Email != null && checkingCondition[3])
                     {
                         Message.Add("Email đã tồn tại!");
                     }
@@ -107,8 +112,9 @@ namespace RazorWebApp.Pages
                 }
 
                 // Add new account to database
+                AccountRegister.Role = AccountRoleEnum.Customer.ToString();
                 _service.AccountService.RegisterAccount(AccountRegister.ToAccount());
-                Message.Add("Đăng ký tài khoản thành công!");
+                SuccessMessage = "Đăng ký tài khoản thành công!";
             }
             catch (Exception ex)
             {
@@ -119,6 +125,12 @@ namespace RazorWebApp.Pages
 
             TabIndex = 2;
             return Page();
+        }
+
+        private void InitialData ()
+        {
+            SuccessMessage = string.Empty;
+            Message.Clear();
         }
     }
 }
