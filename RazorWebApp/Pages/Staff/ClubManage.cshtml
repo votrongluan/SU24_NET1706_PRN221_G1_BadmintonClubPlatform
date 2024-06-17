@@ -61,15 +61,16 @@
             </div>
             <div style="flex: 1;" class="p-4">
                 <h2 class="fs-4 text-center mt-0">Quản lý club</h2>
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success" role="alert">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+
                 <form method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="mt-4">
-                        <p>Chọn câu lạc bộ</p>
-                        <select id="ClubName" class="form-select" asp-for="Club.ClubId" asp-items="Model.Clubs" onchange="fetchClubDetails()">
-                            <option value="">Chọn câu lạc bộ</option>
-                        </select>
-                        <span asp-validation-for="Club.ClubId" class="text-danger"></span>
-                    </div>
                     <div class="mt-4">
                         <p>Tên câu lạc bộ</p>
                         <input class="form-control" type="text" asp-for="Club.ClubName" id="ClubNameInput">
@@ -126,37 +127,10 @@
                     </div>
                     <button type="submit" class="btn btn-primary mt-4">Save</button>
                 </form>
-
             </div>
         </div>
     </main>
     <script>
-        function fetchClubDetails() {
-            var clubId = document.getElementById("ClubName").value;
-            if (clubId) {
-                $.ajax({
-                    url: '@Url.Page("ClubManage", "GetClubDetails")',
-                    type: 'GET',
-                    data: { id: clubId },
-                    success: function (data) {
-                        if (data) {
-                            $('#ClubNameInput').val(data.clubName);
-                            $('#ClubDistricnput').val(data.address);
-                            $('#City').val(data.cityId);
-                            $('#District').val(data.districtId);
-                            $('#ClubEmail').val(data.clubEmail);
-                            $('#ClubPhone').val(data.clubPhone);
-                            $('#FanpageLink').val(data.fanpageLink);
-                            $('#AvatarLink').val(data.avatarLink);
-                            $('#OpenTime').val(data.openTime);
-                            $('#CloseTime').val(data.closeTime);
-                            fetchDistricts(data.cityId, data.districtId);
-                        }
-                    }
-                });
-            }
-        }
-
         function fetchDistricts(cityId, districtId) {
             var city = cityId || document.getElementById("City").value;
             if (city) {
