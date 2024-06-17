@@ -85,7 +85,9 @@
                                         <span asp-validation-for="AccountLogin.Password" class="text-danger"></span>
                                     </div>
                                     <button class="btn btn-primary mt-4" type="submit"
-                                           style="width: 100%;margin-top: 16px;">Đăng nhập</button>
+                                            style="width: 100%;margin-top: 16px;">
+                                        Đăng nhập
+                                    </button>
                                 </form>
                             </div>
 
@@ -101,6 +103,13 @@
                                             }
                                         </div>
                                     }
+
+                                    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                                    {
+                                        <div class="alert alert-success" role="alert">
+                                            <p class="m-0 p-1">@Model.SuccessMessage</p>
+                                        </div>
+                                    }
                                     <div class="mt-4">
                                         <p>Tài khoản</p>
                                         <input class="form-control" type="text" asp-for="AccountRegister.Username">
@@ -108,12 +117,12 @@
                                     </div>
                                     <div class="mt-4">
                                         <p style="margin-top: 8px;">Nhập mật khẩu</p>
-                                        <input class="form-control" type="text" asp-for="AccountRegister.Password">
+                                        <input class="form-control" type="password" asp-for="AccountRegister.Password">
                                         <span asp-validation-for="AccountRegister.Password" class="text-danger"></span>
                                     </div>
                                     <div class="mt-4">
                                         <p style="margin-top: 8px;">Nhập lại mật khẩu</p>
-                                        <input class="form-control" type="text" asp-for="AccountRegister.ConfirmPassword">
+                                        <input class="form-control" type="password" asp-for="AccountRegister.ConfirmPassword">
                                         <span asp-validation-for="AccountRegister.ConfirmPassword" class="text-danger"></span>
                                     </div>
                                     <div class="mt-4">
