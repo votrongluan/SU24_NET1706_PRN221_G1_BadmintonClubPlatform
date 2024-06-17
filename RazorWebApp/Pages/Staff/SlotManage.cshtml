@@ -45,6 +45,9 @@
     <main class="bg-light" style="/*padding-bottom: 2rem;*/min-height: 80vh;">
         <div class="d-flex">
             <div style="min-height: 80vh;background: var(--bs-white);">
+
+                <!-- Menu -->
+
                 <div class="p-4 pb-2 pt-2">
                     <a href="ClubManage"
                        style="text-decoration: none;color: var(--bs-black);">Quản lý club</a>
@@ -96,159 +99,93 @@
                         </div>
                     </div>
                 </form>
-                <div class="table-responsive mt-4">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Khung giờ</th>
-                                <th class="text-center">Giá tiền</th>
-                                <th class="text-center">Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="text-center">06h15 - 08h15</td>
-                                <td class="text-center">33.000 (đồng)</td>
-                                <td class="text-center">
-                                    <button class="btn btn-light" type="button"
-                                            data-bs-target="#update-modal" data-bs-toggle="modal">
-                                        Cập nhật
-                                        giá
-                                    </button><button class="btn btn-danger ms-4" type="button"
-                                                     data-bs-target="#delete-modal" data-bs-toggle="modal">
-                                        Xóa
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">06h15 - 08h15</td>
-                                <td class="text-center">33.000 (đồng)</td>
-                                <td class="text-center">
-                                    <button class="btn btn-light" type="button"
-                                            data-bs-target="#update-modal" data-bs-toggle="modal">
-                                        Cập nhật
-                                        giá
-                                    </button><button class="btn btn-danger ms-4" type="button"
-                                                     data-bs-target="#delete-modal" data-bs-toggle="modal">
-                                        Xóa
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">06h15 - 08h15</td>
-                                <td class="text-center">33.000 (đồng)</td>
-                                <td class="text-center">
-                                    <button class="btn btn-light" type="button"
-                                            data-bs-target="#update-modal" data-bs-toggle="modal">
-                                        Cập nhật
-                                        giá
-                                    </button><button class="btn btn-danger ms-4" type="button"
-                                                     data-bs-target="#delete-modal" data-bs-toggle="modal">
-                                        Xóa
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">06h15 - 08h15</td>
-                                <td class="text-center">33.000 (đồng)</td>
-                                <td class="text-center">
-                                    <button class="btn btn-light" type="button"
-                                            data-bs-target="#update-modal" data-bs-toggle="modal">
-                                        Cập nhật
-                                        giá
-                                    </button><button class="btn btn-danger ms-4" type="button"
-                                                     data-bs-target="#delete-modal" data-bs-toggle="modal">
-                                        Xóa
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">06h15 - 08h15</td>
-                                <td class="text-center">33.000 (đồng)</td>
-                                <td class="text-center">
-                                    <button class="btn btn-light" type="button"
-                                            data-bs-target="#update-modal" data-bs-toggle="modal">
-                                        Cập nhật
-                                        giá
-                                    </button><button class="btn btn-danger ms-4" type="button"
-                                                     data-bs-target="#delete-modal" data-bs-toggle="modal">
-                                        Xóa
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">06h15 - 08h15</td>
-                                <td class="text-center">33.000 (đồng)</td>
-                                <td class="text-center">
-                                    <button class="btn btn-light" type="button"
-                                            data-bs-target="#update-modal" data-bs-toggle="modal">
-                                        Cập nhật
-                                        giá
-                                    </button><button class="btn btn-danger ms-4" type="button"
-                                                     data-bs-target="#delete-modal" data-bs-toggle="modal">
-                                        Xóa
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">06h15 - 08h15</td>
-                                <td class="text-center">33.000 (đồng)</td>
-                                <td class="text-center">
-                                    <button class="btn btn-light" type="button"
-                                            data-bs-target="#update-modal" data-bs-toggle="modal">
-                                        Cập nhật
-                                        giá
-                                    </button><button class="btn btn-danger ms-4" type="button"
-                                                     data-bs-target="#delete-modal" data-bs-toggle="modal">
-                                        Xóa
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div style="flex: 1;" class="p-4">
+                    <h2 class="fs-4 text-center mt-0">@ViewData["Title"]</h2>
+                    <!-- Button thêm giờ -->
+
+                    <div class="table-responsive mt-4">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Khung giờ</th>
+                                    <th class="text-center">Giá tiền</th>
+                                    <th class="text-center">Club</th>
+                                    <th class="text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var slot in Model.Slots)
+                                {
+                                    <tr>
+                                        <td class="text-center">@($"{slot.StartTime.Value.ToString("HH\\:mm")} - {slot.EndTime.Value.ToString("HH\\:mm")}")</td>
+                                        <td class="text-center">@($"{slot.Price:N0} (đồng)")</td>
+                                        <td class="text-center">@slot.Club.ClubName</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-light" type="button" data-bs-target="#update-modal" data-bs-toggle="modal">
+                                                Cập nhật giá
+                                            </button>
+                                            <button class="btn btn-danger ms-4" type="button" data-bs-target="#delete-modal" data-bs-toggle="modal">
+                                                Xóa
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+
+
             </div>
         </div>
+        <!-- thêm giờ-->
         <div class="modal fade" role="dialog" tabindex="-1" id="add-modal">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form>
+                    <form id="add-slot-form">
                         <div class="modal-header">
-                            <h4 class="modal-title fs-5">Thêm giờ</h4><button class="btn-close" type="button"
-                                                                              aria-label="Close" data-bs-dismiss="modal"></button>
+                            <h4 class="modal-title fs-5">Thêm giờ</h4>
+                            <button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
-                            <label class="form-label" style="display: block;/*width: 100%;*/">
-                                Giờ bắt đầu<input class="form-control mt-2" type="text"
-                                                  placeholder="hh:00, hh:15, hh:30, hh:45">
-                            </label><label class="form-label mt-4"
-                                           style="display: block;/*width: 100%;*/">
+                            <label class="form-label" style="display: block;">
+                                Giờ bắt đầu
+                                <input id="start-time-input" class="form-control mt-2" type="text" placeholder="hh:mm">
+                            </label>
+                            <label class="form-label mt-4" style="display: block;">
                                 Thời lượng
-                                <select class="form-select mt-2">
-                                    <optgroup label="This is a group">
-                                        <option value="12" selected="">This is item 1</option>
-                                        <option value="13">This is item 2</option>
-                                        <option value="14">This is item 3</option>
-                                    </optgroup>
+                                <select id="duration-select" class="form-select mt-2">
+                                    <option value="30">30 phút</option>
+                                    <option value="60">1 giờ</option>
+                                    <option value="90">1 giờ 30 phút</option>
+                                    <option value="120">2 giờ</option>
                                 </select>
-                            </label><label class="form-label mt-4" style="display: block;/*width: 100%;*/">
-                                Giá
-                                tiền<input class="form-control mt-2" type="text" placeholder="Đơn vị: đồng">
+                            </label>
+                            <label class="form-label mt-4" style="display: block;">
+                                Giá tiền
+                                <input id="price-input" class="form-control mt-2" type="text" placeholder="Đơn vị: đồng">
+                            </label>
+                            <label class="form-label mt-4" style="display: block;">
+                                Club
+                                <select id="club-id-select" class="form-select mt-2">
+                                    @foreach (var club in Model.AllClubs)
+                                    {
+                                        <option value="@club.ClubId">@club.ClubName</option>
+                                    }
+                                </select>
                             </label>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-light" type="button"
-                                    data-bs-dismiss="modal">
-                                Hủy
-                            </button><button class="btn btn-primary"
-                                             type="submit">
-                                Lưu
-                            </button>
+                            <button class="btn btn-light" type="button" data-bs-dismiss="modal">Hủy</button>
+                            <button id="save-button" class="btn btn-primary" type="button">Lưu</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+
+
         <div class="modal fade" role="dialog" tabindex="-1" id="delete-modal">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -324,6 +261,8 @@
             </li>
         </ul>
     </footer>
+
+
     <script src="~/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/assets/js/Simple-Slider-swiper-bundle.min.js"></script>
     <script src="~/assets/js/Simple-Slider.js"></script>
@@ -331,6 +270,62 @@
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @section Scripts {
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Attach event listener to the save button
+                document.getElementById('save-button').addEventListener('click', function () {
+                    // Gather input values
+                    var startTime = document.getElementById('start-time-input').value.trim();
+                    var duration = parseInt(document.getElementById('duration-select').value);
+                    var price = parseInt(document.getElementById('price-input').value);
+                    var clubId = parseInt(document.getElementById('club-id-select').value);
+
+                    // Calculate end time based on start time and duration
+                    var startDateTime = new Date('2000-01-01 ' + startTime); // We use an arbitrary date for parsing time
+                    var endTime = new Date(startDateTime.getTime() + (duration * 60000)); // Convert duration to milliseconds
+
+                    // Prepare data object to send to server
+                    var data = {
+                        StartTime: startTime,
+                        EndTime: endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                        ClubId: clubId,
+                        Price: price,
+                        Status: true
+                    };
+
+                    // Send AJAX request to save the slot
+                    fetch('/Staff/SlotManage?handler=SaveSlot', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(result => {
+                            // Handle success, e.g., close modal, show success message, etc.
+                            console.log('Slot saved successfully:', result);
+                            // Example: Close modal after successful save
+                            $('#add-modal').modal('hide');
+                            // Optionally, refresh the page or update the slot list
+                            location.reload(); // Example: Reload page after saving
+                        })
+                        .catch(error => {
+                            // Handle error, e.g., show error message
+                            console.error('Error saving slot:', error);
+                        });
+                });
+            });
+        </script>
+    }
+
 </body>
 
 </html>
