@@ -30,6 +30,10 @@ namespace RazorWebApp.Pages
 
             if (LoginedAccount.Role == allowedRole) return string.Empty;
 
+            if (LoginedAccount.Role == AccountRoleEnum.Admin.ToString()) return "/Admin/Index";
+
+            if (LoginedAccount.Role == AccountRoleEnum.Staff.ToString()) return "/Staff/Index";
+
             return "/NotFound";
         }
 
