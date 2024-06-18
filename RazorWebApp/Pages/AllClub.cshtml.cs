@@ -7,7 +7,7 @@ using Services.IService;
 
 namespace RazorWebApp.Pages
 {
-    public class AllClubModel : PageModel
+    public class AllClubModel : AuthorPageServiceModel
     {
         private readonly IServiceManager _service;
         public int FindCount { get; set; }
@@ -86,6 +86,8 @@ namespace RazorWebApp.Pages
 
         public IActionResult OnGet(string startTime, string endTime, int cityId, int districtId, string searchString, string searchProperty, string sortProperty, int sortOrder)
         {
+            LoadAccountFromSession();
+
             InitializeData();
 
             int page = Convert.ToInt32(Request.Query["page"]);

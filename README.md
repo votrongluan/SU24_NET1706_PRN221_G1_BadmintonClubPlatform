@@ -121,20 +121,15 @@ Use built-in continuous integration and continuous deployment (CI/CD) pipelines 
 - Analyze your code for vulnerabilities with Static Application Security Testing (SAST).
 - Deploy to your preferred cloud service.
 
+## Screenshot
+
+
 ## Support
 
 If you need help, you can reach out via:
 
 - [Issue Tracker](https://github.com/votrongluan/badminton-booking-razor-page/issues)
 - [Email](mailto:support@razorpage.com)
-
-## Roadmap
-
-Planned features and improvements:
-
-- Integration with third-party veterinary services.
-- Enhanced reporting and analytics for pet health data.
-- Mobile application for pet owners.
 
 ## Contributing
 

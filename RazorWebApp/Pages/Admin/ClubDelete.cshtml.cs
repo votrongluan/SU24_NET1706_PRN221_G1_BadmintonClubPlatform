@@ -1,5 +1,6 @@
 ﻿using BusinessObjects.Dtos.Club;
 using BusinessObjects.Entities;
+using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.VisualBasic;
@@ -8,7 +9,7 @@ using Services.IService;
 
 namespace RazorWebApp.Pages.Admin
 {
-    public class ClubDeleteModel : PageModel
+    public class ClubDeleteModel : AuthorPageServiceModel
     {
         private readonly IServiceManager _service;
 
@@ -22,6 +23,11 @@ namespace RazorWebApp.Pages.Admin
 
         public IActionResult OnGet(int? id)
         {
+            LoadAccountFromSession();
+            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Admin.ToString());
+
+            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+
             if (id != null)
             {
                 DeleteClub = _service.ClubService.GetClubById(id ?? -1);
@@ -32,7 +38,7 @@ namespace RazorWebApp.Pages.Admin
             }
 
             if (DeleteClub == null)
-            { 
+            {
                 return RedirectToPage("AllClubManage", new { msg = "Không tìm thấy câu lạc bộ với id cần xóa" });
             }
 
@@ -48,7 +54,7 @@ namespace RazorWebApp.Pages.Admin
                 _service.ClubService.DeleteClub(clubId);
                 return RedirectToPage("AllClubManage", new { msg = $"Xóa câu lạc bộ với mã {clubId} thành công" });
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return RedirectToPage("AllClubManage", new { msg = $"Xóa câu lạc bộ thất bại do lỗi hệ thống liên hệ đội ngũ để được hỗ trợ" });
             }

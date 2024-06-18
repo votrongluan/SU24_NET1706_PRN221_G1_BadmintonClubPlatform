@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace RazorWebApp.Pages
 {
-    public class IndexModel : PageModel
+    public class IndexModel : AuthorPageServiceModel
     {
         private readonly ILogger<IndexModel> _logger;
 
@@ -14,7 +14,7 @@ namespace RazorWebApp.Pages
 
         public void OnGet()
         {
-
+            LoadAccountFromSession();
         }
     }
 }
