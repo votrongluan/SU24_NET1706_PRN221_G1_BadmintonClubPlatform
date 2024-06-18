@@ -44,11 +44,13 @@
                 <div class="p-4 pb-2 pt-2"><a href="ClubManage"
                         style="text-decoration: none;color: var(--bs-black);">Quản lý club</a></div>
                 <div class="p-4 pb-2 pt-2"><a href="CourtManage"
-                        style="text-decoration: none;color: var(--bs-black);">Quản lý bàn</a></div>
+                        style="text-decoration: none;color: var(--bs-black);">Quản lý sân</a></div>
                 <div class="p-4 pb-2 pt-2"><a href="SlotManage"
                         style="text-decoration: none;color: var(--bs-black);">Quản lý giờ, giá</a></div>
                 <div class="p-4 pb-2 pt-2"><a href="ClubBookManage"
-                        style="text-decoration: none;color: var(--bs-black);">Lịch đặt sân</a></div>
+                                              style="text-decoration: none;color: var(--bs-black);">Lịch đặt sân</a></div>
+                <div class="p-4 pb-2 pt-2"><a href="MatchManage"
+                                              style="text-decoration: none;color: var(--bs-black);">Lịch thi đấu</a></div>
             </div>
             <div style="flex: 1;" class="p-4">
                 <h2 class="fs-4 text-center mt-0">Lịch đặt sân</h2>
@@ -65,8 +67,6 @@
 
                         <li class="nav-item" role="presentation"><a class="nav-link link-dark" role="tab"
                                 data-bs-toggle="tab" href="#tab-3">Đặt lịch cho khách</a></li>
-                        <li class="nav-item" role="presentation"><a class="nav-link link-dark" role="tab"
-                                data-bs-toggle="tab" href="#tab-4">Lịch thi đấu</a></li>
                     </ul>
                     <div class="tab-content">
                         <div class="active tab-pane" role="tabpanel" id="tab-1">
@@ -192,120 +192,7 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="tab-pane" role="tabpanel" id="tab-4">
-                            <div>
-                                <div class="d-flex mt-4"><button class="btn btn-primary" type="button"
-                                        style="margin-left: auto;" data-bs-target="#modal-1" data-bs-toggle="modal">Đặt
-                                        lịch thi đấu</button></div>
-                                <form style="margin-top: 16px;" class="mt-4">
-                                    <input class="form-control mt-4" type="search" placeholder="Tiêu đề">
-                                    <div class="d-flex flex-lg-row">
-                                        <div class="d-flex" style="column-gap: 1rem;margin-left: auto;">
-                                            <div>
-                                                <p style="margin-bottom: 8px;margin-top: 8px;">Sắp xếp theo</p><select
-                                                    class="form-select">
-                                                    <optgroup label="This is a group">
-                                                        <option value="12" selected="">This is item 1</option>
-                                                        <option value="13">This is item 2</option>
-                                                        <option value="14">This is item 3</option>
-                                                    </optgroup>
-                                                </select>
-                                            </div>
-                                            <div>
-                                                <p style="margin-bottom: 8px;margin-top: 8px;">Thứ tự sắp xếp</p><select
-                                                    class="form-select">
-                                                    <optgroup label="This is a group">
-                                                        <option value="12" selected="">This is item 1</option>
-                                                        <option value="13">This is item 2</option>
-                                                        <option value="14">This is item 3</option>
-                                                    </optgroup>
-                                                </select>
-                                            </div><input class="btn btn-primary align-self-end mt-4" type="submit"
-                                                style="height: fit-content;margin-top: 11px;" value="Tìm kiếm">
-                                        </div>
-                                    </div>
-                                </form>
-                                <div class="table-responsive mt-4">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-start">Tiêu đề</th>
-                                                <th class="text-start">Mô tả</th>
-                                                <th class="text-center">Ngày thi</th>
-                                                <th class="text-center">Giờ thi</th>
-                                                <th class="text-center">Mã sân</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="text-start">Trận đấu giữa anh A và chị B</td>
-                                                <td class="text-start">Rất thú vị</td>
-                                                <td class="text-center">24/12/2023</td>
-                                                <td class="text-center">06h15 - 07h15</td>
-                                                <td class="text-center">1</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <nav>
-                                    <ul class="pagination">
-                                        <li class="page-item"><a class="page-link" aria-label="Previous" href="#"><span
-                                                    aria-hidden="true">«</span></a></li>
-                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">4</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">5</a></li>
-                                        <li class="page-item"><a class="page-link" aria-label="Next" href="#"><span
-                                                    aria-hidden="true">»</span></a></li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" role="dialog" tabindex="-1" id="modal-1">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <form>
-                        <div class="modal-header">
-                            <h4 class="modal-title fs-5">Đặt lịch thi đấu</h4><button class="btn-close" type="button"
-                                aria-label="Close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <label class="form-label" style="display: block;/*width: 100%;*/">Tiêu đề<input
-                                    class="form-control mt-2" type="text"
-                                    placeholder="Nhập tiêu đề thi đấu"></label><label class="form-label mt-4"
-                                style="display: block;/*width: 100%;*/">Nội dung<input class="form-control mt-2"
-                                    type="text" placeholder="Nhập nội dung thi đấu"></label><label
-                                class="form-label mt-4" style="display: block;/*width: 100%;*/">
-                                Loại sân
-                                <select class="form-select mt-2">
-                                    <optgroup label="This is a group">
-                                        <option value="12" selected="">This is item 1</option>
-                                        <option value="13">This is item 2</option>
-                                        <option value="14">This is item 3</option>
-                                    </optgroup>
-                                </select>
-                            </label><label class="form-label mt-4" style="display: block;/*width: 100%;*/">Ngày thi
-                                đấu<input class="form-control mt-4" type="date"></label><label class="form-label mt-4"
-                                style="display: block;/*width: 100%;*/">
-                                Khung giờ
-                                <select class="form-select mt-2">
-                                    <optgroup label="This is a group">
-                                        <option value="12" selected="">This is item 1</option>
-                                        <option value="13">This is item 2</option>
-                                        <option value="14">This is item 3</option>
-                                    </optgroup>
-                                </select>
-                            </label>
-                        </div>
-                        <div class="modal-footer"><button class="btn btn-light" type="button"
-                                data-bs-dismiss="modal">Hủy</button><button class="btn btn-primary"
-                                type="submit">Lưu</button></div>
-                    </form>
                 </div>
             </div>
         </div>

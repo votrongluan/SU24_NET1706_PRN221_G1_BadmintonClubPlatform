@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using DataAccessObjects;
 using Services.IService;
 using System.Text.Json;
+using BusinessObjects.Enums;
 
 namespace RazorWebApp.Pages.Staff
 {
-    public class ClubManageModel : PageModel
+    public class ClubManageModel : AuthorPageServiceModel
     {
         private readonly BusinessObjects.Entities.BcbpContext _context;
         private readonly IClubService _clubService;
@@ -34,6 +35,11 @@ namespace RazorWebApp.Pages.Staff
 
         public async Task<IActionResult> OnGetAsync()
         {
+            LoadAccountFromSession();
+            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Staff.ToString());
+
+            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+
             // Lấy thông tin tài khoản từ session
             string accountJson = HttpContext.Session.GetString("Account");
             if (accountJson == null)

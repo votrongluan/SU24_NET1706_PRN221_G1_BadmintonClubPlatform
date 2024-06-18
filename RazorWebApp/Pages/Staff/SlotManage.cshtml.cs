@@ -8,10 +8,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using static System.Reflection.Metadata.BlobBuilder;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
+using BusinessObjects.Enums;
 
 namespace RazorWebApp.Pages.Staff
 {
-    public class SlotManageModel : PageModel
+    public class SlotManageModel : AuthorPageServiceModel
     {
         private readonly BusinessObjects.Entities.BcbpContext _context;
 
@@ -24,12 +25,19 @@ namespace RazorWebApp.Pages.Staff
         public List<Club> AllClubs { get; set; }
  
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            LoadAccountFromSession();
+            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Staff.ToString());
+
+            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+
             Slots = _context.Slots
             .Include(s => s.Club)
                 .ToList();
             AllClubs = _context.Clubs.ToList();
+
+            return Page();
         }
 
         [BindProperty]

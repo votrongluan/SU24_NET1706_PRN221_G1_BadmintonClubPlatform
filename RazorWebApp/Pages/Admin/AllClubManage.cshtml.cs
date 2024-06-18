@@ -16,7 +16,7 @@ using Microsoft.Data.SqlClient;
 
 namespace RazorWebApp.Pages.Admin
 {
-    public class AllClubManageModel : PageModel
+    public class AllClubManageModel : AuthorPageServiceModel
     {
         private readonly IServiceManager _service;
         [BindProperty] public CreateClubDto CreatedClub { get; set; }
@@ -30,7 +30,7 @@ namespace RazorWebApp.Pages.Admin
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
 
-        private void InitializeData ()
+        private void InitializeData()
         {
             Clubs = _service.ClubService.GetAllClubs();
             Cities = _service.CityService.GetAllCities();
@@ -41,12 +41,12 @@ namespace RazorWebApp.Pages.Admin
             ViewData["CityId"] = new SelectList(Cities, "CityId", "CityName");
         }
 
-        public AllClubManageModel (IServiceManager service)
+        public AllClubManageModel(IServiceManager service)
         {
             _service = service;
         }
 
-        private void Paging (string searchString, string searchProperty, string sortProperty, int sortOrder, int page = 0)
+        private void Paging(string searchString, string searchProperty, string sortProperty, int sortOrder, int page = 0)
         {
             const int PageSize = 10;  // Set the number of items per page
 
@@ -81,40 +81,33 @@ namespace RazorWebApp.Pages.Admin
             FilterClubsDto = FilterClubsDto.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
         }
 
-        public IActionResult OnGet (string searchString, string searchProperty, string sortProperty, int sortOrder)
+        public IActionResult OnGet(string searchString, string searchProperty, string sortProperty, int sortOrder)
         {
-            var role = HttpContext.Session.GetString("role");
+            LoadAccountFromSession();
+            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Admin.ToString());
 
-            if (!string.IsNullOrEmpty(role))
+            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+
+            string msg = Request.Query["msg"];
+
+            if (!string.IsNullOrEmpty(msg))
             {
-                if (!role.Equals(AccountRoleEnum.Admin.ToString()))
-                {
-                    return RedirectToPage("/NotFound");
-                }
-
-                string msg = Request.Query["msg"];
-
-                if (!string.IsNullOrEmpty(msg))
-                {
-                    Message = msg;
-                }
-                else
-                {
-                    Message = string.Empty;
-                }
-
-                InitializeData();
-
-                int page = Convert.ToInt32(Request.Query["page"]);
-                Paging(searchString, searchProperty, sortProperty, sortOrder, page);
-
-                return Page();
+                Message = msg;
+            }
+            else
+            {
+                Message = string.Empty;
             }
 
-            return RedirectToPage("/Authentication");
+            InitializeData();
+
+            int page = Convert.ToInt32(Request.Query["page"]);
+            Paging(searchString, searchProperty, sortProperty, sortOrder, page);
+
+            return Page();
         }
 
-        public IActionResult OnPost ()
+        public IActionResult OnPost()
         {
             Message = string.Empty;
 
@@ -151,7 +144,7 @@ namespace RazorWebApp.Pages.Admin
             return Page();
         }
 
-        public JsonResult OnGetDistrictsByCityId (int cityId)
+        public JsonResult OnGetDistrictsByCityId(int cityId)
         {
             InitializeData();
             var districts = _service.DistrictService.GetAllDistrictsByCityId(cityId);

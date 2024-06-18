@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace RazorWebApp.Pages.Staff
 {
-    public class ClubBookManageModel : AuthorPageServiceModel
+    public class IndexModel : AuthorPageServiceModel
     {
         public IActionResult OnGet()
         {

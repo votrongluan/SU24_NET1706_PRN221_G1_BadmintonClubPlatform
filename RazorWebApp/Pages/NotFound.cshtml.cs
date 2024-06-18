@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace RazorWebApp.Pages
 {
-    public class NotFoundModel : PageModel
+    public class NotFoundModel : AuthorPageServiceModel
     {
         public void OnGet()
         {
+            LoadAccountFromSession();
         }
     }
 }

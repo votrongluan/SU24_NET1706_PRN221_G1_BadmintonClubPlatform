@@ -37,7 +37,30 @@
                         <li class="nav-item"><a class="nav-link" href="AllClub">Câu lạc bộ</a></li>
                         <li class="nav-item"><a class="nav-link" href="Match">Lịch thi đấu</a></li>
                         <li class="nav-item"><a class="nav-link" href="About">Về chúng tôi</a></li>
-                    </ul><a class="btn btn-primary" role="button" href="../Authentication">Đăng nhập</a>
+                    </ul>
+                    @if (Model.LoginedAccount == null)
+                    {
+                        <a class="btn btn-primary" role="button" href="Authentication">Đăng nhập</a>
+                    }
+                    else
+                    {
+                        <div class="dropdown" style="margin-right: 40px;">
+                            <a class="dropdown-toggle d-table-cell" aria-expanded="false" data-bs-toggle="dropdown" href="#"
+                               style="text-decoration: none;color: var(--bs-navbar-active-color);">
+                                <img class="rounded-circle img-fluid" alt="man in black button-up shirt"
+                                     style="width: 40px;height: 40px;margin-right: 8px;"
+                                     src="@Model.LoginedAccount.AvatarLink">@Model.LoginedAccount.Fullname
+                            </a>
+                            <div class="dropdown-menu" style="min-width: 100px;">
+                                <a class="dropdown-item"
+                                   href="AccountInfo">Tài khoản</a>
+                                <a class="dropdown-item" href="BookHistory">
+                                    Lịch
+                                    sử đặt
+                                </a><a asp-page-handler="Logout" class="dropdown-item">Đăng xuất</a>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </nav>
