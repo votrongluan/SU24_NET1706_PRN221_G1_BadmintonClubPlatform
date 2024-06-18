@@ -40,21 +40,9 @@ namespace RazorWebApp.Pages.Staff
 
             if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
 
-            // Lấy thông tin tài khoản từ session
-            string accountJson = HttpContext.Session.GetString("Account");
-            if (accountJson == null)
-            {
-                return RedirectToPage("../Authentication/Login");
-            }
-
-            Account account = JsonSerializer.Deserialize<Account>(accountJson);
-
-            int id = (int)account.ClubManageId;
+            int id = (int)LoginedAccount.ClubManageId;
             
-            if (id != 0) 
-            {
-                Club = _clubService.GetClubById(id);
-            }
+            Club = _clubService.GetClubById(id);
 
             if (Club == null)
             {

@@ -38,7 +38,7 @@
                         <li class="nav-item"></li>
                         <li class="nav-item"></li>
                     </ul>
-                    <a class="btn btn-secondary" role="button" href="../Authentication">Đăng xuất</a>
+                    <a class="btn btn-secondary" role="button" asp-page-handler="Logout" class="dropdown-item">Đăng xuất</a>
                 </div>
             </div>
         </nav>
@@ -119,12 +119,12 @@
                         <span asp-validation-for="Club.AvatarLink" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
-                        <p>Open Time</p>
+                        <p>Giờ mở cửa</p>
                         <input class="form-control" type="time" asp-for="Club.OpenTime" id="OpenTime">
                         <span asp-validation-for="Club.OpenTime" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
-                        <p>Close Time</p>
+                        <p>Giờ đóng cửa</p>
                         <input class="form-control" type="time" asp-for="Club.CloseTime" id="CloseTime">
                         <span asp-validation-for="Club.CloseTime" class="text-danger"></span>
                     </div>
