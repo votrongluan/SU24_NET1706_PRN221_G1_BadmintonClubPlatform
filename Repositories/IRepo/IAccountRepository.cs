@@ -16,4 +16,5 @@ public interface IAccountRepository
     bool CheckPhoneExisted (string phone);
 
     bool CheckEmailExisted (string email);
+    List<Account> GetAllAccount ();
 }
