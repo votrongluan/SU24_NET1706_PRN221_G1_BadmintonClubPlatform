@@ -37,4 +37,14 @@ public class AccountService : IAccountService
     {
         return _repo.Account.CheckEmailExisted(email);
     }
+
+    public List<Account> GetAllAccount ()
+    {
+        return _repo.Account.GetAllAccount();
+    }
+
+    public List<Account> GetAllStaffAccount ()
+    {
+        return _repo.Account.GetAllStaffAccount();
+    }
 }

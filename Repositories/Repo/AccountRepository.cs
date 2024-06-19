@@ -1,6 +1,7 @@
 ﻿using BusinessObjects.Entities;
 using BusinessObjects.Enums;
 using DataAccessObjects;
+using Microsoft.EntityFrameworkCore;
 using Repositories.IRepo;
 
 namespace Repositories.Repo;
@@ -9,7 +10,8 @@ public class AccountRepository : IAccountRepository
 {
     public List<Account> GetAllStaffAccount ()
     {
-        return AccountDao.FindByCondition(e => e.Role.Equals(AccountRoleEnum.Staff.ToString())).ToList();
+        return AccountDao.FindByCondition(e => e.Role.Equals(AccountRoleEnum.Staff.ToString()))
+            .Include(e => e.ClubManage).ToList();
     }
 
     public Account GetAccountById (int id)
@@ -51,5 +53,10 @@ public class AccountRepository : IAccountRepository
     public bool CheckEmailExisted (string email)
     {
         return AccountDao.FindByCondition(e => e.Email.Equals(email)).Any();
+    }
+
+    public List<Account> GetAllAccount ()
+    {
+        return AccountDao.GetAll().ToList();
     }
 }

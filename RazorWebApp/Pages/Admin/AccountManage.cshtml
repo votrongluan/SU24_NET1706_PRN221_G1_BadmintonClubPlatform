@@ -83,17 +83,32 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="text-center">
-                                <td class="text-center">1</td>
-                                <td class="text-center">staff1</td>
-                                <td class="text-center">0982333333</td>
-                                <td class="text-center"><span style="color: rgb(26, 32, 44);">1</span></td>
-                                <td class="text-center">SpringBoot</td>
-                                <td class="text-center">
-                                    <a asp-page="./AccountUpdate" class="btn btn-light" role="button">Cập nhật</a>
-                                    <a asp-page="./AccountDelete" class="btn btn-danger ms-4" role="button">Xóa</a>
-                                </td>
-                            </tr>
+                            @foreach (var item in Model.StaffAccounts)
+                            {
+                                <tr class="text-center">
+                                    <td class="text-center">@item?.UserId</td>
+                                    <td class="text-center">@item?.Username</td>
+                                    <td class="text-center">@item?.UserPhone</td>
+                                    <td class="text-center"><span style="color: rgb(26, 32, 44);">@item?.ClubManage?.ClubId</span></td>
+                                    <td class="text-center">@item?.ClubManage?.ClubName</td>
+                                    <td class="text-center">
+                                        <a asp-page="./AccountUpdate" class="btn btn-light" role="button">Cập nhật</a>
+                                        <a asp-page="./AccountDelete" class="btn btn-danger ms-4" role="button">Xóa</a>
+                                    </td>
+                                </tr>
+                            }
+
+                            @* <tr class="text-center">
+                            <td class="text-center">1</td>
+                            <td class="text-center">staff1</td>
+                            <td class="text-center">0982333333</td>
+                            <td class="text-center"><span style="color: rgb(26, 32, 44);">1</span></td>
+                            <td class="text-center">SpringBoot</td>
+                            <td class="text-center">
+                            <a asp-page="./AccountUpdate" class="btn btn-light" role="button">Cập nhật</a>
+                            <a asp-page="./AccountDelete" class="btn btn-danger ms-4" role="button">Xóa</a>
+                            </td>
+                            </tr> *@
                         </tbody>
                     </table>
                 </div>
