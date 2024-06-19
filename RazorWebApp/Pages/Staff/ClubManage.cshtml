@@ -2,9 +2,9 @@
 @model RazorWebApp.Pages.Staff.ClubManageModel
 @{
 }
+
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
@@ -20,7 +20,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
 </head>
-
 <body>
     <header>
         <nav class="navbar navbar-expand-md py-3">
@@ -61,24 +60,22 @@
             </div>
             <div style="flex: 1;" class="p-4">
                 <h2 class="fs-4 text-center mt-0">Quản lý club</h2>
-
-                @if (TempData["SuccessMessage"] != null)
+                @if (!string.IsNullOrEmpty(Model.ConfirmationMessage))
                 {
                     <div class="alert alert-success" role="alert">
-                        @TempData["SuccessMessage"]
+                        @Model.ConfirmationMessage
                     </div>
                 }
-
                 <form method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="mt-4">
                         <p>Tên câu lạc bộ</p>
-                        <input class="form-control" type="text" asp-for="Club.ClubName" id="ClubNameInput">
+                        <input class="form-control" type="text" asp-for="Club.ClubName">
                         <span asp-validation-for="Club.ClubName" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
                         <p>Địa chỉ</p>
-                        <input class="form-control" type="text" asp-for="Club.Address" id="ClubDistricnput">
+                        <input class="form-control" type="text" asp-for="Club.Address">
                         <span asp-validation-for="Club.Address" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
@@ -97,47 +94,90 @@
                     </div>
                     <div class="mt-4">
                         <p>Email</p>
-                        <input class="form-control" type="text" asp-for="Club.ClubEmail" id="ClubEmail">
+                        <input class="form-control" type="email" asp-for="Club.ClubEmail">
                         <span asp-validation-for="Club.ClubEmail" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
-                        <p>Phone</p>
-                        <input class="form-control" type="text" asp-for="Club.ClubPhone" id="ClubPhone">
+                        <p>Số điện thoại</p>
+                        <input class="form-control" type="text" asp-for="Club.ClubPhone">
                         <span asp-validation-for="Club.ClubPhone" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
                         <p>Fanpage</p>
-                        <input class="form-control" type="text" asp-for="Club.FanpageLink" id="FanpageLink">
+                        <input class="form-control" type="text" asp-for="Club.FanpageLink">
                         <span asp-validation-for="Club.FanpageLink" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
                         <p>Avatar</p>
-                        <input class="form-control" type="text" asp-for="Club.AvatarLink" id="AvatarLink">
+                        <input class="form-control" type="text" asp-for="Club.AvatarLink">
                         <span asp-validation-for="Club.AvatarLink" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
-                        <p>Open Time</p>
-                        <input class="form-control" type="time" asp-for="Club.OpenTime" id="OpenTime">
+                        <p>Giờ mở cửa</p>
+                        <input class="form-control" type="time" asp-for="Club.OpenTime">
                         <span asp-validation-for="Club.OpenTime" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
-                        <p>Close Time</p>
-                        <input class="form-control" type="time" asp-for="Club.CloseTime" id="CloseTime">
+                        <p>Giờ đóng cửa</p>
+                        <input class="form-control" type="time" asp-for="Club.CloseTime">
                         <span asp-validation-for="Club.CloseTime" class="text-danger"></span>
                     </div>
-                    <button type="submit" class="btn btn-primary mt-4">Save</button>
+                    <div class="text-center mt-4">
+                        <button class="btn btn-primary" type="submit">Lưu thay đổi</button>
+                    </div>
                 </form>
             </div>
         </div>
     </main>
+    <footer>
+        <div class="container py-4 py-lg-5">
+            <div class="row justify-content-center">
+                <div class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column item">
+                    <h3 class="fs-6">Công ty</h3>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Giới thiệu</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column item">
+                    <h3 class="fs-6">Chính sách</h3>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Chính sách bảo mật</a></li>
+                        <li><a href="#">Điều khoản sử dụng</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column item">
+                    <h3 class="fs-6">Trợ giúp</h3>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Hướng dẫn sử dụng</a></li>
+                        <li><a href="#">Câu hỏi thường gặp</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 text-center item social">
+                    <h3 class="fs-6">Mạng xã hội</h3>
+                    <a href="#"><i class="fa fa-facebook fa-lg"></i></a>
+                    <a href="#"><i class="fa fa-twitter fa-lg"></i></a>
+                    <a href="#"><i class="fa fa-instagram fa-lg"></i></a>
+                </div>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between align-items-center pt-3">
+                <p class="text-muted mb-0">© 2023 Bacol. All rights reserved.</p>
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+                    <li class="list-inline-item"><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
     <script>
-        function fetchDistricts(cityId, districtId) {
-            var city = cityId || document.getElementById("City").value;
-            if (city) {
+        function fetchDistricts() {
+            var cityId = document.getElementById("City").value;
+            if (cityId) {
                 $.ajax({
                     url: '@Url.Page("ClubManage", "GetDistricts")',
                     type: 'GET',
-                    data: { cityId: city },
+                    data: { cityId: cityId },
                     success: function (data) {
                         var districtSelect = $('#District');
                         districtSelect.empty();
@@ -145,9 +185,6 @@
                         $.each(data, function (index, item) {
                             districtSelect.append('<option value="' + item.value + '">' + item.text + '</option>');
                         });
-                        if (districtId) {
-                            districtSelect.val(districtId);
-                        }
                     }
                 });
             }

@@ -53,7 +53,14 @@ public partial class BcbpContext : DbContext
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer(GetConnectionString());
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseSqlServer(GetConnectionString());
+            optionsBuilder.EnableSensitiveDataLogging(); // Thêm dòng này để bật ghi nhật ký dữ liệu nhạy cảm
+        }
+    }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -9,4 +9,5 @@ public interface IClubService
     void AddClub(Club club);
     void DeleteClub(int clubId);
     Club GetClubById(int clubId);
+    void UpdateClub(Club c);
 }
