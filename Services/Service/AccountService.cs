@@ -47,4 +47,9 @@ public class AccountService : IAccountService
     {
         return _repo.Account.GetAllStaffAccount();
     }
+
+    public void AddStaffAccount (Account account)
+    {
+        _repo.Account.AddStaffAccount(account);
+    }
 }
