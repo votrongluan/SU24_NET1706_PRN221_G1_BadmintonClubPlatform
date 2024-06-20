@@ -44,6 +44,25 @@
             </div>
             <div style="flex: 1;" class="p-4">
                 <h2 class="fs-4 text-center mt-0">Quản lý tài khoản nhân viên</h2>
+
+                @* CHECK IF SUCCESS MESSAGE NOT NULL *@
+                @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                {
+                    <div class="alert alert-success" role="alert">
+                        <p class="m-0 p-1">@Model.SuccessMessage</p>
+                    </div>
+                }
+
+                @* CHECK IF ERROR MESSAGE NOT NULL *@
+                @if (Model.ErrorMessage != null && Model.ErrorMessage.Count > 0)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        @foreach (var message in Model.ErrorMessage)
+                        {
+                            <p class="m-0 p-1">@message</p>
+                        }
+                    </div>
+                }
                 <div class="d-flex mt-4"><button class="btn btn-primary" type="button" style="margin-left: auto;" data-bs-target="#modal-1" data-bs-toggle="modal">Thêm</button></div>
                 <form style="margin-top: 16px;" class="mt-4">
                     <input class="form-control" type="search" placeholder="Tên đăng nhập">
@@ -128,15 +147,6 @@
                         <div class="modal-header">
                             <h4 class="modal-title fs-5">Thêm tài khoản nhân viên</h4><button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
                         </div>
-                        @if (Model.ErrorMessage != null && Model.ErrorMessage.Count > 0)
-                        {
-                            <div class="alert alert-danger m-3" role="alert">
-                                @foreach (var message in Model.ErrorMessage)
-                                {
-                                    <p class="m-0 p-1">@message</p>
-                                }
-                            </div>
-                        }
                         <div class="modal-body">
                             <label class="form-label" style="display: block;">
                                 Tên đăng nhập
