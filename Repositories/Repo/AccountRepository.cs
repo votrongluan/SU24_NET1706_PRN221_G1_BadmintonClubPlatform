@@ -59,4 +59,10 @@ public class AccountRepository : IAccountRepository
     {
         return AccountDao.GetAll().ToList();
     }
+
+    public void AddStaffAccount (Account account)
+    {
+        account.Role = AccountRoleEnum.Staff.ToString();
+        AccountDao.Add(account);
+    }
 }

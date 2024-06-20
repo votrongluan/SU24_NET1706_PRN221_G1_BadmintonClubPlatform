@@ -11,4 +11,5 @@ public interface IAccountService
     bool CheckEmailExisted (string email);
     List<Account> GetAllAccount ();
     List<Account> GetAllStaffAccount ();
+    void AddStaffAccount (Account account);
 }

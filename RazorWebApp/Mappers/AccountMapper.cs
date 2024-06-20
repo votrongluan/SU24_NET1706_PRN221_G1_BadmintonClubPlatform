@@ -27,5 +27,15 @@ namespace RazorWebApp.Mappers
                 Email = e.Email,
             };
         }
+
+        public static Account ToAccount (this AccountAddDto e)
+        {
+            return new Account()
+            {
+                Username = e.Username,
+                Password = e.Password,
+                ClubManageId = e.ClubId
+            };
+        }
     }
 }
