@@ -26,7 +26,9 @@ namespace RazorWebApp.Pages.Admin
             _service = service;
         }
 
+        // MESSAGE FOR ACTION
         public List<string> ErrorMessage = new List<string>();
+        public string SuccessMessage { get; set; }
 
         public IActionResult OnGet ()
         {
@@ -61,16 +63,20 @@ namespace RazorWebApp.Pages.Admin
                 ShowAddAccountModal = true;
                 return Page();
             }
-
             _service.AccountService.AddStaffAccount(AddAccount.ToAccount());
 
-            return RedirectToPage("./AccountManage");
+            return RedirectToPage("./AccountManage", new { SuccessMessage = "Thêm tài khoản nhân viên thành công" });
         }
 
         public void InitialData ()
         {
             StaffAccounts = _service.AccountService.GetAllStaffAccount();
             ViewData["ClubId"] = new SelectList(_service.ClubService.GetAllClubs().OrderBy(c => c.ClubId), "ClubId", "ClubName");
+            string msg = Request.Query["SuccessMessage"];
+            if (msg != null)
+            {
+                SuccessMessage = msg;
+            }
         }
     }
 }
