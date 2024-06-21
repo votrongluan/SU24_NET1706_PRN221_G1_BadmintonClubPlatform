@@ -1,8 +1,7 @@
 using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace RazorWebApp.Pages.Staff
+namespace WebAppRazor.Pages.Staff
 {
     public class SlotDeleteModel : AuthorPageServiceModel
     {

@@ -1,7 +1,7 @@
 ﻿using BusinessObjects.Dtos.Club;
 using BusinessObjects.Entities;
 
-namespace RazorWebApp.Mappers;
+namespace WebAppRazor.Mappers;
 
 public static class ClubMapper
 {

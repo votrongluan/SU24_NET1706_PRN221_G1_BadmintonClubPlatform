@@ -1,11 +1,10 @@
-﻿using BusinessObjects.Entities;
+﻿using System.Text.Json;
+using BusinessObjects.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Services.IService;
-using Services.Service;
-using System.Text.Json;
 
-namespace RazorWebApp.Pages.Staff
+namespace WebAppRazor.Pages.Staff
 {
     public class SlotManageModel : PageModel
     {

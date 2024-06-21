@@ -1,7 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-
-namespace RazorWebApp.Pages
+namespace WebAppRazor.Pages
 {
     public class ClubDetailModel : AuthorPageServiceModel
     {

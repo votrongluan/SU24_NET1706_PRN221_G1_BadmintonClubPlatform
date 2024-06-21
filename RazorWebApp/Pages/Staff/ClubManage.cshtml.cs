@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+﻿using System.Text.Json;
 using BusinessObjects.Entities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Services.IService;
-using System.Text.Json;
-using BusinessObjects.Enums;
 
-namespace RazorWebApp.Pages.Staff
+namespace WebAppRazor.Pages.Staff
 {
     public class ClubManageModel : AuthorPageServiceModel
     {

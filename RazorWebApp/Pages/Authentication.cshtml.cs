@@ -1,15 +1,12 @@
-﻿using BusinessObjects.Dtos.Account;
-using BusinessObjects.Entities;
+﻿using System.Text.Json;
+using BusinessObjects.Dtos.Account;
 using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using RazorWebApp.Mappers;
 using Services.IService;
-using System.Diagnostics;
-using System.Text.Json;
+using WebAppRazor.Mappers;
 
-namespace RazorWebApp.Pages
+namespace WebAppRazor.Pages
 {
     public class AuthenticationModel : PageModel
     {
