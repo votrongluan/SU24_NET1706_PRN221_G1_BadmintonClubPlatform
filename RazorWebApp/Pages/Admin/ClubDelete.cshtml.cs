@@ -32,12 +32,12 @@ namespace WebAppRazor.Pages.Admin
             }
             else
             {
-                return RedirectToPage("AllClubManage", new { msg = "Không tìm thấy câu lạc bộ với id cần xóa" });
+                return RedirectToPage("AllClubManage", new { ErrorMessage = "Không tìm thấy câu lạc bộ với id cần xóa" });
             }
 
             if (DeleteClub == null)
             {
-                return RedirectToPage("AllClubManage", new { msg = "Không tìm thấy câu lạc bộ với id cần xóa" });
+                return RedirectToPage("AllClubManage", new { ErrorMessage = "Không tìm thấy câu lạc bộ với id cần xóa" });
             }
 
             ClubDto = DeleteClub.ToResponseClubDto();
@@ -50,11 +50,11 @@ namespace WebAppRazor.Pages.Admin
             try
             {
                 _service.ClubService.DeleteClub(clubId);
-                return RedirectToPage("AllClubManage", new { msg = $"Xóa câu lạc bộ với mã {clubId} thành công" });
+                return RedirectToPage("AllClubManage", new { SuccessMessage = $"Xóa câu lạc bộ với mã {clubId} thành công" });
             }
             catch (Exception ex)
             {
-                return RedirectToPage("AllClubManage", new { msg = $"Xóa câu lạc bộ thất bại do lỗi hệ thống liên hệ đội ngũ để được hỗ trợ" });
+                return RedirectToPage("AllClubManage", new { ErrorMessage = $"Xóa câu lạc bộ thất bại do lỗi hệ thống liên hệ đội ngũ để được hỗ trợ" });
             }
         }
     }

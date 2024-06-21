@@ -12,7 +12,6 @@ namespace WebAppRazor.Pages.Admin
     {
         private readonly IServiceManager _service;
         [BindProperty] public CreateClubDto CreatedClub { get; set; }
-        public string Message { get; set; } = string.Empty;
         public List<City> Cities { get; set; }
         public List<Club> Clubs { get; set; }
         public List<ResponseClubDto> ClubsDto { get; set; }
@@ -21,6 +20,10 @@ namespace WebAppRazor.Pages.Admin
         // Pagination properties
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
+
+        // MESSAGE FOR ACTION
+        public string ErrorMessage { get; set; }
+        public string SuccessMessage { get; set; }
 
         private void InitializeData()
         {
@@ -80,15 +83,26 @@ namespace WebAppRazor.Pages.Admin
 
             if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
 
-            string msg = Request.Query["msg"];
+            string sM = Request.Query["SuccessMessage"];
 
-            if (!string.IsNullOrEmpty(msg))
+            if (!string.IsNullOrEmpty(sM))
             {
-                Message = msg;
+                SuccessMessage = sM;
             }
             else
             {
-                Message = string.Empty;
+                SuccessMessage = string.Empty;
+            }
+
+            string eM = Request.Query["ErrorMessage"];
+
+            if (!string.IsNullOrEmpty(eM))
+            {
+                ErrorMessage = eM;
+            }
+            else
+            {
+                ErrorMessage = string.Empty;
             }
 
             InitializeData();
@@ -101,7 +115,8 @@ namespace WebAppRazor.Pages.Admin
 
         public IActionResult OnPost()
         {
-            Message = string.Empty;
+            SuccessMessage = string.Empty;
+            ErrorMessage = string.Empty;
 
             if (!ModelState.IsValid)
             {
@@ -117,20 +132,20 @@ namespace WebAppRazor.Pages.Admin
 
                     InitializeData();
                     Paging("", "", "", 0);
-                    Message = "Tạo mới câu lạc bộ thành công";
+                    SuccessMessage = "Tạo mới câu lạc bộ thành công";
                 }
                 else
                 {
                     InitializeData();
                     Paging("", "", "", 0);
-                    Message = "Số điện thoại đã tồn tại trong hệ thống";
+                    ErrorMessage = "Số điện thoại đã tồn tại trong hệ thống";
                 }
             }
             catch (Exception ex)
             {
                 InitializeData();
                 Paging("", "", "", 0);
-                Message = "Câu lạc bộ không được tạo do lỗi hệ thống vui lòng liên hệ đội ngũ hỗ trợ";
+                ErrorMessage = "Câu lạc bộ không được tạo do lỗi hệ thống vui lòng liên hệ đội ngũ hỗ trợ";
             }
 
             return Page();
