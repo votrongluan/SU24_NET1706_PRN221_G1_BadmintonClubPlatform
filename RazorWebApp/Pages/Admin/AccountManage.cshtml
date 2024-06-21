@@ -44,6 +44,25 @@
             </div>
             <div style="flex: 1;" class="p-4">
                 <h2 class="fs-4 text-center mt-0">Quản lý tài khoản nhân viên</h2>
+
+                @* CHECK IF SUCCESS MESSAGE NOT NULL *@
+                @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                {
+                    <div class="alert alert-success" role="alert">
+                        <p class="m-0 p-1">@Model.SuccessMessage</p>
+                    </div>
+                }
+
+                @* CHECK IF ERROR MESSAGE NOT NULL *@
+                @if (Model.ErrorMessage != null && Model.ErrorMessage.Count > 0)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        @foreach (var message in Model.ErrorMessage)
+                        {
+                            <p class="m-0 p-1">@message</p>
+                        }
+                    </div>
+                }
                 <div class="d-flex mt-4"><button class="btn btn-primary" type="button" style="margin-left: auto;" data-bs-target="#modal-1" data-bs-toggle="modal">Thêm</button></div>
                 <form style="margin-top: 16px;" class="mt-4">
                     <input class="form-control" type="search" placeholder="Tên đăng nhập">
@@ -97,18 +116,6 @@
                                     </td>
                                 </tr>
                             }
-
-                            @* <tr class="text-center">
-                            <td class="text-center">1</td>
-                            <td class="text-center">staff1</td>
-                            <td class="text-center">0982333333</td>
-                            <td class="text-center"><span style="color: rgb(26, 32, 44);">1</span></td>
-                            <td class="text-center">SpringBoot</td>
-                            <td class="text-center">
-                            <a asp-page="./AccountUpdate" class="btn btn-light" role="button">Cập nhật</a>
-                            <a asp-page="./AccountDelete" class="btn btn-danger ms-4" role="button">Xóa</a>
-                            </td>
-                            </tr> *@
                         </tbody>
                     </table>
                 </div>
@@ -136,12 +143,37 @@
         <div class="modal fade" role="dialog" tabindex="-1" id="modal-1">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form>
+                    <form method="post" asp-page-handler="AddAccount">
                         <div class="modal-header">
-                            <h4 class="modal-title fs-5">Thêm câu lạc bộ</h4><button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
+                            <h4 class="modal-title fs-5">Thêm tài khoản nhân viên</h4><button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
                         </div>
-                        <div class="modal-body"><label class="form-label" style="display: block;/*width: 100%;*/">Tên đăng nhập<input class="form-control mt-2" type="text" placeholder="Nhập số lượng sân cần thêm"></label><label class="form-label mt-4" style="display: block;/*width: 100%;*/">Mật khẩu<input class="form-control mt-2" type="password"></label><label class="form-label mt-4" style="display: block;/*width: 100%;*/">Mã câu lạc bộ quản lý<input class="form-control mt-2" type="text" placeholder="Nhập mã câu lạc bộ quản lý"></label></div>
-                        <div class="modal-footer"><button class="btn btn-light" type="button" data-bs-dismiss="modal">Hủy</button><button class="btn btn-primary" type="submit">Lưu</button></div>
+                        <div class="modal-body">
+                            <label class="form-label" style="display: block;">
+                                Tên đăng nhập
+                                <input class="form-control mt-2" type="text" placeholder="Tên đăng nhập..." asp-for="AddAccount.Username">
+                                <span asp-validation-for="AddAccount.Username" class="text-danger"></span>
+                            </label>
+                            <label class="form-label mt-4" style="display: block;">
+                                Mật khẩu
+                                <input asp-for="AddAccount.Password" class="form-control mt-2" type="password">
+                                <span asp-validation-for="AddAccount.Password" class="text-danger"></span>
+                            </label>
+                            <label class="form-label mt-4" style="display: block;">
+                                Mã câu lạc bộ quản lý
+                                <select asp-for="AddAccount.ClubId" class="form-control mt-2">
+                                    <option value="" selected disabled>-- Chọn mã câu lạc bộ --</option>
+                                    @foreach (var club in ViewBag.ClubId)
+                                    {
+                                        <option value="@club.Value">@club.Value - @club.Text</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="AddAccount.ClubId" class="text-danger"></span>
+                            </label>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-light" type="button" data-bs-dismiss="modal">Hủy</button>
+                            <button class="btn btn-primary" type="submit">Lưu</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -172,8 +204,11 @@
     <script src="~/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/assets/js/Simple-Slider-swiper-bundle.min.js"></script>
     <script src="~/assets/js/Simple-Slider.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
