@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace RazorWebApp.Pages
 {
-    public class AboutModel : PageModel
+    public class AboutModel : AuthorPageServiceModel
     {
         public void OnGet()
         {
+            LoadAccountFromSession();
         }
     }
 }

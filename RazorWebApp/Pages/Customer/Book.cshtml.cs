@@ -1,12 +1,21 @@
+using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace RazorWebApp.Pages.Customer
 {
-    public class BookModel : PageModel
+    public class BookModel : AuthorPageServiceModel
     {
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            LoadAccountFromSession();
+            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Customer.ToString());
+
+            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+
+            // Code go from here
+
+            return Page();
         }
     }
 }

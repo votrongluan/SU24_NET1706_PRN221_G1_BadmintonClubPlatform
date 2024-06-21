@@ -1,53 +1,65 @@
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using BusinessObjects.Entities;
-using DataAccessObjects;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using static System.Reflection.Metadata.BlobBuilder;
+﻿using BusinessObjects.Entities;
 using Microsoft.AspNetCore.Mvc;
-using System.Globalization;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Services.IService;
+using Services.Service;
+using System.Text.Json;
 
 namespace RazorWebApp.Pages.Staff
 {
     public class SlotManageModel : PageModel
     {
-        private readonly BusinessObjects.Entities.BcbpContext _context;
+        private readonly IServiceManager _serviceManager;
 
-        public SlotManageModel(BusinessObjects.Entities.BcbpContext context)
+        public SlotManageModel(IServiceManager serviceManager)
         {
-            _context = context;
-        }
-
-        public IList<Slot> Slots { get; set; }
-        public List<Club> AllClubs { get; set; }
- 
-
-        public async Task OnGetAsync()
-        {
-            Slots = _context.Slots
-            .Include(s => s.Club)
-                .ToList();
-            AllClubs = _context.Clubs.ToList();
+            _serviceManager = serviceManager;
         }
 
         [BindProperty]
-        public Slot Slot { get; set; }
+        public List<Slot> Slots { get; set; }
 
-        public IActionResult OnPostSaveSlot()
+        [BindProperty]
+        public Slot NewSlot { get; set; }
+        public string ErrorMessage { get; set; }
+
+
+        public async Task<IActionResult> OnGet()
         {
-            try
-            {
-                _context.Slots.Add(Slot);
-                _context.SaveChanges();
+            Slots =_serviceManager.SlotService.GetAllSlot();
+            return Page();
+        }
 
-                return Page();
-            }
-            catch (Exception ex)
+        public IActionResult OnPostAddSlot()
+        {
+            // Validate the new slot's start time
+            foreach (var slot in Slots)
             {
-                return BadRequest(new { error = ex.Message });
+                if (NewSlot.StartTime >= slot.StartTime && NewSlot.StartTime < slot.EndTime)
+                {
+                    ErrorMessage = "Giờ bắt đầu nằm trong khoảng khung giờ đã có sẵn.";
+                    return Page();
+                }
             }
+
+            // If valid, add the new slot (this is just a mock, you would save to the database)
+
+            string accountJson = HttpContext.Session.GetString("Account");
+            if (accountJson == null)
+            {
+                return RedirectToPage("/Authentication");
+            }
+
+            Account account = JsonSerializer.Deserialize<Account>(accountJson);
+            int id = (int)account.ClubManageId;
+
+            //NewSlot.EndTime = NewSlot.StartTime.AddMinutes(NewSlot.Duration);
+            
+            NewSlot.ClubId = id;
+
+            _serviceManager.SlotService.AddSlot(NewSlot);
+
+            return RedirectToPage("/Staff/SlotManage");
         }
     }
 }

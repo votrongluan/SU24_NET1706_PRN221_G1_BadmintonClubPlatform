@@ -9,4 +9,6 @@ public interface IAccountService
     bool CheckUsernameExisted (string username);
     bool CheckPhoneExisted (string phone);
     bool CheckEmailExisted (string email);
+    List<Account> GetAllAccount ();
+    List<Account> GetAllStaffAccount ();
 }

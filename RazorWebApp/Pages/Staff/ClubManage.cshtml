@@ -37,7 +37,7 @@
                         <li class="nav-item"></li>
                         <li class="nav-item"></li>
                     </ul>
-                    <a class="btn btn-secondary" role="button" href="../Authentication">Đăng xuất</a>
+                    <a class="btn btn-secondary" role="button" asp-page-handler="Logout" class="dropdown-item">Đăng xuất</a>
                 </div>
             </div>
         </nav>
@@ -56,6 +56,9 @@
                 </div>
                 <div class="p-4 pb-2 pt-2">
                     <a href="ClubBookManage" style="text-decoration: none;color: var(--bs-black);">Lịch đặt sân</a>
+                </div>
+                <div class="p-4 pb-2 pt-2">
+                    <a href="MatchManage" style="text-decoration: none;color: var(--bs-black);">Lịch thi đấu</a>
                 </div>
             </div>
             <div style="flex: 1;" class="p-4">
@@ -87,7 +90,7 @@
                     </div>
                     <div class="mt-4">
                         <p style="margin-top: 8px;">Quận / huyện</p>
-                        <select id="District" class="form-select" asp-for="DistrictId" asp-items="Model.Districts">
+                        <select id="District" class="form-select" asp-for="Club.DistrictId" asp-items="Model.Districts">
                             <option value="">Chọn quận / huyện</option>
                         </select>
                         <span asp-validation-for="DistrictId" class="text-danger"></span>
@@ -129,48 +132,12 @@
             </div>
         </div>
     </main>
-    <footer>
-        <div class="container py-4 py-lg-5">
-            <div class="row justify-content-center">
-                <div class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column item">
-                    <h3 class="fs-6">Công ty</h3>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Giới thiệu</a></li>
-                        <li><a href="#">Liên hệ</a></li>
-                    </ul>
-                </div>
-                <div class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column item">
-                    <h3 class="fs-6">Chính sách</h3>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Chính sách bảo mật</a></li>
-                        <li><a href="#">Điều khoản sử dụng</a></li>
-                    </ul>
-                </div>
-                <div class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column item">
-                    <h3 class="fs-6">Trợ giúp</h3>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Hướng dẫn sử dụng</a></li>
-                        <li><a href="#">Câu hỏi thường gặp</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-3 text-center item social">
-                    <h3 class="fs-6">Mạng xã hội</h3>
-                    <a href="#"><i class="fa fa-facebook fa-lg"></i></a>
-                    <a href="#"><i class="fa fa-twitter fa-lg"></i></a>
-                    <a href="#"><i class="fa fa-instagram fa-lg"></i></a>
-                </div>
-            </div>
-            <hr>
-            <div class="d-flex justify-content-between align-items-center pt-3">
-                <p class="text-muted mb-0">© 2023 Bacol. All rights reserved.</p>
-                <ul class="list-inline mb-0">
-                    <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
-                    <li class="list-inline-item"><a href="#">Terms of Service</a></li>
-                </ul>
-            </div>
-        </div>
-    </footer>
+
     <script>
+        $(document).ready(function () {
+            fetchDistricts();
+        });
+
         function fetchDistricts() {
             var cityId = document.getElementById("City").value;
             if (cityId) {
@@ -185,10 +152,13 @@
                         $.each(data, function (index, item) {
                             districtSelect.append('<option value="' + item.value + '">' + item.text + '</option>');
                         });
+                        // Set the selected district
+                        districtSelect.val('@Model.DistrictId');
                     }
                 });
             }
         }
     </script>
+
 </body>
 </html>

@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace RazorWebApp.Pages
 {
-    public class MatchModel : PageModel
+    public class MatchModel : AuthorPageServiceModel
     {
         public void OnGet()
         {
+            LoadAccountFromSession();
         }
     }
 }

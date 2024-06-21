@@ -22,18 +22,18 @@ namespace RazorWebApp.Pages
         public string SuccessMessage { get; set; }
         public int TabIndex { get; set; }
 
-        public AuthenticationModel (IServiceManager service)
+        public AuthenticationModel(IServiceManager service)
         {
             _service = service;
             TabIndex = 1;
         }
 
-        public void OnGet ()
+        public void OnGet()
         {
             InitialData();
         }
 
-        public IActionResult OnPostLogin ([Bind("UserName, Password")] AccountLoginDto AccountLogin)
+        public IActionResult OnPostLogin([Bind("UserName, Password")] AccountLoginDto AccountLogin)
         {
             if (!ModelState.IsValid)
             {
@@ -51,12 +51,22 @@ namespace RazorWebApp.Pages
                 {
                     // Serialize the result to a JSON string and put into session
                     HttpContext.Session.SetString("Account", JsonSerializer.Serialize(result));
-                    return RedirectToPage("/Index");
+
+                    var role = result.Role;
+
+                    switch (role)
+                    {
+                        case "Admin":
+                            return RedirectToPage("/Admin/Index");
+                        case "Staff":
+                            return RedirectToPage("/Staff/Index");
+                        default:
+                            return RedirectToPage("/Index");
+                    }
+
                 }
-                else
-                {
-                    Message.Add("Tên đăng nhập hoặc mật khẩu không đúng!");
-                }
+
+                Message.Add("Tên đăng nhập hoặc mật khẩu không đúng!");
             }
             catch (Exception ex)
             {
@@ -68,7 +78,7 @@ namespace RazorWebApp.Pages
         }
 
         // ON POST REGISTER
-        public IActionResult OnPostRegister ([Bind("Username, Password, ConfirmPassword, UserPhone, Email")] AccountRegisterDto AccountRegister)
+        public IActionResult OnPostRegister([Bind("Username, Password, ConfirmPassword, UserPhone, Email")] AccountRegisterDto AccountRegister)
         {
             // Check if model state is valid
             if (!ModelState.IsValid)
@@ -127,7 +137,7 @@ namespace RazorWebApp.Pages
             return Page();
         }
 
-        private void InitialData ()
+        private void InitialData()
         {
             SuccessMessage = string.Empty;
             Message.Clear();

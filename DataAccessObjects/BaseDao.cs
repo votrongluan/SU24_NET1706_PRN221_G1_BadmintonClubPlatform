@@ -1,58 +1,63 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System;
+using BusinessObjects.Entities;
 namespace DataAccessObjects;
 
 public class BaseDao<T> where T : class
 {
-    protected static BcbpContext _context = new BcbpContext();
-    protected static DbSet<T> _dbSet = _context.Set<T>();
-
     public static void Add(T entity)
     {
-        _dbSet.Add(entity);
-        _context.SaveChanges();
-        _context.Entry(entity).State = EntityState.Detached;
+        var context = new BcbpContext();
+        var dbSet = context.Set<T>();
+        dbSet.Add(entity);
+        context.SaveChanges();
+        context.Entry(entity).State = EntityState.Detached;
     }
 
     public static IQueryable<T> GetAll()
     {
-        return _dbSet.AsNoTracking();
+        var context = new BcbpContext();
+        var dbSet = context.Set<T>();
+        return dbSet.AsQueryable().AsNoTracking(); ;
     }
 
     public static void Delete(T entity)
     {
-        _dbSet.Remove(entity);
-        _context.SaveChanges();
+        var context = new BcbpContext();
+        var dbSet = context.Set<T>();
+        dbSet.Remove(entity);
+        context.SaveChanges();
     }
 
     public static void Update(T entity)
     {
-        var tracker = _context.Attach(entity);
+        var context = new BcbpContext();
+        var tracker = context.Attach(entity);
         tracker.State = EntityState.Modified;
-        _context.SaveChanges();
-        _context.Entry(entity).State = EntityState.Detached;
+        context.SaveChanges();
+        context.Entry(entity).State = EntityState.Detached;
     }
 
     public static IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
     {
-        return _dbSet.Where(expression).AsNoTracking();
-    }
-
-    public static BcbpContext GetDbContext()
-    {
-        return _context;
+        var context = new BcbpContext();
+        var dbSet = context.Set<T>();
+        return dbSet.Where(expression).AsQueryable().AsNoTracking();
     }
 
     public static void AddRange(IEnumerable<T> entities)
     {
-        _dbSet.AddRange(entities);
-        _context.SaveChanges();
+        var context = new BcbpContext();
+        context.AddRange(entities);
+        context.SaveChanges();
     }
 
     public static void RemoveRange(IEnumerable<T> entities)
     {
-        _dbSet.RemoveRange(entities);
-        _context.SaveChanges();
+        var context = new BcbpContext();
+        var dbSet = context.Set<T>();
+        dbSet.RemoveRange(entities);
+        context.SaveChanges();
     }
 }

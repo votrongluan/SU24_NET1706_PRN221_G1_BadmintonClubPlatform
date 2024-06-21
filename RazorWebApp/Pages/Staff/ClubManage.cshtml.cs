@@ -5,17 +5,16 @@ using BusinessObjects.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Services.IService;
 using System.Text.Json;
+using BusinessObjects.Enums;
 
 namespace RazorWebApp.Pages.Staff
 {
-    public class ClubManageModel : PageModel
+    public class ClubManageModel : AuthorPageServiceModel
     {
-        private readonly BusinessObjects.Entities.BcbpContext _context;
         private readonly IServiceManager _serviceManager;
 
-        public ClubManageModel(BusinessObjects.Entities.BcbpContext context, IServiceManager serviceManager)
+        public ClubManageModel(IServiceManager serviceManager)
         {
-            _context = context;
             _serviceManager = serviceManager;
         }
 
@@ -53,11 +52,14 @@ namespace RazorWebApp.Pages.Staff
 
             var cityService = _serviceManager.CityService.GetAllCities().ToList();
             Cities = new SelectList(cityService, "CityId", "CityName");
-            CityId = Club.District.CityId;
+            CityId = Club.District.CityId; // Set the initial CityId
             var districtService = _serviceManager.DistrictService.GetAllDistricts().ToList();
             Districts = new SelectList(districtService.Where(d => d.CityId == CityId), "DistrictId", "DistrictName");
 
+            DistrictId = Club.DistrictId; // Set the initial DistrictId
+
             return Page();
+
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -71,28 +73,12 @@ namespace RazorWebApp.Pages.Staff
             Account account = JsonSerializer.Deserialize<Account>(accountJson);
             int id = (int)account.ClubManageId;
 
-            var existingClub = _serviceManager.ClubService.GetClubById(id);
-
-            if (existingClub == null)
-            {
-                return NotFound();
-            }
-
-            // Cập nhật thuộc tính của câu lạc bộ hiện có với các giá trị mới
-            existingClub.ClubName = Club.ClubName;
-            existingClub.Address = Club.Address;
-            existingClub.ClubEmail = Club.ClubEmail;
-            existingClub.ClubPhone = Club.ClubPhone;
-            existingClub.FanpageLink = Club.FanpageLink;
-            existingClub.AvatarLink = Club.AvatarLink;
-            existingClub.OpenTime = Club.OpenTime;
-            existingClub.CloseTime = Club.CloseTime;
-            existingClub.DistrictId = DistrictId;
-
+            // Update club properties with the values from the form
+            Club.ClubId = id;
 
             try
             {
-                _serviceManager.ClubService.UpdateClub(existingClub);
+                _serviceManager.ClubService.UpdateClub(Club);
                 ConfirmationMessage = "Câu lạc bộ đã được cập nhật thành công.";
             }
             catch (DbUpdateConcurrencyException)
@@ -107,8 +93,9 @@ namespace RazorWebApp.Pages.Staff
                 }
             }
 
-            return Page();
+            return RedirectToPage("/Staff/ClubManage");
         }
+
 
 
         public async Task<JsonResult> OnGetGetDistricts(int cityId)
