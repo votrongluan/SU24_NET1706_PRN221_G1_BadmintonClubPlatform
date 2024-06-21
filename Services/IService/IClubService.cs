@@ -9,4 +9,6 @@ public interface IClubService
     void AddClub(Club club);
     void DeleteClub(int clubId);
     Club GetClubById(int clubId);
+    Club GetClubByIdNotInclude(int clubId);
+    void UpdateClub(Club c);
 }

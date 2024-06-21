@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BusinessObjects.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using DataAccessObjects;
 using Services.IService;
 using System.Text.Json;
 using BusinessObjects.Enums;
@@ -12,13 +11,11 @@ namespace RazorWebApp.Pages.Staff
 {
     public class ClubManageModel : AuthorPageServiceModel
     {
-        private readonly BusinessObjects.Entities.BcbpContext _context;
-        private readonly IClubService _clubService;
+        private readonly IServiceManager _serviceManager;
 
-        public ClubManageModel(BusinessObjects.Entities.BcbpContext context, IClubService clubService)
+        public ClubManageModel(IServiceManager serviceManager)
         {
-            _context = context;
-            _clubService = clubService;
+            _serviceManager = serviceManager;
         }
 
         [BindProperty]
@@ -33,34 +30,10 @@ namespace RazorWebApp.Pages.Staff
         public SelectList Cities { get; set; }
         public SelectList Districts { get; set; }
 
+        public string ConfirmationMessage { get; set; }
+
         public async Task<IActionResult> OnGetAsync()
         {
-            LoadAccountFromSession();
-            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Staff.ToString());
-
-            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
-
-            int id = (int)LoginedAccount.ClubManageId;
-            
-            Club = _clubService.GetClubById(id);
-
-            if (Club == null)
-            {
-                return NotFound();
-            }
-
-            CityId = Club.District.CityId;
-            DistrictId = Club.DistrictId;
-
-            Cities = new SelectList(await _context.Cities.ToListAsync(), "CityId", "CityName");
-            Districts = new SelectList(await _context.Districts.Where(d => d.CityId == CityId).ToListAsync(), "DistrictId", "DistrictName");
-
-            return Page();
-        }
-
-        public async Task<IActionResult> OnPostAsync()
-        {
-            // Lấy thông tin tài khoản từ session
             string accountJson = HttpContext.Session.GetString("Account");
             if (accountJson == null)
             {
@@ -68,31 +41,49 @@ namespace RazorWebApp.Pages.Staff
             }
 
             Account account = JsonSerializer.Deserialize<Account>(accountJson);
+            int id = (int)account.ClubManageId;
 
-            var club = await _context.Clubs.FindAsync(account.ClubManageId);
-            if (club == null)
+            Club = _serviceManager.ClubService.GetClubById(id);
+
+            if (Club == null)
             {
                 return NotFound();
             }
 
-            club.ClubName = Club.ClubName;
-            club.Address = Club.Address;
-            club.ClubEmail = Club.ClubEmail;
-            club.ClubPhone = Club.ClubPhone;
-            club.FanpageLink = Club.FanpageLink;
-            club.AvatarLink = Club.AvatarLink;
-            club.OpenTime = Club.OpenTime;
-            club.CloseTime = Club.CloseTime;
-            club.DistrictId = DistrictId;
+            var cityService = _serviceManager.CityService.GetAllCities().ToList();
+            Cities = new SelectList(cityService, "CityId", "CityName");
+            CityId = Club.District.CityId; // Set the initial CityId
+            var districtService = _serviceManager.DistrictService.GetAllDistricts().ToList();
+            Districts = new SelectList(districtService.Where(d => d.CityId == CityId), "DistrictId", "DistrictName");
+
+            DistrictId = Club.DistrictId; // Set the initial DistrictId
+
+            return Page();
+
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            string accountJson = HttpContext.Session.GetString("Account");
+            if (accountJson == null)
+            {
+                return RedirectToPage("/Authentication");
+            }
+
+            Account account = JsonSerializer.Deserialize<Account>(accountJson);
+            int id = (int)account.ClubManageId;
+
+            // Update club properties with the values from the form
+            Club.ClubId = id;
 
             try
             {
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Đã cập nhật thành công";
+                _serviceManager.ClubService.UpdateClub(Club);
+                ConfirmationMessage = "Câu lạc bộ đã được cập nhật thành công.";
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ClubExists(club.ClubId))
+                if (!ClubExists(Club.ClubId))
                 {
                     return NotFound();
                 }
@@ -102,12 +93,27 @@ namespace RazorWebApp.Pages.Staff
                 }
             }
 
-            return RedirectToPage("./ClubManage");
+            return RedirectToPage("/Staff/ClubManage");
         }
+
+
+
+        public async Task<JsonResult> OnGetGetDistricts(int cityId)
+        {
+            var districtService = _serviceManager.DistrictService.GetAllDistricts().ToList();
+            var districts = districtService.Where(d => d.CityId == cityId).Select(d => new SelectListItem
+            {
+                Value = d.DistrictId.ToString(),
+                Text = d.DistrictName
+            });
+
+            return new JsonResult(districts);
+        }
+
 
         private bool ClubExists(int id)
         {
-            return _context.Clubs.Any(e => e.ClubId == id);
+            return _serviceManager.ClubService.GetAllClubs().Any(e => e.ClubId == id);
         }
     }
 }

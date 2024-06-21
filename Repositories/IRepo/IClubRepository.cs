@@ -5,6 +5,7 @@ namespace Repositories.IRepo;
 public interface IClubRepository
 {
     List<Club> GetAllClubs();
+    Club GetClubByIdNotInclude(int id);
     Club GetClubById(int id);
     void DeleteClub(int id);
     void UpdateClub(Club club);

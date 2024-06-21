@@ -17,6 +17,8 @@ public class ClubRepository : IClubRepository
         return ClubDao.GetAll().Include(e => e.District).ThenInclude(e => e.City).OrderByDescending(e => e.ClubId).Where(e => e.Status != false).ToList();
     }
 
+
+
     public Club GetClubById(int id)
     {
         return GetAllClubs().Where(e => e.ClubId == id).FirstOrDefault();
@@ -52,5 +54,10 @@ public class ClubRepository : IClubRepository
     public List<Club> GetMostPopularClubs()
     {
         return ClubDao.GetAll().OrderByDescending(e => e.TotalReview).Take(4).ToList();
+    }
+
+    public Club GetClubByIdNotInclude(int id)
+    {
+        return ClubDao.FindByCondition(e => e.ClubId == id).FirstOrDefault();
     }
 }

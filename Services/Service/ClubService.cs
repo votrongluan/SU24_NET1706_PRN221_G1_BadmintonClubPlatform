@@ -37,4 +37,14 @@ public class ClubService : IClubService
     {
         return _repo.Club.GetClubById(clubId);
     }
+
+    public void UpdateClub(Club c)
+    {
+        _repo.Club.UpdateClub(c);
+    }
+
+    public Club GetClubByIdNotInclude(int clubId)
+    {
+        return _repo.Club.GetClubByIdNotInclude(clubId);
+    }
 }
