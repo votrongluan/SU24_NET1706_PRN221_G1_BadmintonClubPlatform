@@ -64,28 +64,38 @@
                     </div>
                 }
                 <div class="d-flex mt-4"><button class="btn btn-primary" type="button" style="margin-left: auto;" data-bs-target="#modal-1" data-bs-toggle="modal">Thêm</button></div>
-                <form style="margin-top: 16px;" class="mt-4">
-                    <input class="form-control" type="search" placeholder="Tên đăng nhập">
+                <form method="get" style="margin-top: 16px;" class="mt-4">
+                    <input name="searchString" class="form-control" type="search" placeholder="Từ khóa tìm kiếm">
                     <div class="d-flex flex-lg-row">
                         <div class="d-flex" style="column-gap: 1rem;margin-left: auto;">
                             <div>
-                                <p style="margin-bottom: 8px;margin-top: 8px;">Sắp xếp theo</p><select class="form-select">
-                                    <optgroup label="This is a group">
-                                        <option value="12" selected="">This is item 1</option>
-                                        <option value="13">This is item 2</option>
-                                        <option value="14">This is item 3</option>
-                                    </optgroup>
+                                <p style="margin-bottom: 8px;margin-top: 8px;">Tìm kiếm theo</p>
+                                <select name="searchProperty" class="form-select">
+                                    <option value="AccountId" selected="">Mã tài khoản</option>
+                                    <option value="Username">Tên đăng nhập</option>
+                                    <option value="ClubId">Mã câu lạc bộ</option>
+                                    <option value="ClubName">Tên câu lạc bộ</option>
                                 </select>
                             </div>
                             <div>
-                                <p style="margin-bottom: 8px;margin-top: 8px;">Thứ tự sắp xếp</p><select class="form-select">
-                                    <optgroup label="This is a group">
-                                        <option value="12" selected="">This is item 1</option>
-                                        <option value="13">This is item 2</option>
-                                        <option value="14">This is item 3</option>
-                                    </optgroup>
+                                <p style="margin-bottom: 8px;margin-top: 8px;">Sắp xếp theo</p>
+                                <select name="sortProperty" class="form-select">
+                                    <option value="AccountId" selected="">Mã tài khoản</option>
+                                    <option value="Username">Tên đăng nhập</option>
+                                    <option value="ClubId">Mã câu lạc bộ</option>
+                                    <option value="ClubName">Tên câu lạc bộ</option>
                                 </select>
-                            </div><input class="btn btn-primary align-self-end mt-4" type="submit" style="height: fit-content;margin-top: 11px;" value="Tìm kiếm">
+                            </div>
+                            <div>
+                                <p style="margin-bottom: 8px;margin-top: 8px;">Thứ tự sắp xếp</p>
+                                <select name="sortOrder" class="form-select">
+                                    <option value="0" selected="">Mặc định</option>
+                                    <option value="1">Tăng dần</option>
+                                    <option value="-1">Giảm dần</option>
+                                </select>
+                            </div>
+                            
+                            <input class="btn btn-primary align-self-end mt-4" type="submit" style="height: fit-content;margin-top: 11px;" value="Tìm kiếm">
                         </div>
                     </div>
                 </form>
@@ -95,19 +105,17 @@
                             <tr>
                                 <th class="text-center">Mã tài khoản</th>
                                 <th class="text-center">Tên đăng nhập</th>
-                                <th class="text-center">Số điện thoại</th>
                                 <th class="text-center">Mã câu lạc bộ</th>
                                 <th class="text-center">Câu lạc bộ</th>
                                 <th class="text-center">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.StaffAccounts)
+                            @foreach (var item in Model.FilterStaffAccounts)
                             {
                                 <tr class="text-center">
                                     <td class="text-center">@item?.UserId</td>
                                     <td class="text-center">@item?.Username</td>
-                                    <td class="text-center">@item?.UserPhone</td>
                                     <td class="text-center"><span style="color: rgb(26, 32, 44);">@item?.ClubManage?.ClubId</span></td>
                                     <td class="text-center">@item?.ClubManage?.ClubName</td>
                                     <td class="text-center">
@@ -121,21 +129,28 @@
                 </div>
                 <nav>
                     <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" aria-label="Previous" href="#">
-                                <span aria-hidden="true">«</span>
-                            </a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">4</a></li>
-                        <li class="page-item"><a class="page-link" href="#">5</a></li>
-                        <li class="page-item">
-                            <a class="page-link" aria-label="Next" href="#">
-                                <span aria-hidden="true">»</span>
-                            </a>
-                        </li>
+                        @if (Model.CurrentPage > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" aria-label="Previous" href="?page=@(Model.CurrentPage - 1)&searchString=@Request.Query["searchString"]&searchProperty=@Request.Query["searchProperty"]&sortProperty=@Request.Query["sortProperty"]&sortOrder=@Request.Query["sortOrder"]">
+                                    <span aria-hidden="true">«</span>
+                                </a>
+                            </li>
+                        }
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                <a class="page-link" href="?page=@i&searchString=@Request.Query["searchString"]&searchProperty=@Request.Query["searchProperty"]&sortProperty=@Request.Query["sortProperty"]&sortOrder=@Request.Query["sortOrder"]">@i</a>
+                            </li>
+                        }
+                        @if (Model.CurrentPage < Model.TotalPages)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" aria-label="Next" href="?page=@(Model.CurrentPage + 1)&searchString=@Request.Query["searchString"]&searchProperty=@Request.Query["searchProperty"]&sortProperty=@Request.Query["sortProperty"]&sortOrder=@Request.Query["sortOrder"]">
+                                    <span aria-hidden="true">»</span>
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </nav>
             </div>

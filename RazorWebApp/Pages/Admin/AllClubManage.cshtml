@@ -45,11 +45,23 @@
             </div>
 
             <div style="flex: 1;" class="p-4">
-                @if (!string.IsNullOrWhiteSpace(Model.Message))
-                {
-                    <span class="text-center mb-4 d-block text-info">@Model.Message</span>
-                }
                 <h2 class="fs-4 text-center mt-0">Quản lý câu lạc bộ</h2>
+                
+                @* CHECK IF SUCCESS MESSAGE NOT NULL *@
+                @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                {
+                    <div class="alert alert-success" role="alert">
+                        <p class="m-0 p-1">@Model.SuccessMessage</p>
+                    </div>
+                }
+
+                @* CHECK IF ERROR MESSAGE NOT NULL *@
+                @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <p class="m-0 p-1">@Model.ErrorMessage</p>
+                    </div>
+                }
 
                 <div class="d-flex mt-4">
                     <button class="btn btn-primary" type="button" style="margin-left: auto;" data-bs-target="#modal-1" data-bs-toggle="modal">Thêm</button>
