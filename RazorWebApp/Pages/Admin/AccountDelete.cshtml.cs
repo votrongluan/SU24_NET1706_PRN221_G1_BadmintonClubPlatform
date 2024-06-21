@@ -1,8 +1,7 @@
 using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace RazorWebApp.Pages.Admin
+namespace WebAppRazor.Pages.Admin
 {
     public class AccountDeleteModel : AuthorPageServiceModel
     {

@@ -1,20 +1,12 @@
-﻿using BusinessObjects.Entities;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Repositories.IRepo;
-using Services.IService;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using BusinessObjects.Dtos;
-using BusinessObjects.Dtos.Club;
-using RazorWebApp.Mappers;
-using Azure;
+﻿using BusinessObjects.Dtos.Club;
+using BusinessObjects.Entities;
 using BusinessObjects.Enums;
-using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Services.IService;
+using WebAppRazor.Mappers;
 
-namespace RazorWebApp.Pages.Admin
+namespace WebAppRazor.Pages.Admin
 {
     public class AllClubManageModel : AuthorPageServiceModel
     {

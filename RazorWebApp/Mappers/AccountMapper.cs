@@ -1,7 +1,7 @@
 ﻿using BusinessObjects.Dtos.Account;
 using BusinessObjects.Entities;
 
-namespace RazorWebApp.Mappers
+namespace WebAppRazor.Mappers
 {
     public static class AccountMapper
     {

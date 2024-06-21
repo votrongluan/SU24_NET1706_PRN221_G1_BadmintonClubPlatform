@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repositories", "Repositorie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{856BDDBD-E305-4632-A0A8-24630B21114A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorWebApp", "RazorWebApp\RazorWebApp.csproj", "{3B0B0082-B502-4AEB-8FC3-6F2A37DA9443}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAppRazor", "RazorWebApp\WebAppRazor.csproj", "{3B0B0082-B502-4AEB-8FC3-6F2A37DA9443}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

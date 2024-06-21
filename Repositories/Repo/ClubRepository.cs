@@ -14,7 +14,7 @@ public class ClubRepository : IClubRepository
 
     public List<Club> GetAllClubs()
     {
-        return ClubDao.GetAll().Include(e => e.District).ThenInclude(e => e.City).OrderByDescending(e => e.ClubId).Where(e => e.Status != false).ToList();
+        return ClubDao.GetAll().Include(e => e.Bookings).Include(e => e.AvailableBookingTypes).Include(e => e.District).ThenInclude(e => e.City).OrderByDescending(e => e.ClubId).Where(e => e.Status != false).ToList();
     }
 
 

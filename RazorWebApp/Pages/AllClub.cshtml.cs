@@ -1,11 +1,9 @@
 ﻿using BusinessObjects.Entities;
-using DataAccessObjects;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Services.IService;
 
-namespace RazorWebApp.Pages
+namespace WebAppRazor.Pages
 {
     public class AllClubModel : AuthorPageServiceModel
     {
@@ -60,9 +58,9 @@ namespace RazorWebApp.Pages
             {
                 FilterClubs = sortProperty switch
                 {
-                    "Star" => sortOrder == -1 ? FilterClubs.OrderByDescending(e => e.ClubId).ToList() : sortOrder == 1 ? FilterClubs.OrderBy(e => e.ClubId).ToList() : FilterClubs,
-                    "Book" => sortOrder == -1 ? FilterClubs.OrderByDescending(e => e.ClubName).ToList() : sortOrder == 1 ? FilterClubs.OrderBy(e => e.ClubName).ToList() : FilterClubs,
-                    "Review" => sortOrder == -1 ? FilterClubs.OrderByDescending(e => e.Address).ToList() : sortOrder == 1 ? FilterClubs.OrderBy(e => e.Address).ToList() : FilterClubs,
+                    "Star" => sortOrder == -1 ? FilterClubs.OrderByDescending(e => e.TotalReview != 0 ? e.TotalStar / e.TotalReview * 1.0 : -1).ToList() : sortOrder == 1 ? FilterClubs.OrderBy(e => e.TotalReview != 0 ? e.TotalStar / e.TotalReview * 1.0 : -1).ToList() : FilterClubs,
+                    "Book" => sortOrder == -1 ? FilterClubs.OrderByDescending(e => e.Bookings.Count).ToList() : sortOrder == 1 ? FilterClubs.OrderBy(e => e.Bookings.Count).ToList() : FilterClubs,
+                    "Review" => sortOrder == -1 ? FilterClubs.OrderByDescending(e => e.TotalReview).ToList() : sortOrder == 1 ? FilterClubs.OrderBy(e => e.TotalReview).ToList() : FilterClubs,
                     _ => FilterClubs,
                 };
             }

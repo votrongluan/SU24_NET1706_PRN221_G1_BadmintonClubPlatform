@@ -2,12 +2,10 @@
 using BusinessObjects.Entities;
 using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.VisualBasic;
-using RazorWebApp.Mappers;
 using Services.IService;
+using WebAppRazor.Mappers;
 
-namespace RazorWebApp.Pages.Admin
+namespace WebAppRazor.Pages.Admin
 {
     public class ClubDeleteModel : AuthorPageServiceModel
     {
