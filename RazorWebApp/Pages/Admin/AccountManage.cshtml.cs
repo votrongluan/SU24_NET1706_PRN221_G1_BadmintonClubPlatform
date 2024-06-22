@@ -21,7 +21,7 @@ namespace WebAppRazor.Pages.Admin
         [BindProperty]
         public AccountAddDto AddAccount { get; set; }
 
-        public AccountManageModel(IServiceManager service)
+        public AccountManageModel (IServiceManager service)
         {
             _service = service;
         }
@@ -34,7 +34,7 @@ namespace WebAppRazor.Pages.Admin
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
 
-        private void Paging(string searchString, string searchProperty, string sortProperty, int sortOrder, int page = 0)
+        private void Paging (string searchString, string searchProperty, string sortProperty, int sortOrder, int page = 0)
         {
             const int PageSize = 10;  // Set the number of items per page
 
@@ -69,7 +69,7 @@ namespace WebAppRazor.Pages.Admin
             FilterStaffAccounts = FilterStaffAccounts.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
         }
 
-        public IActionResult OnGet(string searchString, string searchProperty, string sortProperty, int sortOrder)
+        public IActionResult OnGet (string searchString, string searchProperty, string sortProperty, int sortOrder)
         {
             LoadAccountFromSession();
             var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Admin.ToString());
@@ -86,7 +86,7 @@ namespace WebAppRazor.Pages.Admin
         }
 
         // POST FOR ADD ACCOUNT
-        public IActionResult OnPostAddAccount()
+        public IActionResult OnPostAddAccount ()
         {
             InitialData();
             if (!ModelState.IsValid)
@@ -106,19 +106,24 @@ namespace WebAppRazor.Pages.Admin
                 return Page();
             }
             _service.AccountService.AddStaffAccount(AddAccount.ToAccount());
+            TempData["SuccessMessage"] = "Thêm tài khoản thành công!";
 
-            return RedirectToPage("./AccountManage", new { SuccessMessage = "Thêm tài khoản nhân viên thành công" });
+            return RedirectToPage("./AccountManage");
         }
 
-        public void InitialData()
+        public void InitialData ()
         {
             StaffAccounts = _service.AccountService.GetAllStaffAccount();
             FilterStaffAccounts = StaffAccounts;
             ViewData["ClubId"] = new SelectList(_service.ClubService.GetAllClubs().OrderBy(c => c.ClubId), "ClubId", "ClubName");
-            string msg = Request.Query["SuccessMessage"];
+            string msg = TempData["SuccessMessage"] as string;
             if (msg != null)
             {
                 SuccessMessage = msg;
+            }
+            else
+            {
+                SuccessMessage = string.Empty;
             }
         }
     }

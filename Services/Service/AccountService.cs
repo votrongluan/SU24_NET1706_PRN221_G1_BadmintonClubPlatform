@@ -52,4 +52,19 @@ public class AccountService : IAccountService
     {
         _repo.Account.AddStaffAccount(account);
     }
+
+    public Account GetAccountById (int id)
+    {
+        return _repo.Account.GetAccountById(id);
+    }
+
+    public Account GetStaffAccountById (int id)
+    {
+        return _repo.Account.GetStaffAccountById(id);
+    }
+
+    public void DeleteAccount (int id)
+    {
+        _repo.Account.DeleteAccount(id);
+    }
 }
