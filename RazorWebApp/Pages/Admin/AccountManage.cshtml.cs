@@ -36,7 +36,7 @@ namespace WebAppRazor.Pages.Admin
 
         private void Paging(string searchString, string searchProperty, string sortProperty, int sortOrder, int page = 0)
         {
-            const int PageSize = 2;  // Set the number of items per page
+            const int PageSize = 10;  // Set the number of items per page
 
             if (!string.IsNullOrWhiteSpace(searchString))
             {
