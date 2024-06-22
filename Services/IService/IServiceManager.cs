@@ -9,6 +9,7 @@ public interface IServiceManager
     IAccountService AccountService { get; }
     IBookingService BookingService { get; }
     ICourtService CourtService { get; }
+    ICourtTypeService CourtTypeService { get; }
     IMatchService MatchService { get; }
     IReviewService ReviewService { get; }
     ISlotService SlotService { get; }

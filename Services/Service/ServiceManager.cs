@@ -13,6 +13,7 @@ public class ServiceManager : IServiceManager
     private readonly Lazy<IAccountService> _accountService;
     private readonly Lazy<IBookingService> _bookingService;
     private readonly Lazy<ICourtService> _courtService;
+    private readonly Lazy<ICourtTypeService> _courtTypeService;
     private readonly Lazy<IMatchService> _matchService;
     private readonly Lazy<IReviewService> _reviewService;
     private readonly Lazy<ISlotService> _slotService;
@@ -27,6 +28,7 @@ public class ServiceManager : IServiceManager
         _accountService = new Lazy<IAccountService>(() => new AccountService(repoManager));
         _bookingService = new Lazy<IBookingService>(() => new BookingService(repoManager));
         _courtService = new Lazy<ICourtService>(() => new CourtService(repoManager));
+        _courtTypeService = new Lazy<ICourtTypeService>(() => new CourtTypeService(repoManager));
         _matchService = new Lazy<IMatchService>(() => new MatchService(repoManager));
         _reviewService = new Lazy<IReviewService>(() => new ReviewService(repoManager));
         _slotService = new Lazy<ISlotService>(() => new SlotService(repoManager));
@@ -40,6 +42,7 @@ public class ServiceManager : IServiceManager
     public IAccountService AccountService => _accountService.Value;
     public IBookingService BookingService => _bookingService.Value;
     public ICourtService CourtService => _courtService.Value;
+    public ICourtTypeService CourtTypeService => _courtTypeService.Value;
     public IMatchService MatchService => _matchService.Value;
     public IReviewService ReviewService => _reviewService.Value;
     public ISlotService SlotService => _slotService.Value;
