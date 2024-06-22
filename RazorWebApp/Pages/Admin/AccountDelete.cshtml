@@ -46,9 +46,32 @@
             </div>
             <div style="flex: 1;" class="p-4">
                 <h2 class="fs-4 text-center mt-0">Xác nhận xóa tài khoản</h2>
-                <form>
-                    <label class="form-label d-block mt-4">Mã tài khoản<input class="form-control mt-2" type="text" readonly=""></label><label class="form-label d-block mt-4">Tên đăng nhập<input class="form-control mt-2" type="text" readonly=""></label><label class="form-label d-block mt-4">Số điện thoại<input class="form-control mt-2" type="text" readonly=""></label><label class="form-label d-block mt-4">Mã câu lạc bộ<input class="form-control mt-2" type="text" readonly=""></label><label class="form-label d-block mt-4">Câu lạc bộ<input class="form-control mt-2" type="text" readonly=""></label>
-                    <div class="d-flex justify-content-between mt-4"><a class="btn btn-secondary" role="button" asp-page="./AccountManage">Quay lại</a><a class="btn btn-primary" role="button">Xác nhận</a></div>
+                <form method="post">
+                    <label class="form-label d-block mt-4">
+                        Mã tài khoản
+                        <input class="form-control mt-2" type="text" readonly="" asp-for="Account.UserId">
+                    </label>
+                    <label class="form-label d-block mt-4">
+                        Tên đăng nhập
+                        <input class="form-control mt-2" type="text" readonly="" asp-for="Account.Username">
+                    </label>
+                    <label class="form-label d-block mt-4">
+                        Số điện thoại
+                        <input class="form-control mt-2" type="text" readonly="" asp-for="Account.UserPhone">
+                    </label>
+                    <label class="form-label d-block mt-4">
+                        Mã câu lạc bộ
+                        <input class="form-control mt-2" type="text" readonly="" asp-for="Account.ClubManageId">
+                    </label>
+                    <label class="form-label d-block mt-4">
+                        Câu lạc bộ
+                        <input class="form-control mt-2" type="text" readonly="" asp-for="Account.ClubManage.ClubName">
+                    </label>
+                    <div class="d-flex justify-content-between mt-4">
+                        <a class="btn btn-secondary" role="button" asp-page="./AccountManage">Quay lại</a>
+                        <input type="hidden" asp-for="Account.UserId" />
+                        <input class="btn btn-primary" role="button" value="Xác nhận" type="submit">
+                    </div>
                 </form>
             </div>
         </div>

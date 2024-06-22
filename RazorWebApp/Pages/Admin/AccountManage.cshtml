@@ -120,7 +120,7 @@
                                     <td class="text-center">@item?.ClubManage?.ClubName</td>
                                     <td class="text-center">
                                         <a asp-page="./AccountUpdate" class="btn btn-light" role="button">Cập nhật</a>
-                                        <a asp-page="./AccountDelete" class="btn btn-danger ms-4" role="button">Xóa</a>
+                                        <a asp-page="./AccountDelete" class="btn btn-danger ms-4" role="button" asp-route-id="@item?.UserId">Xóa</a>
                                     </td>
                                 </tr>
                             }
