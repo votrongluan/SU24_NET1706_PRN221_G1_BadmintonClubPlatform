@@ -19,6 +19,12 @@ public class AccountRepository : IAccountRepository
         return AccountDao.FindByCondition(e => e.UserId == id).FirstOrDefault();
     }
 
+    public Account GetStaffAccountById (int id)
+    {
+        return AccountDao.FindByCondition(e => e.UserId == id && e.Role.Equals(AccountRoleEnum.Staff.ToString()))
+            .Include(e => e.ClubManage).FirstOrDefault();
+    }
+
     public Account GetAccount (string username, string password)
     {
         return AccountDao.FindByCondition((e => e.Username.Equals(username) && e.Password.Equals(password))).FirstOrDefault();
