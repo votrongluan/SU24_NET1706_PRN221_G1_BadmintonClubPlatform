@@ -1,4 +1,4 @@
-using BusinessObjects.Dtos.Court;
+﻿using BusinessObjects.Dtos.Court;
 using BusinessObjects.Entities;
 using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
@@ -107,13 +107,13 @@ namespace WebAppRazor.Pages.Staff
                 _service.CourtService.AddCourt(court);
                 InitializeData();
                 Filter("", "", "", 0);
-                Message = "T?o m?i s�n th�nh c�ng";
+                Message = "Tạo mới sân thành công";
             }
             catch (Exception ex)
             {
                 InitializeData();
                 Filter("", "", "", 0);
-                Message = "S�n kh�ng ???c t?o do l?i h? th?ng vui l�ng li�n h? ??i ng? h? tr?";
+                Message = "Sân không được tạo do lỗi hệ thống vui lòng liên hệ đội ngũ hỗ trợ";
             }
             return Page();
         }
