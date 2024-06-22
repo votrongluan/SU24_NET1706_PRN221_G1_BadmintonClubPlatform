@@ -8,6 +8,7 @@ public interface IAccountService
     Account GetAccountById (int id);
     Account GetStaffAccountById (int id);
     void RegisterAccount (Account account);
+    void UpdateStaffAccount (Account account);
     void DeleteAccount (int id);
     bool CheckUsernameExisted (string username);
     bool CheckPhoneExisted (string phone);

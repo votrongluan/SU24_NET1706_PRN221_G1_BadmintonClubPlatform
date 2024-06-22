@@ -12,7 +12,6 @@ public interface IAccountRepository
     void AddAccount (Account account);
     void UpdateAccount (Account account);
     void DeleteAccount (int id);
-
     bool CheckUsernameExisted (string username);
 
     bool CheckPhoneExisted (string phone);
