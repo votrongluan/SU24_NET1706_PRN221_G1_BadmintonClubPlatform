@@ -67,4 +67,9 @@ public class AccountService : IAccountService
     {
         _repo.Account.DeleteAccount(id);
     }
+
+    public void UpdateStaffAccount (Account account)
+    {
+        _repo.Account.UpdateAccount(account);
+    }
 }
