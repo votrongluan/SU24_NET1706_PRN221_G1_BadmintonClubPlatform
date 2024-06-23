@@ -1,5 +1,6 @@
 ﻿using BusinessObjects.Entities;
 using DataAccessObjects;
+using Microsoft.EntityFrameworkCore;
 using Repositories.IRepo;
 
 namespace Repositories.Repo;
@@ -8,7 +9,7 @@ public class MatchRepository : IMatchRepository
 {
     public List<Match> GetAllMatches()
     {
-        return MatchDao.GetAll().ToList();
+        return MatchDao.GetAll().Include(e => e.Booking).ThenInclude(e => e.BookingDetails).ThenInclude(e => e.Slot).ToList();
     }
 
     public Match GetMatchById(int matchId)
