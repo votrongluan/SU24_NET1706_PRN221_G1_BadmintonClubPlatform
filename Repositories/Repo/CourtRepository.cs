@@ -19,7 +19,7 @@ public class CourtRepository : ICourtRepository
 
     public List<Court> GetCourtsByClubId(int id)
     {
-        return CourtDao.FindByCondition(x => x.ClubId == id).ToList();
+        return CourtDao.FindByCondition(x => x.ClubId == id && x.Status != false).ToList();
     }
 
     public Court GetCourtById(int id)
