@@ -4,6 +4,7 @@ using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Services.IService;
+using WebAppRazor.Constants;
 using WebAppRazor.Mappers;
 
 namespace WebAppRazor.Pages.Staff
@@ -67,16 +68,17 @@ namespace WebAppRazor.Pages.Staff
 
             if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
 
-            string msg = Request.Query["msg"];
-
-            if (!string.IsNullOrEmpty(msg))
-            {
-                Message = msg;
-            }
-            else
+            // Set and clear the message
+            if (!string.IsNullOrWhiteSpace(Message))
             {
                 Message = string.Empty;
             }
+
+            if (TempData.ContainsKey("Message"))
+            {
+                Message = TempData["Message"].ToString();
+            }
+
             InitializeData();
 
             Filter(searchString, searchProperty, sortProperty, sortOrder);
@@ -90,32 +92,41 @@ namespace WebAppRazor.Pages.Staff
 
             if (!ModelState.IsValid)
             {
-                return Page();
+                var errorMessages = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage);
+
+                var combinedErrorMessage = string.Join("\n", errorMessages);
+
+                TempData["Message"] = $"{MessagePrefix.ERROR} Dữ liệu bạn nhập có lỗi:\n{combinedErrorMessage}";
+                return RedirectToPage("CourtManage");
             }
+
             try
             {
                 LoadAccountFromSession();
                 var accLog = LoginedAccount.ClubManageId;
                 var clubId = _service.ClubService.GetAllClubs();
 
-                var court = new Court
+                for (int i = 0; i < CreateCourt.Quantity; i++)
                 {
-                    CourtTypeId = CreateCourt.CourtTypeId,
-                    ClubId = CreateCourt.ClubId
-                };
+                    var court = new Court
+                    {
+                        CourtTypeId = CreateCourt.CourtTypeId,
+                        ClubId = CreateCourt.ClubId
+                    };
 
-                _service.CourtService.AddCourt(court);
-                InitializeData();
-                Filter("", "", "", 0);
-                Message = "Tạo mới sân thành công";
+                    _service.CourtService.AddCourt(court);
+                }
+
+                TempData["Message"] = $"{MessagePrefix.SUCCESS}{CreateCourt.Quantity} sân được tạo thành công";
+                return RedirectToPage("CourtManage");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                InitializeData();
-                Filter("", "", "", 0);
-                Message = "Sân không được tạo do lỗi hệ thống vui lòng liên hệ đội ngũ hỗ trợ";
+                TempData["Message"] = $"{MessagePrefix.ERROR}Sân không được tạo do lỗi hệ thống vui lòng liên hệ đội ngũ hỗ trợ";
+                return RedirectToPage("AllClubManage");
             }
-            return Page();
         }
 
         public JsonResult OnGetCourtsByClubId(int id)

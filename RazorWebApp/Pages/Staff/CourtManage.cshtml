@@ -46,10 +46,6 @@
     <main class="bg-light" style="/*padding-bottom: 2rem;*/min-height: 80vh;">
         <div class="d-flex">
             <div style="min-height: 80vh;background: var(--bs-white);">
-                @if (!string.IsNullOrWhiteSpace(Model.Message))
-                {
-                    <span class="text-center mb-4 d-block text-info">@Model.Message</span>
-                }
                 <div class="p-4 pb-2 pt-2">
                     <a asp-page="ClubManage"
                        style="text-decoration: none;color: var(--bs-black);">Quản lý club</a>
@@ -73,6 +69,20 @@
             </div>
             <div style="flex: 1;" class="p-4">
                 <h2 class="fs-4 text-center mt-0">Quản lý sân</h2>
+                
+                @* CHECK IF MESSAGE NOT NULL *@
+                @if (!string.IsNullOrEmpty(Model.Message))
+                {
+                    var messageClass = Model.Message.StartsWith(Constants.MessagePrefix.ERROR.ToString()) ? "alert-danger" :
+                        Model.Message.StartsWith(Constants.MessagePrefix.SUCCESS.ToString()) ? "alert-success" :
+                        Model.Message.StartsWith(Constants.MessagePrefix.WARNING.ToString()) ? "alert-warning" :
+                        "alert-info";
+
+                    <div class="alert @messageClass" role="alert">
+                        <p class="m-0 p-1">@Model.Message.Substring(1)</p>
+                    </div>
+                }
+
                 <div class="d-flex mt-4">
                     <button class="btn btn-primary" type="button" style="margin-left: auto;" data-bs-target="#modal-1" data-bs-toggle="modal">Thêm sân</button>
                 </div>
@@ -119,7 +129,7 @@
                                             @Model.CourtTypes.FirstOrDefault(x => x.CourtTypeId == court.CourtTypeId)?.TypeName
                                     </td>
                                     <td class="text-center">
-                                        <a asp-route-id="@court.CourtId" asp-page="./CourtDelete" class="btn btn-danger" role="button">Cập nhật</a>
+                                        <a asp-route-id="@court.CourtId" asp-page="./CourtDelete" class="btn btn-danger" role="button">Xóa</a>
                                     </td>
                                 </tr>
                                 }
@@ -138,7 +148,8 @@
                         <div class="modal-body">
                             <label class="form-label" style="display: block;/*width: 100%;*/">
                                 Số lượng
-                                <input class="form-control mt-2" type="text" placeholder="Nhập số lượng sân cần thêm">
+                                <input asp-for="CreateCourt.Quantity" class="form-control mt-2" type="text" placeholder="Nhập số lượng sân cần thêm">
+                                <span asp-validation-for="CreateCourt.Quantity" class="text-danger"></span>
                             </label>
                             <label class="form-label mt-4" style="display: block;/*width:100%;*/">
                                 Loại sân

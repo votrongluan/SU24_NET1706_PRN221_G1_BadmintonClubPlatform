@@ -109,7 +109,16 @@ namespace WebAppRazor.Pages.Admin
 
             if (!ModelState.IsValid)
             {
-                return Page();
+                // Build the error message from ModelState
+                var errorMessages = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage);
+
+                var combinedErrorMessage = string.Join("\n", errorMessages);
+
+                // Set the message with the error prefix and combined error messages
+                TempData["Message"] = $"{MessagePrefix.ERROR} Dữ liệu bạn nhập có lỗi:\n{combinedErrorMessage}";
+                return RedirectToPage("AllClubManage");
             }
 
             try

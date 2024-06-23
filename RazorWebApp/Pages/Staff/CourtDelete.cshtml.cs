@@ -1,8 +1,9 @@
-using BusinessObjects.Dtos.Court;
+﻿using BusinessObjects.Dtos.Court;
 using BusinessObjects.Entities;
 using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Services.IService;
+using WebAppRazor.Constants;
 using WebAppRazor.Mappers;
 
 namespace WebAppRazor.Pages.Staff
@@ -14,6 +15,7 @@ namespace WebAppRazor.Pages.Staff
         public ResponseCourtDto CourtDto { get; set; }
         public List<CourtType> CourtTypes { get; set; }
         public List<Club> Clubs { get; set; }
+
         public CourtDeleteModel(IServiceManager service)
         {
             _service = service;
@@ -32,12 +34,16 @@ namespace WebAppRazor.Pages.Staff
             }
             else
             {
-                return RedirectToPage("CourtManage", new { msg = "Kh�ng t�m th?y s�n v?i id c?n x�a" });
+                TempData["Message"] = $"{MessagePrefix.ERROR}Không tìm thấy sân với id cần xóa";
+                return RedirectToPage("CourtManage");
             }
+
             if (DeleteCourt == null)
             {
-                return RedirectToPage("CourtManage", new { msg = "Kh�ng t�m th?y s�n v?i id c?n x�a" });
+                TempData["Message"] = $"{MessagePrefix.ERROR}Không tìm sân với id cần xóa";
+                return RedirectToPage("CourtManage");
             }
+
             CourtDto = DeleteCourt.ToResponseCourtDto();
 
             return Page();
@@ -48,11 +54,14 @@ namespace WebAppRazor.Pages.Staff
             try
             {
                 _service.CourtService.DeleteCourt(courtId);
-                return RedirectToPage("CourtManage", new { msg = $"X�a c�u l?c b? v?i m� {courtId} th�nh c�ng" });
+
+                TempData["Message"] = $"{MessagePrefix.SUCCESS}Xóa câu lạc bộ với mã {courtId} thành công";
+                return RedirectToPage("CourtManage");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return RedirectToPage("CourtManage", new { msg = $"X�a c�u l?c b? th?t b?i do l?i h? th?ng li�n h? ??i ng? ?? ???c h? tr?" });
+                TempData["Message"] = $"{MessagePrefix.ERROR}Xóa câu lạc bộ thất bại vui lòng liên hệ đội ngũ để được hỗ trợ";
+                return RedirectToPage("CourtManage");
             }
         }
     }
