@@ -13,4 +13,6 @@ public interface IServiceManager
     IMatchService MatchService { get; }
     IReviewService ReviewService { get; }
     ISlotService SlotService { get; }
+    IAvailableBookingTypeService AvailableBookingTypeService { get; }
+    IBookingTypeService BookingTypeService { get; }
 }   

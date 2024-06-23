@@ -124,7 +124,7 @@ namespace WebAppRazor.Pages.Admin
                 }
                 else
                 {
-                    TempData["Message"] =  $"{MessagePrefix.ERROR}Số điện thoại đã tồn tại trong hệ thống";
+                    TempData["Message"] = $"{MessagePrefix.ERROR}Số điện thoại đã tồn tại trong hệ thống";
                     return RedirectToPage("AllClubManage");
                 }
             }
@@ -133,8 +133,6 @@ namespace WebAppRazor.Pages.Admin
                 TempData["Message"] = $"{MessagePrefix.ERROR}Câu lạc bộ không được tạo do lỗi hệ thống vui lòng liên hệ đội ngũ hỗ trợ";
                 return RedirectToPage("AllClubManage");
             }
-
-            return Page();
         }
 
         public JsonResult OnGetDistrictsByCityId(int cityId)
