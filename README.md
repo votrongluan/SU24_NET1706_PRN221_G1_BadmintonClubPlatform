@@ -27,31 +27,31 @@ To get started with this project, follow these steps:
 
 ### Setting Up the Database
 
-1. Update the `appsettings.json` file with your database connection string:
+1. Update the `appsettings.json` file in folder `RazorWebApp` with your database connection string:
 
    ```json
    {
      "ConnectionStrings": {
-       "DefaultConnection": "YourConnectionStringHere"
+       "DefaultConnectionString": "YourConnectionStringHere"
      }
    }
    ```
 
    **Please do not commit any changes in `appsettings.json`**
 
-2. Run the `DatabaseScript.sql` in Other folder
+2. Run the `DatabaseScript.sql` in `Other` folder
 
 ## Usage
 
 ### Running the Application
 
-1. Run the application:
+1. Run the application in `RazorWebApp` folder:
 
    ```bash
    dotnet run
    ```
 
-2. Navigate to `https://localhost:5004` in your web browser to see the application in action.
+2. Navigate to `https://localhost:5072` in your web browser to see the application in action.
 
 ### Examples
 
@@ -69,7 +69,7 @@ To collaborate within the team without forking, follow these steps:
 
 We use a Git branching strategy with three main branches:
 
-- `master`: Contains the stable version of the code. Direct commits to this branch are restricted.
+- `main`: Contains the stable version of the code. Direct commits to this branch are restricted.
 - `dev`: Contains the latest development changes. This is the main branch for ongoing development.
 - `test`: Contains code that is under testing before being merged into `dev`.
 
@@ -123,13 +123,12 @@ Use built-in continuous integration and continuous deployment (CI/CD) pipelines 
 
 ## Screenshot
 
-
 ## Support
 
 If you need help, you can reach out via:
 
 - [Issue Tracker](https://github.com/votrongluan/badminton-booking-razor-page/issues)
-- [Email](mailto:support@razorpage.com)
+- [Email](mailto:support@support.support)
 
 ## Contributing
 

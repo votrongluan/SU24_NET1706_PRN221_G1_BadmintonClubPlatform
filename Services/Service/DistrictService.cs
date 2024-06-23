@@ -14,7 +14,7 @@ public class DistrictService : IDistrictService
     }
     public List<District> GetAllDistrictsByCityId(int id)
     {
-        return _repo.District.GetAllDistrcitsByCityId(id);
+        return _repo.District.GetAllDistrictsByCityId(id);
     }
 
     public List<District> GetAllDistricts()

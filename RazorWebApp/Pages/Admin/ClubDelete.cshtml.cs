@@ -3,6 +3,7 @@ using BusinessObjects.Entities;
 using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Services.IService;
+using WebAppRazor.Constants;
 using WebAppRazor.Mappers;
 
 namespace WebAppRazor.Pages.Admin
@@ -32,12 +33,14 @@ namespace WebAppRazor.Pages.Admin
             }
             else
             {
-                return RedirectToPage("AllClubManage", new { ErrorMessage = "Không tìm thấy câu lạc bộ với id cần xóa" });
+                TempData["Message"] = $"{MessagePrefix.ERROR}Không tìm thấy câu lạc bộ với id cần xóa";
+                return RedirectToPage("AllClubManage");
             }
 
             if (DeleteClub == null)
             {
-                return RedirectToPage("AllClubManage", new { ErrorMessage = "Không tìm thấy câu lạc bộ với id cần xóa" });
+                TempData["Message"] = $"{MessagePrefix.ERROR}Không tìm thấy câu lạc bộ với id cần xóa";
+                return RedirectToPage("AllClubManage");
             }
 
             ClubDto = DeleteClub.ToResponseClubDto();
@@ -50,12 +53,14 @@ namespace WebAppRazor.Pages.Admin
             try
             {
                 _service.ClubService.DeleteClub(clubId);
-                return RedirectToPage("AllClubManage", new { SuccessMessage = $"Xóa câu lạc bộ với mã {clubId} thành công" });
+                TempData["Message"] = $"{MessagePrefix.SUCCESS}Xóa câu lạc bộ với mã {clubId} thành công";
             }
             catch (Exception ex)
             {
-                return RedirectToPage("AllClubManage", new { ErrorMessage = $"Xóa câu lạc bộ thất bại do lỗi hệ thống liên hệ đội ngũ để được hỗ trợ" });
+                TempData["Message"] = $"{MessagePrefix.ERROR}Xóa câu lạc bộ thất bại do lỗi hệ thống liên hệ đội ngũ để được hỗ trợ";
             }
+
+            return RedirectToPage("AllClubManage");
         }
     }
 }

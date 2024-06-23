@@ -46,20 +46,17 @@
 
             <div style="flex: 1;" class="p-4">
                 <h2 class="fs-4 text-center mt-0">Quản lý câu lạc bộ</h2>
-                
-                @* CHECK IF SUCCESS MESSAGE NOT NULL *@
-                @if (!string.IsNullOrEmpty(Model.SuccessMessage))
-                {
-                    <div class="alert alert-success" role="alert">
-                        <p class="m-0 p-1">@Model.SuccessMessage</p>
-                    </div>
-                }
 
-                @* CHECK IF ERROR MESSAGE NOT NULL *@
-                @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                @* CHECK IF MESSAGE NOT NULL *@
+                @if (!string.IsNullOrEmpty(Model.Message))
                 {
-                    <div class="alert alert-danger" role="alert">
-                        <p class="m-0 p-1">@Model.ErrorMessage</p>
+                    var messageClass = Model.Message.StartsWith(Constants.MessagePrefix.ERROR.ToString()) ? "alert-danger" :
+                    Model.Message.StartsWith(Constants.MessagePrefix.SUCCESS.ToString()) ? "alert-success" :
+                    Model.Message.StartsWith(Constants.MessagePrefix.WARNING.ToString()) ? "alert-warning" :
+                    "alert-info";
+
+                    <div class="alert @messageClass" role="alert">
+                        <p class="m-0 p-1">@Model.Message.Substring(1)</p>
                     </div>
                 }
 
@@ -123,7 +120,7 @@
                                     <td class="text-center">@club.ClubPhone</td>
                                     <td class="text-center">
                                         <a asp-route-id=@club.ClubId asp-page="./ClubDelete" class="btn btn-danger" role="button">Xóa</a>
-                                    </td> 
+                                    </td>
                                 </tr>
                             }
                         </tbody>

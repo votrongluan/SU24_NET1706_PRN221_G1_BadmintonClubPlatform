@@ -4,6 +4,7 @@ using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Services.IService;
+using WebAppRazor.Constants;
 using WebAppRazor.Mappers;
 
 namespace WebAppRazor.Pages.Admin
@@ -22,8 +23,7 @@ namespace WebAppRazor.Pages.Admin
         public int TotalPages { get; set; }
 
         // MESSAGE FOR ACTION
-        public string ErrorMessage { get; set; }
-        public string SuccessMessage { get; set; }
+        public string Message { get; set; }
 
         private void InitializeData()
         {
@@ -78,31 +78,21 @@ namespace WebAppRazor.Pages.Admin
 
         public IActionResult OnGet(string searchString, string searchProperty, string sortProperty, int sortOrder)
         {
+            // Authorize
             LoadAccountFromSession();
             var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Admin.ToString());
 
             if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
 
-            string sM = Request.Query["SuccessMessage"];
-
-            if (!string.IsNullOrEmpty(sM))
+            // Set and clear the message
+            if (!string.IsNullOrWhiteSpace(Message))
             {
-                SuccessMessage = sM;
-            }
-            else
-            {
-                SuccessMessage = string.Empty;
+                Message = string.Empty;
             }
 
-            string eM = Request.Query["ErrorMessage"];
-
-            if (!string.IsNullOrEmpty(eM))
+            if (TempData.ContainsKey("Message"))
             {
-                ErrorMessage = eM;
-            }
-            else
-            {
-                ErrorMessage = string.Empty;
+                Message = TempData["Message"].ToString();
             }
 
             InitializeData();
@@ -115,8 +105,7 @@ namespace WebAppRazor.Pages.Admin
 
         public IActionResult OnPost()
         {
-            SuccessMessage = string.Empty;
-            ErrorMessage = string.Empty;
+            Message = string.Empty;
 
             if (!ModelState.IsValid)
             {
@@ -130,22 +119,19 @@ namespace WebAppRazor.Pages.Admin
                 {
                     _service.ClubService.AddClub(CreatedClub.ToClub());
 
-                    InitializeData();
-                    Paging("", "", "", 0);
-                    SuccessMessage = "Tạo mới câu lạc bộ thành công";
+                    TempData["Message"] = $"{MessagePrefix.SUCCESS}Tạo mới câu lạc bộ thành công";
+                    return RedirectToPage("AllClubManage");
                 }
                 else
                 {
-                    InitializeData();
-                    Paging("", "", "", 0);
-                    ErrorMessage = "Số điện thoại đã tồn tại trong hệ thống";
+                    TempData["Message"] =  $"{MessagePrefix.ERROR}Số điện thoại đã tồn tại trong hệ thống";
+                    return RedirectToPage("AllClubManage");
                 }
             }
             catch (Exception ex)
             {
-                InitializeData();
-                Paging("", "", "", 0);
-                ErrorMessage = "Câu lạc bộ không được tạo do lỗi hệ thống vui lòng liên hệ đội ngũ hỗ trợ";
+                TempData["Message"] = $"{MessagePrefix.ERROR}Câu lạc bộ không được tạo do lỗi hệ thống vui lòng liên hệ đội ngũ hỗ trợ";
+                return RedirectToPage("AllClubManage");
             }
 
             return Page();
