@@ -1,9 +1,11 @@
 ﻿using System.Text.Json;
 using BusinessObjects.Entities;
+using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Services.IService;
+using WebAppRazor.Constants;
 
 namespace WebAppRazor.Pages.Staff
 {
@@ -28,20 +30,28 @@ namespace WebAppRazor.Pages.Staff
         public SelectList Cities { get; set; }
         public SelectList Districts { get; set; }
 
-        public string ConfirmationMessage { get; set; }
+        public string Message { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
-            string accountJson = HttpContext.Session.GetString("Account");
-            if (accountJson == null)
+            // Authorize
+            LoadAccountFromSession();
+            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Staff.ToString());
+
+            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+
+            // Set and clear the message
+            if (!string.IsNullOrWhiteSpace(Message))
             {
-                return RedirectToPage("/Authentication");
+                Message = string.Empty;
             }
 
-            Account account = JsonSerializer.Deserialize<Account>(accountJson);
-            int id = (int)account.ClubManageId;
+            if (TempData.ContainsKey("Message"))
+            {
+                Message = TempData["Message"].ToString();
+            }
 
-            Club = _serviceManager.ClubService.GetClubById(id);
+            Club = _serviceManager.ClubService.GetClubById(LoginedAccount.ClubManageId ?? -1);
 
             if (Club == null)
             {
@@ -62,14 +72,8 @@ namespace WebAppRazor.Pages.Staff
 
         public async Task<IActionResult> OnPostAsync()
         {
-            string accountJson = HttpContext.Session.GetString("Account");
-            if (accountJson == null)
-            {
-                return RedirectToPage("/Authentication");
-            }
-
-            Account account = JsonSerializer.Deserialize<Account>(accountJson);
-            int id = (int)account.ClubManageId;
+            LoadAccountFromSession();
+            int id = (int)LoginedAccount.ClubManageId;
 
             // Update club properties with the values from the form
             Club.ClubId = id;
@@ -77,7 +81,9 @@ namespace WebAppRazor.Pages.Staff
             try
             {
                 _serviceManager.ClubService.UpdateClub(Club);
-                ConfirmationMessage = "Câu lạc bộ đã được cập nhật thành công.";
+
+                TempData["Message"] = $"{MessagePrefix.SUCCESS}Câu lạc bộ đã được cập nhật thành công.";
+                return RedirectToPage("ClubManage"); 
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -85,16 +91,10 @@ namespace WebAppRazor.Pages.Staff
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
             }
 
             return RedirectToPage("/Staff/ClubManage");
         }
-
-
 
         public async Task<JsonResult> OnGetGetDistricts(int cityId)
         {
