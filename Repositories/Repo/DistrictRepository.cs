@@ -6,7 +6,7 @@ namespace Repositories.Repo;
 
 public class DistrictRepository : IDistrictRepository
 {
-    public List<District> GetAllDistrcitsByCityId(int id)
+    public List<District> GetAllDistrictsByCityId(int id)
     {
         return DistrictDao.FindByCondition(e => e.CityId == id).ToList();
     }

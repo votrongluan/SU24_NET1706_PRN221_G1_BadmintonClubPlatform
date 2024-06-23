@@ -4,6 +4,6 @@ namespace Repositories.IRepo;
 
 public interface IDistrictRepository
 {
-    List<District> GetAllDistrcitsByCityId(int id);
+    List<District> GetAllDistrictsByCityId(int id);
     List<District> GetAllDistricts();
 }
