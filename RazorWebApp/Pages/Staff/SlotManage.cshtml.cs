@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using BusinessObjects.Entities;
+using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Services.IService;
@@ -7,7 +8,7 @@ using WebAppRazor.Constants;
 
 namespace WebAppRazor.Pages.Staff
 {
-    public class SlotManageModel : PageModel
+    public class SlotManageModel : AuthorPageServiceModel
     {
         private readonly IServiceManager _serviceManager;
 
@@ -29,6 +30,11 @@ namespace WebAppRazor.Pages.Staff
 
         public async Task<IActionResult> OnGet()
         {
+            LoadAccountFromSession();
+            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Staff.ToString());
+
+            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+
             // Set and clear the message
             if (!string.IsNullOrWhiteSpace(Message))
             {
@@ -40,7 +46,9 @@ namespace WebAppRazor.Pages.Staff
                 Message = TempData["Message"].ToString();
             }
 
-            Slots = _serviceManager.SlotService.GetAllSlot();
+            int id = (int)LoginedAccount.ClubManageId;
+
+            Slots = _serviceManager.SlotService.GetAllSlot().Where(e => e.ClubId == id).ToList();
             return Page();
         }
 
