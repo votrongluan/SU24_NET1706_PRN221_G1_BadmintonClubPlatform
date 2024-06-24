@@ -64,6 +64,18 @@
             </div>
             <div style="flex: 1;" class="p-4">
                 <h2 class="fs-4 text-center mt-0">Quản lý giờ, giá</h2>
+                @* CHECK IF MESSAGE NOT NULL *@
+                @if (!string.IsNullOrEmpty(Model.Message))
+                {
+                    var messageClass = Model.Message.StartsWith(Constants.MessagePrefix.ERROR.ToString()) ? "alert-danger" :
+                    Model.Message.StartsWith(Constants.MessagePrefix.SUCCESS.ToString()) ? "alert-success" :
+                    Model.Message.StartsWith(Constants.MessagePrefix.WARNING.ToString()) ? "alert-warning" :
+                    "alert-info";
+
+                    <div class="alert @messageClass" role="alert">
+                        <p class="m-0 p-1">@Model.Message.Substring(1)</p>
+                    </div>
+                }
                 <div class="d-flex mt-4">
                     <button class="btn btn-primary" type="button" style="margin-left: auto;" data-bs-target="#add-modal" data-bs-toggle="modal">
                         Thêm giờ
@@ -117,13 +129,8 @@
                                         <td class="text-center">@($"{slot.StartTime:HH\\:mm} - {slot.EndTime:HH\\:mm}")</td>
                                         <td class="text-center">@($"{slot.Price:N0} (đồng)")</td>
                                         <td class="text-center">
-                                            <button class="btn btn-light" type="button" data-bs-target="#update-modal" data-bs-toggle="modal" data-slot-id="@slot.SlotId">
-                                                Cập nhật giá
-                                            </button>
-                                            <button class="btn btn-danger ms-4" type="button" data-bs-target="#delete-modal" data-bs-toggle="modal" data-slot-id="@slot.SlotId">
-                                                Xóa
-                                            </button>
-                                        </td>
+                                            <a asp-page="./SlotUpdate" class="btn btn-light" role="button" asp-route-id="@slot.SlotId">Cập nhật</a>
+                                            <a asp-page="./SlotDelete" class="btn btn-danger ms-4" role="button" asp-route-id="@slot.SlotId">Xóa</a>
                                     </tr>
                                 }
                             </tbody>
@@ -148,7 +155,7 @@
                             </label>
                             <label class="form-label mt-4" style="display: block;">
                                 Thời lượng
-                                <select name="NewSlot.Duration" class="form-select mt-2">
+                                <select name="Duration" class="form-select mt-2">
                                     <option value="30">30 phút</option>
                                     <option value="60">1 giờ</option>
                                     <option value="90">1 giờ 30 phút</option>
@@ -165,14 +172,8 @@
                             <button class="btn btn-primary" type="submit">Lưu</button>
                         </div>
                     </form>
-                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
-                    {
-                        <div class="alert alert-danger mt-2" role="alert">
-                            @Model.ErrorMessage
-                        </div>
-                    }
                 </div>
-            </div>
+            </div> 
         </div>
     </main>
     <script src="~/assets/bootstrap/js/bootstrap.min.js"></script>

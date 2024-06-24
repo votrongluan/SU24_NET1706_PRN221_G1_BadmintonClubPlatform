@@ -25,13 +25,13 @@ public class SlotService : ISlotService
         return _repo.Slot.GetAllSlot().ToList();
     }
 
-    public Club GetSlotById(int slotId)
+    public Slot GetSlotById(int slotId)
     {
-        throw new NotImplementedException();
+        return _repo.Slot.GetSlotById(slotId);
     }
 
     public void UpdateSlot(Slot c)
     {
-        throw new NotImplementedException();
+        _repo.Slot.UpdateSlot(c);
     }
 }

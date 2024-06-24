@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.Entities;
+using BusinessObjects.Enums;
 using DataAccessObjects;
 using Repositories.IRepo;
 
@@ -18,13 +19,13 @@ public class SlotRepository : ISlotRepository
         return SlotDao.GetAll().ToList();
     }
 
-    public Club GetSlotById(int id)
+    public Slot GetSlotById(int id)
     {
-        throw new NotImplementedException();
+        return SlotDao.FindByCondition(e => e.SlotId == id).FirstOrDefault();
     }
 
-    public void UpdateSlot(Club club)
+    public void UpdateSlot(Slot slot)
     {
-        throw new NotImplementedException();
+        SlotDao.Update(slot);
     }
 }

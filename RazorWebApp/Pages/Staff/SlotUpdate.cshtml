@@ -16,13 +16,25 @@
     <link rel="stylesheet" href="~/assets/css/Navbar-With-Button-icons.css">
     <link rel="stylesheet" href="~/assets/css/Simple-Slider-swiper-bundle.min.css">
     <link rel="stylesheet" href="~/assets/css/Simple-Slider.css">
+
+    <style>
+        /* CSS for readonly gray */
+        .readonly-gray[readonly] {
+            background-color: #f0f0f0; /* Màu xám nhạt */
+            color: #333; /* Màu chữ */
+            cursor: not-allowed; /* Con trỏ không cho phép */
+        }
+    </style>
 </head>
 
 <body>
     <header>
         <nav class="navbar navbar-expand-md py-3">
             <div class="container-fluid">
-                <a class="navbar-brand d-flex align-items-center" href="#"><span><strong>Bacol</strong></span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+                <a class="navbar-brand d-flex align-items-center" href="#"><span><strong>Bacol</strong></span></a>
+                <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1">
+                    <span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span>
+                </button>
                 <div class="collapse navbar-collapse" id="navcol-1">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item"></li>
@@ -36,7 +48,7 @@
             </div>
         </nav>
     </header>
-    <main class="bg-light" style="/*padding-bottom: 2rem;*/min-height: 80vh;">
+    <main class="bg-light" style="min-height: 80vh;">
         <div class="d-flex">
             <div style="min-height: 80vh;background: var(--bs-white);">
                 <div class="p-4 pb-2 pt-2">
@@ -52,14 +64,24 @@
                     <a href="ClubBookManage" style="text-decoration: none;color: var(--bs-black);">Lịch đặt sân</a>
                 </div>
                 <div class="p-4 pb-2 pt-2">
-                    <a href="MatchManage" style="text-decoration: none;color: var(--bs-black);">Lịch thi đấu</a>
+                    <a href="MatchManage" style="text-decoration: none;color: var (--bs-black);">Lịch thi đấu</a>
                 </div>
             </div>
             <div style="flex: 1;" class="p-4">
                 <h2 class="fs-4 text-center mt-0">Cập nhật giá cho khung giờ</h2>
-                <form>
-                    <label class="form-label d-block mt-4">Khung giờ<input class="form-control mt-2" type="text" readonly=""></label><label class="form-label d-block mt-4">Giá<input class="form-control mt-2" type="password"></label>
-                    <div class="d-flex justify-content-between mt-4"><a class="btn btn-secondary" role="button" href="Staff/SlotManage">Quay lại</a><a class="btn btn-primary" role="button">Cập nhật</a></div>
+                <form method="post">
+                    <label class="form-label d-block mt-4">
+                        Khung giờ
+                        <input class="form-control mt-2 readonly-gray" type="text" value="@Model.TimeSlot" readonly>
+                    </label>
+                    <label class="form-label d-block mt-4">
+                        Giá
+                        <input class="form-control mt-2" type="number" name="Price" value="@Model.Slot.Price">
+                    </label>
+                    <div class="d-flex justify-content-between mt-4">
+                        <a class="btn btn-secondary" role="button" href="./SlotManage">Quay lại</a>
+                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    </div>
                 </form>
             </div>
         </div>

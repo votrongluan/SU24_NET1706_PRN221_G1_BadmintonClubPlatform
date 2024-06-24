@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using System.ComponentModel.DataAnnotations;
 using BusinessObjects.Entities;
 using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +31,11 @@ namespace WebAppRazor.Pages.Staff
         public SelectList Districts { get; set; }
 
         public string Message { get; set; }
+
+        [BindProperty]
+        public List<int> SelectedBookingTypes { get; set; }
+
+        public List<SelectListItem> BookingTypes { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -66,8 +71,21 @@ namespace WebAppRazor.Pages.Staff
 
             DistrictId = Club.DistrictId; // Set the initial DistrictId
 
-            return Page();
+            // Fetch booking types from database
+            var bookingTypes = _serviceManager.BookingTypeService.GetAllBookingTypes().ToList();
+            BookingTypes = bookingTypes.Select(bt => new SelectListItem
+            {
+                Value = bt.BookingTypeId.ToString(),
+                Text = bt.Description
+            }).ToList();
 
+            // Fetch selected booking types for the club
+            SelectedBookingTypes = _serviceManager.AvailableBookingTypeService.GetAvailableBookingTypes()
+                .Where(abt => abt.ClubId == Club.ClubId)
+                .Select(abt => abt.BookingTypeId)
+                .ToList();
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -82,8 +100,29 @@ namespace WebAppRazor.Pages.Staff
             {
                 _serviceManager.ClubService.UpdateClub(Club);
 
+                // Delete existing booking types for the club
+                List<AvailableBookingType> availableBookingTypes = _serviceManager.AvailableBookingTypeService.GetAvailableBookingTypes()
+                    .Where(abt => abt.ClubId == id)
+                    .ToList();
+
+                foreach (var e in availableBookingTypes)
+                {
+                    _serviceManager.AvailableBookingTypeService.DeleteAvailableBookingType(e.AvailableBookingTypeId);
+                }
+
+                // Add new booking types based on the selected booking types
+                foreach (var bookingTypeId in SelectedBookingTypes)
+                {
+                    var newAvailableBookingType = new AvailableBookingType
+                    {
+                        ClubId = id,
+                        BookingTypeId = bookingTypeId
+                    };
+                    _serviceManager.AvailableBookingTypeService.AddAvailableBookingType(newAvailableBookingType);
+                }
+
                 TempData["Message"] = $"{MessagePrefix.SUCCESS}Câu lạc bộ đã được cập nhật thành công.";
-                return RedirectToPage("ClubManage"); 
+                return RedirectToPage("ClubManage");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -91,9 +130,11 @@ namespace WebAppRazor.Pages.Staff
                 {
                     return NotFound();
                 }
+                else
+                {
+                    throw;
+                }
             }
-
-            return RedirectToPage("/Staff/ClubManage");
         }
 
         public async Task<JsonResult> OnGetGetDistricts(int cityId)
@@ -107,7 +148,6 @@ namespace WebAppRazor.Pages.Staff
 
             return new JsonResult(districts);
         }
-
 
         private bool ClubExists(int id)
         {
