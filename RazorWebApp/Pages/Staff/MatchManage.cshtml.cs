@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Services.IService;
+using WebAppRazor.Mappers;
 
 namespace WebAppRazor.Pages.Staff
 {
@@ -15,9 +16,10 @@ namespace WebAppRazor.Pages.Staff
         private readonly IServiceManager _service;
         [BindProperty] public MatchCreateDto CreatedClub { get; set; }
         public List<Match> Matches { get; set; }
+        public List<MatchResponseDto> MatchesDto { get; set; }
+        public List<MatchResponseDto> FilterMatchesDto { get; set; }
         public List<BookingType> BookingTypes { get; set; }
         public List<Slot> Slots { get; set; }
-        public List<Match> FilterMatches { get; set; }
 
         // Pagination properties
         public int CurrentPage { get; set; }
@@ -29,10 +31,11 @@ namespace WebAppRazor.Pages.Staff
         private void InitializeData()
         {
             Matches = _service.MatchService.GetAllMatches();
+            MatchesDto = Matches.Select(e => e.ToMatch()).ToList();
             BookingTypes = _service.BookingTypeService.GetAllBookingTypes();
             Slots = _service.SlotService.GetAllSlot();
 
-            FilterMatches = Matches;
+            FilterMatchesDto = MatchesDto;
         }
 
         public MatchManageModel(IServiceManager service)
@@ -46,33 +49,34 @@ namespace WebAppRazor.Pages.Staff
 
             if (!string.IsNullOrWhiteSpace(searchString))
             {
-                FilterMatches = searchProperty switch
+                FilterMatchesDto = searchProperty switch
                 {
-                    //"ClubId" => Matches.Where(e => e.ClubId.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList(),
-                    //"ClubName" => Matches.Where(e => e.ClubName.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList(),
-                    //"Address" => Matches.Where(e => e.Address.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList(),
-                    //"ClubPhone" => Matches.Where(e => e.ClubPhone.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList(),
-                    _ => FilterMatches,
+                    "Title" => MatchesDto.Where(e => e.Title.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList(),
+                    "Description" => MatchesDto.Where(e => e.Description.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList(),
+                    "MatchDate" => MatchesDto.Where(e => e.MatchDate.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList(),
+                    "MatchTime" => MatchesDto.Where(e => e.MatchTime.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList(),
+                    "CourtId" => MatchesDto.Where(e => e.CourtId.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList(),
+                    _ => MatchesDto,
                 };
             }
 
             if (!string.IsNullOrWhiteSpace(sortProperty))
             {
-                FilterMatches = sortProperty switch
+                FilterMatchesDto = sortProperty switch
                 {
-                    //"ClubId" => sortOrder == -1 ? FilterMatches.OrderByDescending(e => e.ClubId).ToList() : sortOrder == 1 ? FilterMatches.OrderBy(e => e.ClubId).ToList() : FilterMatches,
-                    //"ClubName" => sortOrder == -1 ? FilterMatches.OrderByDescending(e => e.ClubName).ToList() : sortOrder == 1 ? FilterMatches.OrderBy(e => e.ClubName).ToList() : FilterMatches,
-                    //"Address" => sortOrder == -1 ? FilterMatches.OrderByDescending(e => e.Address).ToList() : sortOrder == 1 ? FilterMatches.OrderBy(e => e.Address).ToList() : FilterMatches,
-                    //"ClubPhone" => sortOrder == -1 ? FilterMatches.OrderByDescending(e => e.ClubPhone).ToList() : sortOrder == 1 ? FilterMatches.OrderBy(e => e.ClubPhone).ToList() : FilterMatches,
-                    _ => FilterMatches,
+                    "ClubId" => sortOrder == -1 ? FilterMatchesDto.OrderByDescending(e => e.Title).ToList() : sortOrder == 1 ? FilterMatchesDto.OrderBy(e => e.Title).ToList() : FilterMatchesDto,
+                    "ClubName" => sortOrder == -1 ? FilterMatchesDto.OrderByDescending(e => e.Description).ToList() : sortOrder == 1 ? FilterMatchesDto.OrderBy(e => e.Description).ToList() : FilterMatchesDto,
+                    "Address" => sortOrder == -1 ? FilterMatchesDto.OrderByDescending(e => e.MatchDate).ToList() : sortOrder == 1 ? FilterMatchesDto.OrderBy(e => e.MatchDate).ToList() : FilterMatchesDto,
+                    "ClubPhone" => sortOrder == -1 ? FilterMatchesDto.OrderByDescending(e => e.MatchTime).ToList() : sortOrder == 1 ? FilterMatchesDto.OrderBy(e => e.MatchTime).ToList() : FilterMatchesDto,
+                    _ => FilterMatchesDto,
                 };
             }
 
             // Pagination logic
             page = page == 0 ? 1 : page;
             CurrentPage = page;
-            TotalPages = (int)Math.Ceiling(FilterMatches.Count / (double)PageSize);
-            FilterMatches = FilterMatches.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
+            TotalPages = (int)Math.Ceiling(FilterMatchesDto.Count / (double)PageSize);
+            FilterMatchesDto = FilterMatchesDto.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
         }
 
         public IActionResult OnGet(string searchString, string searchProperty, string sortProperty, int sortOrder)

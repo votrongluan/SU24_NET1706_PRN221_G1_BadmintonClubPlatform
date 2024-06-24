@@ -24,6 +24,8 @@ public static class ClubMapper
             ClubPhone = e.ClubPhone,
             DistrictId = e.DistrictId,
             Address = e.Address,
+            TotalReview = 0,
+            TotalStar = 0,
         };
     }
 }
