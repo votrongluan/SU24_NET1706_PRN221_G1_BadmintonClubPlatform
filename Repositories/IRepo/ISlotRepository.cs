@@ -6,8 +6,8 @@ public interface ISlotRepository
 {
     List<Slot> GetAllSlot();
     //Club GetClubByIdNotInclude(int id);
-    Club GetSlotById(int id);
+    Slot GetSlotById(int id);
     void DeleteSlot(int id);
-    void UpdateSlot(Club club);
+    void UpdateSlot(Slot slot);
     void AddSlot(Slot slot);
 }

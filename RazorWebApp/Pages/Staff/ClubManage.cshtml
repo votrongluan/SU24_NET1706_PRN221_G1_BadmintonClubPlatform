@@ -63,14 +63,14 @@
             </div>
             <div style="flex: 1;" class="p-4">
                 <h2 class="fs-4 text-center mt-0">Quản lý club</h2>
-                
+
                 @* CHECK IF MESSAGE NOT NULL *@
                 @if (!string.IsNullOrEmpty(Model.Message))
                 {
                     var messageClass = Model.Message.StartsWith(Constants.MessagePrefix.ERROR.ToString()) ? "alert-danger" :
-                        Model.Message.StartsWith(Constants.MessagePrefix.SUCCESS.ToString()) ? "alert-success" :
-                        Model.Message.StartsWith(Constants.MessagePrefix.WARNING.ToString()) ? "alert-warning" :
-                        "alert-info";
+                    Model.Message.StartsWith(Constants.MessagePrefix.SUCCESS.ToString()) ? "alert-success" :
+                    Model.Message.StartsWith(Constants.MessagePrefix.WARNING.ToString()) ? "alert-warning" :
+                    "alert-info";
 
                     <div class="alert @messageClass" role="alert">
                         <p class="m-0 p-1">@Model.Message.Substring(1)</p>
@@ -133,40 +133,71 @@
                         <input class="form-control" type="time" asp-for="Club.CloseTime">
                         <span asp-validation-for="Club.CloseTime" class="text-danger"></span>
                     </div>
-                    <div class="text-center mt-4">
-                        <button class="btn btn-primary" type="submit">Lưu thay đổi</button>
+                    <!-- New Fields for ClientId, ApiKey, ChecksumKey -->
+                    <div class="mt-4">
+                        <p>Client ID</p>
+                        <input class="form-control" type="text" asp-for="Club.ClientId">
+                        <span asp-validation-for="Club.ClientId" class="text-danger"></span>
                     </div>
+                    <div class="mt-4">
+                        <p>API Key</p>
+                        <input class="form-control" type="text" asp-for="Club.ApiKey">
+                        <span asp-validation-for="Club.ApiKey" class="text-danger"></span>
+                    </div>
+                    <div class="mt-4">
+                        <p>Checksum Key</p>
+                        <input class="form-control" type="text" asp-for="Club.ChecksumKey">
+                        <span asp-validation-for="Club.ChecksumKey" class="text-danger"></span>
+                    </div>
+
+                    <div class="mt-4">
+                        <div class="form-group">
+                            <label class="control-label">Loại Hình Dịch Vụ</label>
+                            <div class="tag-checkboxes mt-2">
+                                @foreach (var bookingType in Model.BookingTypes)
+                                {
+                                    <div class="form-check">
+                                        <input type="checkbox" id="bookingType_@bookingType.Value" name="SelectedBookingTypes" value="@bookingType.Value"
+                                               class="form-check-input"
+                                        @(Model.SelectedBookingTypes != null && Model.SelectedBookingTypes.Contains(Convert.ToInt32(bookingType.Value)) ? "checked" : "") />
+                                        <label class="form-check-label" for="bookingType_@bookingType.Value">@bookingType.Text</label>
+                                    </div>
+                                }
+                            </div>
+                            <span asp-validation-for="SelectedBookingTypes" class="text-danger"></span>
+                        </div>
+                    </div> 
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+                    </div> 
                 </form>
             </div>
         </div>
+        </div>
     </main>
-
+    <footer></footer>
+    <script src="~/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/assets/js/bs-init.js"></script>
+    <script src="~/assets/js/Simple-Slider-swiper-bundle.min.js"></script>
+    <script src="~/assets/js/Simple-Slider.js"></script>
     <script>
         $(document).ready(function () {
-            fetchDistricts();
-        });
-
-        function fetchDistricts() {
-            var cityId = document.getElementById("City").value;
-            if (cityId) {
+            $('#city').change(function () {
+                var cityId = $(this).val();
                 $.ajax({
-                    url: '@Url.Page("ClubManage", "GetDistricts")',
+                    url: '@Url.Page("/Staff/ClubManage", "GetDistricts", new { cityId = "__cityId__" })'.replace("__cityId__", cityId),
                     type: 'GET',
-                    data: { cityId: cityId },
                     success: function (data) {
-                        var districtSelect = $('#District');
-                        districtSelect.empty();
-                        districtSelect.append('<option value="">Chọn quận / huyện</option>');
-                        $.each(data, function (index, item) {
-                            districtSelect.append('<option value="' + item.value + '">' + item.text + '</option>');
+                        var districts = $('#district');
+                        districts.empty();
+                        $.each(data, function (index, district) {
+                            districts.append('<option value="' + district.value + '">' + district.text + '</option>');
                         });
-                        // Set the selected district
-                        districtSelect.val('@Model.DistrictId');
                     }
                 });
-            }
-        }
+            });
+        });
     </script>
-
 </body>
 </html>
