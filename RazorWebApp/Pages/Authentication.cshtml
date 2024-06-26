@@ -59,6 +59,12 @@
                                 <a class="nav-link @(Model.TabIndex == 2 ? "active": "")" role="tab" data-bs-toggle="tab" href="#tab-2"
                                    style="color: var(--bs-body-color);">Đăng ký</a>
                             </li>
+
+                            @* OWNER REGISTER *@
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link @(Model.TabIndex == 3 ? "active": "")" role="tab" data-bs-toggle="tab" href="#tab-3"
+                                   style="color: var(--bs-body-color);">Đăng ký tài khoản chủ sân</a>
+                            </li>
                         </ul>
                         <div class="tab-content" style="margin-top: 16px;">
 
@@ -74,6 +80,16 @@
                                             }
                                         </div>
                                     }
+
+                                    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                                    {
+                                        <div class="alert alert-success" role="alert">
+                                            <p class="m-0 p-1">
+                                                @Model.SuccessMessage
+                                            </p>
+                                        </div>
+                                    }
+
                                     <div class="mt-4">
                                         <p>Tài khoản</p>
                                         <input asp-for="AccountLogin.UserName" class="form-control" type="text">
@@ -91,7 +107,7 @@
                                 </form>
                             </div>
 
-                            @* REGISTER PAGE *@
+                            @* REGISTER FORM *@
                             <div class="tab-pane @(Model.TabIndex == 2 ? "active" : "")" role="tabpanel" id="tab-2">
                                 <form method="POST" asp-page-handler="Register" asp-route-action="register">
                                     @if (Model.Message != null && Model.Message.Count > 0)
@@ -104,12 +120,67 @@
                                         </div>
                                     }
 
-                                    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                                    @* @if (!string.IsNullOrEmpty(Model.SuccessMessage))
                                     {
-                                        <div class="alert alert-success" role="alert">
-                                            <p class="m-0 p-1">@Model.SuccessMessage</p>
+                                    <div class="alert alert-success" role="alert">
+                                    <p class="m-0 p-1">@Model.SuccessMessage</p>
+                                    </div>
+                                    } *@
+
+                                    <div class="mt-4">
+                                        <p>Tài khoản</p>
+                                        <input class="form-control" type="text" asp-for="AccountRegister.Username">
+                                        <span asp-validation-for="AccountRegister.Username" class="text-danger"></span>
+                                    </div>
+                                    <div class="mt-4">
+                                        <p style="margin-top: 8px;">Nhập mật khẩu</p>
+                                        <input class="form-control" type="password" asp-for="AccountRegister.Password">
+                                        <span asp-validation-for="AccountRegister.Password" class="text-danger"></span>
+                                    </div>
+                                    <div class="mt-4">
+                                        <p style="margin-top: 8px;">Nhập lại mật khẩu</p>
+                                        <input class="form-control" type="password" asp-for="AccountRegister.ConfirmPassword">
+                                        <span asp-validation-for="AccountRegister.ConfirmPassword" class="text-danger"></span>
+                                    </div>
+                                    <div class="mt-4">
+                                        <p class="mt-2">Nhập số điện thoại&nbsp;</p>
+                                        <input class="form-control" type="text" asp-for="AccountRegister.UserPhone">
+                                        <span asp-validation-for="AccountRegister.UserPhone" class="text-danger"></span>
+                                    </div>
+                                    <div class="mt-4">
+                                        <p class="mt-2">Nhập email (Không bắt buộc)</p>
+                                        <input class="form-control" type="text" asp-for="AccountRegister.Email">
+                                        <span asp-validation-for="AccountRegister.Email" class="text-danger"></span>
+                                    </div>
+
+                                    @* BUTTON *@
+                                    <button class="btn btn-primary mt-4" type="submit"
+                                            style="width: 100%;margin-top: 16px;">
+                                        Đăng ký
+                                    </button>
+                                </form>
+                            </div>
+
+                            @* OWNER REGISTER FORM *@
+                            <div class="tab-pane @(Model.TabIndex == 3 ? "active" : "")" role="tabpanel" id="tab-3">
+                                <form method="POST" asp-page-handler="OwnerRegister" asp-route-action="owner-register">
+                                    @if (Model.Message != null && Model.Message.Count > 0)
+                                    {
+                                        <div class="alert alert-danger" role="alert">
+                                            @foreach (var message in Model.Message)
+                                            {
+                                                <p class="m-0 p-1">@message</p>
+                                            }
                                         </div>
                                     }
+
+                                    @* @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                                    {
+                                    <div class="alert alert-success" role="alert">
+                                    <p class="m-0 p-1">@Model.SuccessMessage</p>
+                                    </div>
+                                    } *@
+
                                     <div class="mt-4">
                                         <p>Tài khoản</p>
                                         <input class="form-control" type="text" asp-for="AccountRegister.Username">

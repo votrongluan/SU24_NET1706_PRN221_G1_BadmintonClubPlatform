@@ -19,18 +19,18 @@ namespace WebAppRazor.Pages
         public string SuccessMessage { get; set; }
         public int TabIndex { get; set; }
 
-        public AuthenticationModel(IServiceManager service)
+        public AuthenticationModel (IServiceManager service)
         {
             _service = service;
             TabIndex = 1;
         }
 
-        public void OnGet()
+        public void OnGet ()
         {
             InitialData();
         }
 
-        public IActionResult OnPostLogin([Bind("UserName, Password")] AccountLoginDto AccountLogin)
+        public IActionResult OnPostLogin ([Bind("UserName, Password")] AccountLoginDto AccountLogin)
         {
             if (!ModelState.IsValid)
             {
@@ -54,11 +54,11 @@ namespace WebAppRazor.Pages
                     switch (role)
                     {
                         case "Admin":
-                            return RedirectToPage("/Admin/Index");
+                        return RedirectToPage("/Admin/Index");
                         case "Staff":
-                            return RedirectToPage("/Staff/Index");
+                        return RedirectToPage("/Staff/Index");
                         default:
-                            return RedirectToPage("/Index");
+                        return RedirectToPage("/Index");
                     }
 
                 }
@@ -75,7 +75,7 @@ namespace WebAppRazor.Pages
         }
 
         // ON POST REGISTER
-        public IActionResult OnPostRegister([Bind("Username, Password, ConfirmPassword, UserPhone, Email")] AccountRegisterDto AccountRegister)
+        public IActionResult OnPostRegister ([Bind("Username, Password, ConfirmPassword, UserPhone, Email")] AccountRegisterDto AccountRegister)
         {
             // Check if model state is valid
             if (!ModelState.IsValid)
@@ -121,7 +121,10 @@ namespace WebAppRazor.Pages
                 // Add new account to database
                 AccountRegister.Role = AccountRoleEnum.Customer.ToString();
                 _service.AccountService.RegisterAccount(AccountRegister.ToAccount());
-                SuccessMessage = "Đăng ký tài khoản thành công!";
+                TempData["SuccessMessage"] = "Đăng ký tài khoản thành công!";
+
+                TabIndex = 1;
+                return RedirectToPage("/Authentication");
             }
             catch (Exception ex)
             {
@@ -129,14 +132,78 @@ namespace WebAppRazor.Pages
                 TabIndex = 2;
                 return Page();
             }
-
-            TabIndex = 2;
-            return Page();
         }
 
-        private void InitialData()
+        public IActionResult OnPostOwnerRegister ([Bind("Username, Password, ConfirmPassword, UserPhone, Email")] AccountRegisterDto AccountRegister)
         {
-            SuccessMessage = string.Empty;
+            // Check if model state is valid
+            if (!ModelState.IsValid)
+            {
+                TabIndex = 3;
+                return Page();
+            }
+
+            try
+            {
+                List<bool> checkingCondition = new List<bool>
+                {
+                    _service.AccountService.CheckUsernameExisted(AccountRegister.Username),
+                    AccountRegister.ConfirmPassword != AccountRegister.Password,
+                    _service.AccountService.CheckPhoneExisted(AccountRegister.UserPhone),
+                    _service.AccountService.CheckEmailExisted(AccountRegister.Email)
+                };
+
+                // If any checking conditions fail, add appropriate error messages and return page
+                if (checkingCondition.Contains(true))
+                {
+                    if (checkingCondition[0])
+                    {
+                        Message.Add("Tên đăng nhập đã tồn tại!");
+
+                    }
+                    if (checkingCondition[1])
+                    {
+                        Message.Add("Mật khẩu không khớp!");
+                    }
+                    if (checkingCondition[2])
+                    {
+                        Message.Add("Số điện thoại đã tồn tại!");
+                    }
+                    if (AccountRegister.Email != null && checkingCondition[3])
+                    {
+                        Message.Add("Email đã tồn tại!");
+                    }
+
+                    TabIndex = 3;
+                    return Page();
+                }
+
+                // Add new account to database
+                AccountRegister.Role = AccountRoleEnum.Staff.ToString();
+                _service.AccountService.RegisterAccount(AccountRegister.ToAccount());
+                TempData["SuccessMessage"] = "Đăng ký tài khoản dành cho chủ sân thành công!";
+
+                TabIndex = 1;
+                return RedirectToPage("/Authentication");
+            }
+            catch (Exception ex)
+            {
+                Message.Add(ex.Message); // Set the exception message to Message
+                TabIndex = 3;
+                return Page();
+            }
+        }
+
+        private void InitialData ()
+        {
+            if (TempData["SuccessMessage"] is string msg)
+            {
+                SuccessMessage = msg;
+            }
+            else
+            {
+                SuccessMessage = string.Empty;
+            }
             Message.Clear();
         }
     }
