@@ -12,9 +12,19 @@ public class ClubRepository : IClubRepository
         return ClubDao.GetAll().Include(e => e.Bookings).Include(e => e.AvailableBookingTypes).Include(e => e.District).ThenInclude(e => e.City).OrderByDescending(e => e.ClubId).Where(e => e.Status != false).ToList();
     }
 
+    public List<Club> GetAllDeActiveClubs()
+    {
+        return ClubDao.GetAll().Include(e => e.Bookings).Include(e => e.AvailableBookingTypes).Include(e => e.District).ThenInclude(e => e.City).OrderByDescending(e => e.ClubId).Where(e => e.Status == false).ToList();
+    }
+
     public Club GetClubById(int id)
     {
         return GetAllClubs().Where(e => e.ClubId == id).FirstOrDefault();
+    }
+
+    public Club GetDeActiveClubById(int id)
+    {
+        return ClubDao.FindByCondition(e => e.ClubId == id && e.Status == false).FirstOrDefault();
     }
 
     public void DeleteClub(int id)

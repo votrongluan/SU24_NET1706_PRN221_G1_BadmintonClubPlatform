@@ -23,6 +23,11 @@ public class ClubService : IClubService
         return _repo.Club.GetAllClubs();
     }
 
+    public List<Club> GetAllDeActiveClubs()
+    {
+        return _repo.Club.GetAllDeActiveClubs();
+    }
+
     public void AddClub(Club club)
     {
         _repo.Club.AddClub(club);
@@ -36,6 +41,11 @@ public class ClubService : IClubService
     public Club GetClubById(int clubId)
     {
         return _repo.Club.GetClubById(clubId);
+    }
+
+    public Club GetDeActiveClubById(int clubId)
+    {
+        return _repo.Club.GetDeActiveClubById(clubId);
     }
 
     public void UpdateClub(Club c)

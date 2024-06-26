@@ -39,9 +39,12 @@
     <main class="bg-light" style="/*padding-bottom: 2rem;*/min-height: 80vh;">
         <div class="d-flex">
             <div style="min-height: 80vh;background: var(--bs-white);">
-                <div class="p-4 pb-2 pt-2"><a href="AllClubManage" style="text-decoration: none;color: var(--bs-black);">Quản lý club</a></div>
-                <div class="p-4 pb-2 pt-2"><a href="AccountManage" style="text-decoration: none;color: var(--bs-black);">Quản lý tài khoản</a></div>
+                <div class="p-4 pb-2 pt-2"><a asp-page="/Admin/Dashboard" style="text-decoration: none;color: var(--bs-black);">Bảng điều khiển</a></div>
+                <div class="p-4 pb-2 pt-2"><a asp-page="/Admin/DeactiveClubs" style="text-decoration: none;color: var(--bs-black);">Club chờ duyệt</a></div>
+                <div class="p-4 pb-2 pt-2"><a asp-page="/Admin/AllClubManage" style="text-decoration: none;color: var(--bs-black);">Quản lý club</a></div>
+                <div class="p-4 pb-2 pt-2"><a asp-page="/Admin/AccountManage" style="text-decoration: none;color: var(--bs-black);">Quản lý tài khoản</a></div>
             </div>
+
             <div style="flex: 1;" class="p-4">
                 <h2 class="fs-4 text-center mt-0">Xác nhận xóa câu lạc bộ</h2>
                 <form method="post">
