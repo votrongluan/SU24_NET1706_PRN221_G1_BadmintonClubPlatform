@@ -24,6 +24,7 @@ namespace WebAppRazor.Mappers
                 Username = e.Username,
                 Password = e.Password,
                 UserPhone = e.UserPhone,
+                Role = e.Role,
                 Email = e.Email,
             };
         }
