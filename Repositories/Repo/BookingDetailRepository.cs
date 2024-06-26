@@ -8,7 +8,7 @@ public class BookingDetailRepository : IBookingDetailRepository
 {
     public List<BookingDetail> GetAllBookingDetails()
     {
-        return BookingDetailDao.GetAll().ToList();
+        return BookingDetailDao.GetAll().OrderByDescending(e => e.BookingDetailId).ToList();
     }
 
     public BookingDetail GetBookingDetailById(int bookingDetailId)

@@ -8,65 +8,65 @@ namespace Repositories.Repo;
 
 public class AccountRepository : IAccountRepository
 {
-    public List<Account> GetAllStaffAccount ()
+    public List<Account> GetAllStaffAccount()
     {
         return AccountDao.FindByCondition(e => e.Role.Equals(AccountRoleEnum.Staff.ToString()))
-            .Include(e => e.ClubManage).ToList();
+            .Include(e => e.ClubManage).OrderByDescending(e => e.UserId).ToList();
     }
 
-    public Account GetAccountById (int id)
+    public Account GetAccountById(int id)
     {
         return AccountDao.FindByCondition(e => e.UserId == id).FirstOrDefault();
     }
 
-    public Account GetStaffAccountById (int id)
+    public Account GetStaffAccountById(int id)
     {
         return AccountDao.FindByCondition(e => e.UserId == id && e.Role.Equals(AccountRoleEnum.Staff.ToString()))
             .Include(e => e.ClubManage).FirstOrDefault();
     }
 
-    public Account GetAccount (string username, string password)
+    public Account GetAccount(string username, string password)
     {
         return AccountDao.FindByCondition((e => e.Username.Equals(username) && e.Password.Equals(password))).FirstOrDefault();
     }
 
-    public void AddAccount (Account account)
+    public void AddAccount(Account account)
     {
         AccountDao.Add(account);
     }
 
-    public void UpdateAccount (Account account)
+    public void UpdateAccount(Account account)
     {
         AccountDao.Update(account);
     }
 
-    public void DeleteAccount (int id)
+    public void DeleteAccount(int id)
     {
         var account = GetAccountById(id);
         AccountDao.Delete(account);
     }
 
-    public bool CheckUsernameExisted (string username)
+    public bool CheckUsernameExisted(string username)
     {
         return AccountDao.FindByCondition(e => e.Username.Equals(username)).Any();
     }
 
-    public bool CheckPhoneExisted (string phone)
+    public bool CheckPhoneExisted(string phone)
     {
         return AccountDao.FindByCondition(e => e.UserPhone.Equals(phone)).Any();
     }
 
-    public bool CheckEmailExisted (string email)
+    public bool CheckEmailExisted(string email)
     {
         return AccountDao.FindByCondition(e => e.Email.Equals(email)).Any();
     }
 
-    public List<Account> GetAllAccount ()
+    public List<Account> GetAllAccount()
     {
-        return AccountDao.GetAll().ToList();
+        return AccountDao.GetAll().OrderByDescending(e => e.UserId).ToList();
     }
 
-    public void AddStaffAccount (Account account)
+    public void AddStaffAccount(Account account)
     {
         account.Role = AccountRoleEnum.Staff.ToString();
         AccountDao.Add(account);

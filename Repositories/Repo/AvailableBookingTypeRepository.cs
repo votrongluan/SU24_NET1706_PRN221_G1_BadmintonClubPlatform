@@ -8,7 +8,7 @@ public class AvailableBookingTypeRepository : IAvailableBookingTypeRepository
 {
     public List<AvailableBookingType> GetAllAvailableBookingTypes()
     {
-        return AvailableBookingTypeDao.GetAll().ToList();
+        return AvailableBookingTypeDao.GetAll().OrderByDescending(e => e.AvailableBookingTypeId).ToList();
     }
 
     public AvailableBookingType GetAvailableBookingTypeById(int availableBookingTypeId)

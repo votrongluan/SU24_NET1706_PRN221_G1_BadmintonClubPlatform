@@ -17,7 +17,7 @@ To get started with this project, follow these steps:
 
    ```bash
    git clone https://github.com/votrongluan/badminton-booking-razor-page
-   cd RazorWebApp
+   cd badminton-booking-razor-page
    ```
 
 2. Install dependencies:
@@ -39,7 +39,7 @@ To get started with this project, follow these steps:
 
    **Please do not commit any changes in `appsettings.json`**
 
-2. Run the `DatabaseScript.sql` in `Other` folder
+2. Run the `DatabaseScript.sql` in `Others` folder
 
 ## Usage
 
@@ -121,7 +121,7 @@ Use built-in continuous integration and continuous deployment (CI/CD) pipelines 
 - Analyze your code for vulnerabilities with Static Application Security Testing (SAST).
 - Deploy to your preferred cloud service.
 
-## Screenshot
+## Screenshots
 
 ## Support
 

@@ -32,15 +32,15 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navcol-1">
                     <ul class="navbar-nav me-auto">
-                        <li class="nav-item"><a class="nav-link active" href="../Index">Trang chủ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="Service">Dịch vụ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="AllClub">Câu lạc bộ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="Match">Lịch thi đấu</a></li>
-                        <li class="nav-item"><a class="nav-link" href="About">Về chúng tôi</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="/Index">Trang chủ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Service">Dịch vụ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/AllClub">Câu lạc bộ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Match">Lịch thi đấu</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/About">Về chúng tôi</a></li>
                     </ul>
                     @if (Model.LoginedAccount == null)
                     {
-                        <a class="btn btn-primary" role="button" href="Authentication">Đăng nhập</a>
+                        <a class="btn btn-primary" role="button" href="/Authentication">Đăng nhập</a>
                     }
                     else
                     {

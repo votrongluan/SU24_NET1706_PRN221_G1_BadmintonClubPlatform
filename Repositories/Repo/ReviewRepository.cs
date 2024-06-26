@@ -8,7 +8,7 @@ public class ReviewRepository : IReviewRepository
 {
     public List<Review> GetAllReviews()
     {
-        return ReviewDao.GetAll().ToList();
+        return ReviewDao.GetAll().OrderByDescending(e => e.ReviewId).ToList();
     }
 
     public Review GetReviewById(int reviewId)
