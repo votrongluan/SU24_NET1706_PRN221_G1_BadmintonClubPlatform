@@ -82,7 +82,7 @@ namespace WebAppRazor.Pages.Customer
                 if (BookingRequestDto.BookingTypeId == (int)BookingTypeEnum.LichNgay)
                 {
                     var availableCourt = _service.CourtService.GetAllCourts();
-                    var bookingDetailInSlotAndDate = _service.BookingDetailService.GetAllBookingDetails().Where(e => e.BookDate == BookingRequestDto.BookDate && e.SlotId == slotId && e.Court.CourtTypeId == BookingRequestDto.CourtTypeId);
+                    var bookingDetailInSlotAndDate = _service.BookingDetailService.GetAllBookingDetails().Where(e => e.BookDate == BookingRequestDto.BookDate && e.Court.CourtTypeId == BookingRequestDto.CourtTypeId);
 
                     availableCourt = availableCourt.Where(e => !bookingDetailInSlotAndDate.Any(ee => ee.CourtId == e.CourtId)).ToList();
 
@@ -103,7 +103,7 @@ namespace WebAppRazor.Pages.Customer
                             BookingId = booking.BookingId,
                             BookDate = BookingRequestDto.BookDate,
                             CourtId = availableCourt.ElementAt(0).CourtId,
-                            SlotId = slotId,
+                            //SlotId = slotId,
                         };
 
                         _service.BookingDetailService.AddBookingDetail(bookingDetail);
@@ -125,7 +125,7 @@ namespace WebAppRazor.Pages.Customer
 
                     for (int i = 1; i <= BookingRequestDto.WeekCount; i++)
                     {
-                        var bookingDetailInSlotAndDate = _service.BookingDetailService.GetAllBookingDetails().Where(e => e.BookDate == date && e.SlotId == slotId && e.Court.CourtTypeId == BookingRequestDto.CourtTypeId);
+                        var bookingDetailInSlotAndDate = _service.BookingDetailService.GetAllBookingDetails().Where(e => e.BookDate == date && e.Court.CourtTypeId == BookingRequestDto.CourtTypeId);
 
                         availableCourt = availableCourt.Where(e => !bookingDetailInSlotAndDate.Any(ee => ee.CourtId == e.CourtId)).ToList();
 
@@ -153,7 +153,7 @@ namespace WebAppRazor.Pages.Customer
                                 BookingId = booking.BookingId,
                                 BookDate = date,
                                 CourtId = availableCourt.ElementAt(0).CourtId,
-                                SlotId = slotId,
+                                //SlotId = slotId,
                             };
 
                             _service.BookingDetailService.AddBookingDetail(bookingDetail);
