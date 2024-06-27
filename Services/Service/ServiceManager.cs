@@ -19,6 +19,7 @@ public class ServiceManager : IServiceManager
     private readonly Lazy<ISlotService> _slotService;
     private readonly Lazy<IAvailableBookingTypeService> _availabelBookingService;
     private readonly Lazy<IBookingTypeService> _bookingTypeService;
+    private readonly Lazy<IBookingDetailService> _bookingDetailService;
 
     public ServiceManager(IRepositoryManager repoManager)
     {
@@ -36,7 +37,7 @@ public class ServiceManager : IServiceManager
         _slotService = new Lazy<ISlotService>(() => new SlotService(repoManager));
         _availabelBookingService = new Lazy<IAvailableBookingTypeService>(() => new AvailableBookingTypeService(repoManager));
         _bookingTypeService = new Lazy<IBookingTypeService>(() => new BookingTypeService(repoManager));
-
+        _bookingDetailService = new Lazy<IBookingDetailService>(() => new BookingDetailService(repoManager));
     }
 
     public IAuthenticationService AuthenticationService => _authenticationService.Value;
@@ -53,4 +54,6 @@ public class ServiceManager : IServiceManager
     public ISlotService SlotService => _slotService.Value;
     public IAvailableBookingTypeService AvailableBookingTypeService => _availabelBookingService.Value;
     public IBookingTypeService BookingTypeService => _bookingTypeService.Value;
+
+    public IBookingDetailService BookingDetailService => _bookingDetailService.Value;
 }
