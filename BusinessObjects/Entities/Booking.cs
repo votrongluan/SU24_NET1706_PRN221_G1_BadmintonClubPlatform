@@ -15,6 +15,8 @@ public partial class Booking
 
     public bool? PaymentStatus { get; set; }
 
+    public int? TotalPrice { get; set; }
+
     public virtual ICollection<BookingDetail> BookingDetails { get; set; } = new List<BookingDetail>();
 
     public virtual BookingType BookingType { get; set; } = null!;
@@ -23,5 +25,5 @@ public partial class Booking
 
     public virtual Match? Match { get; set; }
 
-    public virtual Account User { get; set; } = null!;
+    public virtual Account? User { get; set; }
 }

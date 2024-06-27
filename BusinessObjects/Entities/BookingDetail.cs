@@ -9,7 +9,9 @@ public partial class BookingDetail
 
     public int BookingId { get; set; }
 
-    public int SlotId { get; set; }
+    public TimeOnly? StartTime { get; set; }
+
+    public TimeOnly? EndTime { get; set; }
 
     public int CourtId { get; set; }
 
@@ -18,6 +20,4 @@ public partial class BookingDetail
     public virtual Booking Booking { get; set; } = null!;
 
     public virtual Court Court { get; set; } = null!;
-
-    public virtual Slot Slot { get; set; } = null!;
 }
