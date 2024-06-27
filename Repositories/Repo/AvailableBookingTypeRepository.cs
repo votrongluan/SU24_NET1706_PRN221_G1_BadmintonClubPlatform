@@ -1,5 +1,6 @@
 ﻿using BusinessObjects.Entities;
 using DataAccessObjects;
+using Microsoft.EntityFrameworkCore;
 using Repositories.IRepo;
 
 namespace Repositories.Repo;
@@ -8,7 +9,7 @@ public class AvailableBookingTypeRepository : IAvailableBookingTypeRepository
 {
     public List<AvailableBookingType> GetAllAvailableBookingTypes()
     {
-        return AvailableBookingTypeDao.GetAll().OrderByDescending(e => e.AvailableBookingTypeId).ToList();
+        return AvailableBookingTypeDao.GetAll().Include(e => e.BookingType).OrderByDescending(e => e.AvailableBookingTypeId).ToList();
     }
 
     public AvailableBookingType GetAvailableBookingTypeById(int availableBookingTypeId)

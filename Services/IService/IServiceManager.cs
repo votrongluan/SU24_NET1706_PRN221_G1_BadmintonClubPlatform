@@ -15,4 +15,5 @@ public interface IServiceManager
     ISlotService SlotService { get; }
     IAvailableBookingTypeService AvailableBookingTypeService { get; }
     IBookingTypeService BookingTypeService { get; }
+    IBookingDetailService BookingDetailService { get; }
 }   

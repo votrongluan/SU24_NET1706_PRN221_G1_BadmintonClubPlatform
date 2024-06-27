@@ -16,7 +16,7 @@ public class SlotRepository : ISlotRepository
 
     public List<Slot> GetAllSlot()
     {
-        return SlotDao.GetAll().OrderByDescending(e => e.StartTime).ToList();
+        return SlotDao.GetAll().OrderBy(e => e.StartTime).ToList();
     }
 
     public Slot GetSlotById(int id)
