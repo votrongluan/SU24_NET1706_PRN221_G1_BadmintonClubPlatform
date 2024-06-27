@@ -24,6 +24,11 @@ namespace WebAppRazor.Pages
             }
         }
 
+        protected void UpdateAccountSession(Account result)
+        {
+            HttpContext.Session.SetString("Account", JsonSerializer.Serialize(result));
+        }
+
         protected string GetNavigatePageByAllowedRole(string allowedRole)
         {
             if (LoginedAccount == null) return "/Authentication";

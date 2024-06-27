@@ -196,6 +196,8 @@ namespace WebAppRazor.Pages.Staff
                 owner.ClubManageId = Club.ClubId;
                 _serviceManager.AccountService.UpdateStaffAccount(owner);
 
+                UpdateAccountSession(owner);
+
                 // Add booking types for the new club
                 foreach (var bookingTypeId in SelectedBookingTypes)
                 {
@@ -207,7 +209,6 @@ namespace WebAppRazor.Pages.Staff
                     _serviceManager.AvailableBookingTypeService.AddAvailableBookingType(newAvailableBookingType);
                 }
 
-                TempData["Message"] = $"{MessagePrefix.SUCCESS}Câu lạc bộ đã được đăng ký thành công.";
                 return RedirectToPage("ClubManage");
             }
             catch (Exception ex)
