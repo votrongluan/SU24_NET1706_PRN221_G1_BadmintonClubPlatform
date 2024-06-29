@@ -7,24 +7,29 @@ namespace Repositories.Repo;
 
 public class SlotRepository : ISlotRepository
 {
-    public void AddSlot(Slot slot) => SlotDao.Add(slot);
+    public void AddSlot (Slot slot) => SlotDao.Add(slot);
 
-    public void DeleteSlot(int id)
+    public void DeleteSlot (int id)
     {
         throw new NotImplementedException();
     }
 
-    public List<Slot> GetAllSlot()
+    public List<Slot> GetAllByClubId (int id)
+    {
+        return SlotDao.FindByCondition(e => e.ClubId == id).ToList();
+    }
+
+    public List<Slot> GetAllSlot ()
     {
         return SlotDao.GetAll().OrderBy(e => e.StartTime).ToList();
     }
 
-    public Slot GetSlotById(int id)
+    public Slot GetSlotById (int id)
     {
         return SlotDao.FindByCondition(e => e.SlotId == id).FirstOrDefault();
     }
 
-    public void UpdateSlot(Slot slot)
+    public void UpdateSlot (Slot slot)
     {
         SlotDao.Update(slot);
     }
