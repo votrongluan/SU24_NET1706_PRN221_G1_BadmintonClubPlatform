@@ -20,6 +20,11 @@ public class SlotService : ISlotService
         throw new NotImplementedException();
     }
 
+    public List<Slot> GetAllByClubId (int id)
+    {
+        return _repo.Slot.GetAllByClubId(id).ToList();
+    }
+
     public List<Slot> GetAllSlot()
     {
         return _repo.Slot.GetAllSlot().ToList();

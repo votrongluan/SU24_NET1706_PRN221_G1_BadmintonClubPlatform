@@ -9,4 +9,5 @@ public interface ISlotService
     void DeleteSlot(int slotId);
     Slot GetSlotById(int slotId);
     void UpdateSlot(Slot c);
+    List<Slot> GetAllByClubId(int id);
 }

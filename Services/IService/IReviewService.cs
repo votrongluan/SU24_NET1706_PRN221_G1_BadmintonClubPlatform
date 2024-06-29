@@ -9,4 +9,5 @@ public interface IReviewService
     void DeleteReview(int reviewId);
     Review GetReviewById(int reviewId);
     void UpdateReview(Review review);
+    List<Review> GetAllByClubId(int clubId);
 }

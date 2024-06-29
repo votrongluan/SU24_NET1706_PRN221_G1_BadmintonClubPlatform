@@ -10,4 +10,5 @@ public interface ISlotRepository
     void DeleteSlot(int id);
     void UpdateSlot(Slot slot);
     void AddSlot(Slot slot);
+    List<Slot> GetAllByClubId(int id);
 }
