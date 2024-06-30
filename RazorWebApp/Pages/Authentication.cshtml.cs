@@ -75,7 +75,7 @@ namespace WebAppRazor.Pages
         }
 
         // ON POST REGISTER
-        public IActionResult OnPostRegister ([Bind("Username, Password, ConfirmPassword, UserPhone, Email")] AccountRegisterDto AccountRegister)
+        public IActionResult OnPostRegister ([Bind("Username, Password, ConfirmPassword, Fullname, UserPhone, Email")] AccountRegisterDto AccountRegister)
         {
             // Check if model state is valid
             if (!ModelState.IsValid)

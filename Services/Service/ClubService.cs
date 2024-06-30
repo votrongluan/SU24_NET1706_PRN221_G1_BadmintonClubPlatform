@@ -52,4 +52,9 @@ public class ClubService : IClubService
     {
         _repo.Club.UpdateClub(c);
     }
+
+    public double GetAverageRatingStar (int clubId)
+    {
+        return _repo.Club.GetAverageRatingStar(clubId);
+    }
 }
