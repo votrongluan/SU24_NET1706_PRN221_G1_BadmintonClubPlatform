@@ -12,4 +12,5 @@ public interface IClubService
     Club GetClubById(int clubId);
     Club GetDeActiveClubById(int clubId);
     void UpdateClub(Club c);
+    double GetAverageRatingStar(int clubId);
 }

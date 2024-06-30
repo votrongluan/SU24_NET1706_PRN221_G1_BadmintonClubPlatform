@@ -1,8 +1,10 @@
+using BusinessObjects.Dtos.Review;
 using BusinessObjects.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Services.IService;
 using System.Net.WebSockets;
+using WebAppRazor.Mappers;
 
 namespace WebAppRazor.Pages
 {
@@ -13,6 +15,11 @@ namespace WebAppRazor.Pages
         public List<Slot> SlotList { get; set; }
         public List<Review> ReviewList { get; set; }
         public List<Review> FilterReviewList { get; set; }
+        public Club ExistedClub { get; set; }
+        public double ClubAverageRating { get; set; }
+
+        [BindProperty]
+        public CreateReviewDto CreateReview { get; set; }
 
         // Pagination properties
         public int CurrentPage { get; set; }
@@ -25,7 +32,7 @@ namespace WebAppRazor.Pages
 
         private void Paging (int page = 0)
         {
-            const int PageSize = 10;  // Set the number of items per page
+            const int PageSize = 5;  // Set the number of items per page
 
             //if (!string.IsNullOrWhiteSpace(searchString))
             //{
@@ -71,9 +78,32 @@ namespace WebAppRazor.Pages
             return Page();
         }
 
+        public IActionResult OnPost (int? id)
+        {
+            LoadAccountFromSession();
+            InitialData(id.Value);
+            CreateReview.UserId = LoginedAccount.UserId;
+            CreateReview.ClubId = id.Value;
+
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            _service.ReviewService.AddReview(CreateReview.ToReview());
+            var existedClub = _service.ClubService.GetClubById(id.Value);
+            existedClub.TotalReview += 1;
+            existedClub.TotalStar += CreateReview.Star;
+
+            _service.ClubService.UpdateClub(existedClub);
+
+            return RedirectToPage("./ClubDetail", new { id = id.Value });
+        }
+
         private void InitialData (int id)
         {
             Club = _service.ClubService.GetClubById(id);
+            ClubAverageRating = _service.ClubService.GetAverageRatingStar(id);
             SlotList = _service.SlotService.GetAllByClubId(id);
             ReviewList = _service.ReviewService.GetAllByClubId(id);
         }
