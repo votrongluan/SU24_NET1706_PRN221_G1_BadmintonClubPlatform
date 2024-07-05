@@ -27,7 +27,10 @@ namespace WebAppRazor.Pages
 
         public IActionResult OnGet()
         {
+            LoadAccountFromSession();
+
             InitializeData();
+            
             return Page();
         }
     }
