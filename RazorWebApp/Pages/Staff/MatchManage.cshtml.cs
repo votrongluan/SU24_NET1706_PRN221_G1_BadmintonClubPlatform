@@ -1,3 +1,4 @@
+﻿using BusinessObjects.Dtos.Booking;
 using BusinessObjects.Dtos.Club;
 using BusinessObjects.Dtos.Match;
 using BusinessObjects.Entities;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Services.IService;
+using WebAppRazor.Constants;
 using WebAppRazor.Mappers;
 
 namespace WebAppRazor.Pages.Staff
@@ -14,11 +16,11 @@ namespace WebAppRazor.Pages.Staff
     public class MatchManageModel : AuthorPageServiceModel
     {
         private readonly IServiceManager _service;
-        [BindProperty] public MatchCreateDto CreatedClub { get; set; }
+        [BindProperty] public MatchCreateDto CreatedMatch { get; set; }
         public List<Match> Matches { get; set; }
         public List<MatchResponseDto> MatchesDto { get; set; }
         public List<MatchResponseDto> FilterMatchesDto { get; set; }
-        public List<BookingType> BookingTypes { get; set; }
+        public List<CourtType> CourtTypes { get; set; }
         public List<Slot> Slots { get; set; }
 
         // Pagination properties
@@ -32,8 +34,7 @@ namespace WebAppRazor.Pages.Staff
         {
             Matches = _service.MatchService.GetAllMatches();
             MatchesDto = Matches.Select(e => e.ToMatchResponseDto()).ToList();
-            BookingTypes = _service.BookingTypeService.GetAllBookingTypes();
-            Slots = _service.SlotService.GetAllSlot();
+            CourtTypes = _service.CourtTypeService.GetAllCourtTypes();
 
             FilterMatchesDto = MatchesDto;
         }
@@ -64,10 +65,11 @@ namespace WebAppRazor.Pages.Staff
             {
                 FilterMatchesDto = sortProperty switch
                 {
-                    "ClubId" => sortOrder == -1 ? FilterMatchesDto.OrderByDescending(e => e.Title).ToList() : sortOrder == 1 ? FilterMatchesDto.OrderBy(e => e.Title).ToList() : FilterMatchesDto,
-                    "ClubName" => sortOrder == -1 ? FilterMatchesDto.OrderByDescending(e => e.Description).ToList() : sortOrder == 1 ? FilterMatchesDto.OrderBy(e => e.Description).ToList() : FilterMatchesDto,
-                    "Address" => sortOrder == -1 ? FilterMatchesDto.OrderByDescending(e => e.MatchDate).ToList() : sortOrder == 1 ? FilterMatchesDto.OrderBy(e => e.MatchDate).ToList() : FilterMatchesDto,
-                    "ClubPhone" => sortOrder == -1 ? FilterMatchesDto.OrderByDescending(e => e.MatchTime).ToList() : sortOrder == 1 ? FilterMatchesDto.OrderBy(e => e.MatchTime).ToList() : FilterMatchesDto,
+                    "Title" => sortOrder == -1 ? FilterMatchesDto.OrderByDescending(e => e.Title).ToList() : sortOrder == 1 ? FilterMatchesDto.OrderBy(e => e.Title).ToList() : FilterMatchesDto,
+                    "Description" => sortOrder == -1 ? FilterMatchesDto.OrderByDescending(e => e.Description).ToList() : sortOrder == 1 ? FilterMatchesDto.OrderBy(e => e.Description).ToList() : FilterMatchesDto,
+                    "MatchDate" => sortOrder == -1 ? FilterMatchesDto.OrderByDescending(e => e.MatchDateOnly).ToList() : sortOrder == 1 ? FilterMatchesDto.OrderBy(e => e.MatchDateOnly).ToList() : FilterMatchesDto,
+                    "MatchTime" => sortOrder == -1 ? FilterMatchesDto.OrderByDescending(e => e.MatchTime).ToList() : sortOrder == 1 ? FilterMatchesDto.OrderBy(e => e.MatchTime).ToList() : FilterMatchesDto,
+                    "CourtId" => sortOrder == -1 ? FilterMatchesDto.OrderByDescending(e => e.CourtId).ToList() : sortOrder == 1 ? FilterMatchesDto.OrderBy(e => e.CourtId).ToList() : FilterMatchesDto,
                     _ => FilterMatchesDto,
                 };
             }
@@ -104,6 +106,60 @@ namespace WebAppRazor.Pages.Staff
             Paging(searchString, searchProperty, sortProperty, sortOrder, page);
 
             return Page();
+        }
+
+        public IActionResult OnPost()
+        {
+            LoadAccountFromSession();
+
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            if (CreatedMatch.StartTime > CreatedMatch.EndTime)
+            {
+                TempData["Message"] = $"{MessagePrefix.ERROR}Giờ bắt đầu không thể lớn hơn giờ kết thúc";
+                return RedirectToPage("MatchManage");
+            }
+
+            try
+            {
+                BookingRequestDto dto = new()
+                {
+                    ClubId = (int)LoginedAccount.ClubManageId,
+                    BookDate = CreatedMatch.MatchDate,
+                    StartTime = CreatedMatch.StartTime,
+                    EndTime = CreatedMatch.EndTime,
+                    UserId = (int)LoginedAccount.UserId,
+                    BookingTypeId = (int) BookingTypeEnum.LichThiDau,
+                    CourtTypeId = CreatedMatch.CourtTypeId,
+                    DefaultPrice = 0,
+                };
+
+                var result = _service.BookingService.BookLichThiDau(dto);
+
+                if (!result.status)
+                {
+                    TempData["Message"] = $"{MessagePrefix.ERROR}Không thể đặt lịch thi đấu vào ngày {CreatedMatch.MatchDate} từ {CreatedMatch.StartTime} đến {CreatedMatch.EndTime}";
+                    return RedirectToPage("MatchManage");
+                }
+
+                _service.MatchService.AddMatch(new Match()
+                {
+                    Description = CreatedMatch.Description,
+                    Title = CreatedMatch.Title,
+                    BookingId = result.bookId,
+                });
+
+                TempData["Message"] = $"{MessagePrefix.SUCCESS}Lịch thi đấu đã được đặt thành công";
+                return RedirectToPage("MatchManage");
+            }
+            catch
+            {
+                TempData["Message"] = $"{MessagePrefix.ERROR}Lỗi từ phía hệ thống";
+                return RedirectToPage("MatchManage");
+            }
         }
     }
 }

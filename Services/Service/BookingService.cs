@@ -40,6 +40,85 @@ public class BookingService : IBookingService
         _repo.Booking.UpdateBooking(booking);
     }
 
+    public (bool status, int bookId) BookLichThiDau(BookingRequestDto dto)
+    {
+        var availableCourt = _repo.Court.GetCourtsByClubId(dto.ClubId).ToList();
+        var bookingDetailInSlotAndDate = _repo.BookingDetail.GetAllBookingDetails().Where(e =>
+            e.BookDate == dto.BookDate && e.Court.CourtTypeId == dto.CourtTypeId).OrderBy(e => e.StartTime);
+        Court selectedCourt = null;
+
+        foreach (var court in availableCourt)
+        {
+            var courtSchedule = bookingDetailInSlotAndDate.Where(e => e.CourtId == court.CourtId).ToList();
+
+            if (courtSchedule.Any())
+            {
+                // 9-11, 12-14, 14-17 ...
+                // 7-9
+                if (dto.EndTime <= courtSchedule[0].StartTime || dto.StartTime >= courtSchedule[courtSchedule.Count - 1].EndTime)
+                {
+                    selectedCourt = court;
+                    break;
+                }
+
+                if (courtSchedule.Count == 1) continue;
+
+                bool canBook = false;
+
+                for (int i = 1; i < courtSchedule.Count - 1; i++)
+                {
+                    if (courtSchedule[i - 1].EndTime <= dto.StartTime && courtSchedule[i].StartTime <= dto.EndTime)
+                    {
+                        canBook = true;
+                        break;
+                    }
+                }
+
+                if (canBook)
+                {
+                    selectedCourt = court;
+                    break;
+                }
+            }
+            else
+            {
+                selectedCourt = court;
+                break;
+            }
+        }
+
+        if (selectedCourt != null)
+        {
+            var slots = _repo.Slot.GetAllByClubId(dto.ClubId);
+
+            Booking booking = new()
+            {
+                BookingTypeId = dto.BookingTypeId,
+                ClubId = dto.ClubId,
+                PaymentStatus = false,
+                UserId = dto.UserId,
+                TotalPrice = 0,
+            };
+
+            _repo.Booking.AddBooking(booking);
+
+            BookingDetail bookingDetail = new()
+            {
+                BookingId = booking.BookingId,
+                BookDate = dto.BookDate,
+                CourtId = selectedCourt.CourtId,
+                StartTime = dto.StartTime,
+                EndTime = dto.EndTime,
+            };
+
+            _repo.BookingDetail.AddBookingDetail(bookingDetail);
+
+            return (true, booking.BookingId);
+        }
+
+        return (false, -1);
+    }
+
     private int CalculatePrice(List<Slot> slots, TimeOnly startTime, TimeOnly endTime, int defaultPrice)
     {
         var total = 0;
@@ -81,6 +160,10 @@ public class BookingService : IBookingService
                 break;
             }
         }
+
+        var tienVND = total / 1000;
+        var sodu = total % tienVND * 1000;
+        total = sodu > 0 ? tienVND * 1000 + 1000 : tienVND * 1000;
 
         return total;
     }

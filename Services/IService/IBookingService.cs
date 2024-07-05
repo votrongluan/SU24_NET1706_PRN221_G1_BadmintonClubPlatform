@@ -10,6 +10,7 @@ public interface IBookingService
     void DeleteBooking(int bookingId);
     Booking GetBookingById(int bookingId);
     void UpdateBooking(Booking booking);
+    (bool status, int bookId) BookLichThiDau(BookingRequestDto dto);
     bool BookLichNgay(BookingRequestDto dto);
     bool BookLichCoDinh(BookingRequestDto dto);
 }

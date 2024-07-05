@@ -7,10 +7,10 @@ public static class MatchMapper
 {
     public static MatchResponseDto ToMatchResponseDto(this Match match)
     {
-        var bookingDetails = match.Booking?.BookingDetails.ElementAtOrDefault(0);
-        var formatDate = bookingDetails?.BookDate ?? DateOnly.MinValue;
-        var formatStartTime = match.Booking.BookingDetails.ElementAt(0).StartTime.Value.Hour.ToString("D2") + ":" + match.Booking.BookingDetails.ElementAt(0).StartTime.Value.Minute.ToString("D2");
-        var formatEndTime = match.Booking.BookingDetails.ElementAt(0).EndTime.Value.Hour.ToString("D2") + ":" + match.Booking.BookingDetails.ElementAt(0).EndTime.Value.Minute.ToString("D2");
+        var bookingDetail = match.Booking?.BookingDetails.ElementAtOrDefault(0);
+        var formatDate = bookingDetail.BookDate.Value.ToString("dd/MM/yyyy");
+        var formatStartTime = bookingDetail.StartTime.Value.Hour.ToString("D2") + ":" + match.Booking.BookingDetails.ElementAt(0).StartTime.Value.Minute.ToString("D2");
+        var formatEndTime = bookingDetail.EndTime.Value.Hour.ToString("D2") + ":" + match.Booking.BookingDetails.ElementAt(0).EndTime.Value.Minute.ToString("D2");
 
         return new MatchResponseDto()
         {
@@ -22,6 +22,7 @@ public static class MatchMapper
             MatchDate = formatDate,
             MatchTime = $"{formatStartTime} - {formatEndTime}",
             Title = match.Title,
+            MatchDateOnly = bookingDetail.BookDate,
         };
     }
 }
