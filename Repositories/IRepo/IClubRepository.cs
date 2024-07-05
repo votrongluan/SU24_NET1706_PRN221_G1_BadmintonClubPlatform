@@ -14,4 +14,5 @@ public interface IClubRepository
     List<Club> GetMostRatingClubs();
     List<Club> GetMostBookingClubs();
     List<Club> GetMostPopularClubs();
+    double GetAverageRatingStar(int clubId);
 }

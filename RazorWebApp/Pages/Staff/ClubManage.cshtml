@@ -77,7 +77,7 @@
                     </div>
                 }
 
-                <form method="post">
+                <form method="post" asp-page-handler="@(Model.Club == null ? "AddClub" : "SaveClub")">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="mt-4">
                         <p>Tên câu lạc bộ</p>
@@ -166,11 +166,19 @@
                             </div>
                             <span asp-validation-for="SelectedBookingTypes" class="text-danger"></span>
                         </div>
-                    </div> 
+                    </div>
 
                     <div class="mt-4">
-                        <button type="submit" class="btn btn-primary">Lưu</button>
-                    </div> 
+                        @if (Model.Club != null)
+                        {
+                            <button type="submit" class="btn btn-primary">Lưu</button>
+                        }
+                        else if (Model.c != 1)
+                        {
+                            <button type="submit" class="btn btn-primary">Đăng ký</button>
+                        }
+                    </div>
+
                 </form>
             </div>
         </div>
@@ -182,22 +190,31 @@
     <script src="~/assets/js/Simple-Slider-swiper-bundle.min.js"></script>
     <script src="~/assets/js/Simple-Slider.js"></script>
     <script>
-        $(document).ready(function () {
-            $('#city').change(function () {
-                var cityId = $(this).val();
-                $.ajax({
-                    url: '@Url.Page("/Staff/ClubManage", "GetDistricts", new { cityId = "__cityId__" })'.replace("__cityId__", cityId),
-                    type: 'GET',
-                    success: function (data) {
-                        var districts = $('#district');
-                        districts.empty();
-                        $.each(data, function (index, district) {
-                            districts.append('<option value="' + district.value + '">' + district.text + '</option>');
-                        });
-                    }
-                });
+        function fetchDistricts() {
+            var cityId = document.getElementById("City").value;
+
+            // Send an AJAX request to fetch districts
+            $.ajax({
+                type: "GET",
+                url: "/Staff/ClubManage?handler=GetDistricts&cityId=" + cityId, // Adjust the URL according to your routing
+                success: function (response) {
+                    var districtSelect = document.getElementById("District");
+                    districtSelect.innerHTML = '<option value="">Chọn quận / huyện</option>'; // Clear existing options
+
+                    // Populate the districts dropdown
+                    response.forEach(function (district) {
+                        var option = document.createElement("option");
+                        option.value = district.value;
+                        option.text = district.text;
+                        districtSelect.add(option);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
             });
-        });
+        }
     </script>
+
 </body>
 </html>

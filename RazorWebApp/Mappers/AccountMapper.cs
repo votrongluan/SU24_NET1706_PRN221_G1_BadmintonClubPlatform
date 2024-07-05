@@ -16,13 +16,14 @@ namespace WebAppRazor.Mappers
                 Email = e.Email,
             };
         }
-
+           
         public static Account ToAccount (this AccountRegisterDto e)
         {
             return new Account()
             {
                 Username = e.Username,
                 Password = e.Password,
+                Fullname = e.Fullname,
                 UserPhone = e.UserPhone,
                 Role = e.Role,
                 Email = e.Email,

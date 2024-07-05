@@ -22,6 +22,9 @@ namespace BusinessObjects.Dtos.Account
         [Required(ErrorMessage = "Cần nhập số điện thoại")]
         public string UserPhone { get; set; }
 
+        [Required(ErrorMessage = "Cần nhập họ và tên")]
+        public string Fullname { get; set; }
+
         public string? Email { get; set; }
 
         public string? Role { get; set; }

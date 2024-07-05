@@ -21,6 +21,8 @@ namespace WebAppRazor.Pages.Staff
         [BindProperty]
         public Club Club { get; set; }
 
+        public int c;
+
         [BindProperty]
         public int CityId { get; set; }
 
@@ -56,22 +58,6 @@ namespace WebAppRazor.Pages.Staff
                 Message = TempData["Message"].ToString();
             }
 
-            Club = _serviceManager.ClubService.GetClubById(LoginedAccount.ClubManageId ?? -1);
-
-            if (Club == null)
-            {
-                return NotFound();
-            }
-
-            var cityService = _serviceManager.CityService.GetAllCities().ToList();
-            Cities = new SelectList(cityService, "CityId", "CityName");
-            CityId = Club.District.CityId; // Set the initial CityId
-            var districtService = _serviceManager.DistrictService.GetAllDistricts().ToList();
-            Districts = new SelectList(districtService.Where(d => d.CityId == CityId), "DistrictId", "DistrictName");
-
-            DistrictId = Club.DistrictId; // Set the initial DistrictId
-
-            // Fetch booking types from database
             var bookingTypes = _serviceManager.BookingTypeService.GetAllBookingTypes().ToList();
             BookingTypes = bookingTypes.Select(bt => new SelectListItem
             {
@@ -79,16 +65,59 @@ namespace WebAppRazor.Pages.Staff
                 Text = bt.Description
             }).ToList();
 
-            // Fetch selected booking types for the club
-            SelectedBookingTypes = _serviceManager.AvailableBookingTypeService.GetAvailableBookingTypes()
+            if (LoginedAccount.ClubManageId != null)
+            {
+                Club = _serviceManager.ClubService.GetClubById((int)LoginedAccount.ClubManageId);
+
+                if (Club == null) 
+                {
+                    TempData["Message"] = $"{MessagePrefix.INFO}Đơn đăng ký Club của bạn đang được xử lý";
+
+                    // Set and clear the message
+                    if (!string.IsNullOrWhiteSpace(Message))
+                    {
+                        Message = string.Empty;
+                    }
+
+                    if (TempData.ContainsKey("Message"))
+                    {
+                        Message = TempData["Message"].ToString();
+                    }
+                    c = 1;
+                    return Page();
+                }
+
+                var cityService = _serviceManager.CityService.GetAllCities().ToList();
+                Cities = new SelectList(cityService, "CityId", "CityName");
+                CityId = Club.District.CityId; // Set the initial CityId
+                var districtService = _serviceManager.DistrictService.GetAllDistricts().ToList();
+                Districts = new SelectList(districtService.Where(d => d.CityId == CityId), "DistrictId", "DistrictName");
+                DistrictId = Club.DistrictId; // Set the initial DistrictId
+
+
+                SelectedBookingTypes = _serviceManager.AvailableBookingTypeService.GetAvailableBookingTypes()
                 .Where(abt => abt.ClubId == Club.ClubId)
                 .Select(abt => abt.BookingTypeId)
                 .ToList();
+            }
+            else
+            {
+                var cityService = _serviceManager.CityService.GetAllCities().ToList();
+                Cities = new SelectList(cityService, "CityId", "CityName");
+
+                var districtService = _serviceManager.DistrictService.GetAllDistricts().ToList();
+                Districts = new SelectList(districtService.Where(d => d.CityId == CityId), "DistrictId", "DistrictName");
+                // Fetch selected booking types for the club
+                SelectedBookingTypes = _serviceManager.AvailableBookingTypeService.GetAvailableBookingTypes()
+                    .Select(abt => abt.BookingTypeId)
+                    .ToList();
+            }
+
 
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostSaveClubAsync()
         {
             LoadAccountFromSession();
             int id = (int)LoginedAccount.ClubManageId;
@@ -98,6 +127,11 @@ namespace WebAppRazor.Pages.Staff
 
             try
             {
+                var existingClub = _serviceManager.ClubService.GetClubById(id);
+
+                Club.TotalStar = existingClub.TotalStar;
+                Club.TotalReview = existingClub.TotalReview;
+
                 _serviceManager.ClubService.UpdateClub(Club);
 
                 // Delete existing booking types for the club
@@ -152,6 +186,41 @@ namespace WebAppRazor.Pages.Staff
         private bool ClubExists(int id)
         {
             return _serviceManager.ClubService.GetAllClubs().Any(e => e.ClubId == id);
+        }
+
+        public async Task<IActionResult> OnPostAddClubAsync()
+        {
+            LoadAccountFromSession();
+
+            try
+            {
+                Club.Status = false;
+                _serviceManager.ClubService.AddClub(Club);
+
+                Account owner = LoginedAccount;
+                owner.ClubManageId = Club.ClubId;
+                _serviceManager.AccountService.UpdateStaffAccount(owner);
+
+                UpdateAccountSession(owner);
+
+                // Add booking types for the new club
+                foreach (var bookingTypeId in SelectedBookingTypes)
+                {
+                    var newAvailableBookingType = new AvailableBookingType
+                    {
+                        ClubId = Club.ClubId,
+                        BookingTypeId = bookingTypeId
+                    };
+                    _serviceManager.AvailableBookingTypeService.AddAvailableBookingType(newAvailableBookingType);
+                }
+
+                return RedirectToPage("ClubManage");
+            }
+            catch (Exception ex)
+            {
+                TempData["Message"] = $"{MessagePrefix.ERROR}Có lỗi xảy ra khi đăng ký câu lạc bộ: {ex.Message}";
+                return Page();
+            }
         }
     }
 }

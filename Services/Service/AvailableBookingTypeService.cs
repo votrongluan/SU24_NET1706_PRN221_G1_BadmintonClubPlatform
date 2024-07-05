@@ -18,6 +18,11 @@ public class AvailableBookingTypeService : IAvailableBookingTypeService
         return _repo.AvailableBookingType.GetAllAvailableBookingTypes();
     }
 
+    public List<AvailableBookingType> GetAvailableBookingTypesByClubId(int clubId)
+    {
+        return _repo.AvailableBookingType.GetAllAvailableBookingTypesByClubId(clubId);
+    }
+
     public void AddAvailableBookingType(AvailableBookingType availableBookingType)
     {
         _repo.AvailableBookingType.AddAvailableBookingType(availableBookingType);

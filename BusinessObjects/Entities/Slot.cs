@@ -17,7 +17,5 @@ public partial class Slot
 
     public int? Price { get; set; }
 
-    public virtual ICollection<BookingDetail> BookingDetails { get; set; } = new List<BookingDetail>();
-
     public virtual Club Club { get; set; } = null!;
 }

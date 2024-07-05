@@ -31,7 +31,8 @@ namespace WebAppRazor.Pages.Customer
             Club = _service.ClubService.GetClubById(ClubId).ToResponseClubDto();
             CourtTypes = _service.CourtTypeService.GetAllCourtTypes();
             Slots = _service.SlotService.GetAllSlot().Where(e => e.ClubId == ClubId).ToList();
-            BookingTypes = _service.BookingTypeService.GetAllBookingTypes().Where(e => e.BookingTypeId != (int)BookingTypeEnum.LichThiDau).ToList();
+            BookingTypes = _service.AvailableBookingTypeService.GetAvailableBookingTypesByClubId(ClubId)
+                .Select(e => e.BookingType).Where(e => e.BookingTypeId != (int)BookingTypeEnum.LichThiDau).ToList();
         }
 
         public IActionResult OnGet(int? id)
@@ -61,114 +62,67 @@ namespace WebAppRazor.Pages.Customer
             return Page();
         }
 
-        public IActionResult OnPost(int id, int slotId)
+        public IActionResult OnPost(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
             LoadAccountFromSession();
 
-            if (BookingRequestDto.BookDate < DateOnly.FromDateTime(DateTime.Now.AddDays(2)) ||
-                BookingRequestDto.BookDate > DateOnly.FromDateTime(DateTime.Now.AddDays(14)))
+            if (BookingRequestDto.BookDate < DateOnly.FromDateTime(DateTime.Now.AddDays(3)))
             {
-                TempData["Message"] = $"{MessagePrefix.ERROR}Ngày chưa chính xác, phải lớn hơn hôm nay 2 ngày và không quá 2 tuần";
+                TempData["Message"] = $"{MessagePrefix.ERROR}Ngày chưa chính xác, phải lớn hơn hôm nay 3 ngày";
                 return RedirectToPage("Book", new { id });
             }
 
             try
             {
+                var bookClub = _service.ClubService.GetClubById(id);
+                var bookingDetail = _service.BookingDetailService.GetAllBookingDetails()
+                    .Where(e => e.BookDate == BookingRequestDto.BookDate);
+
+                //if (bookingDetail != null)
+                //{
+                //    TempData["Message"] = $"{MessagePrefix.ERROR}Đặt thất bại, bạn đã đặt lịch cho ngày hôm đó";
+                //    return RedirectToPage("Book", new { id });
+                //}
+
+                BookingRequestDto.ClubId = id;
+                BookingRequestDto.UserId = LoginedAccount.UserId;
+                BookingRequestDto.StartTime =
+                    new TimeOnly(BookingRequestDto.StartTimeHour, BookingRequestDto.StartTimeMinute);
+                BookingRequestDto.EndTime = BookingRequestDto.StartTime.AddHours(BookingRequestDto.Duration);
+                BookingRequestDto.DefaultPrice = (int)bookClub.DefaultPricePerHour;
+
+                if (BookingRequestDto.StartTime < bookClub.OpenTime || BookingRequestDto.EndTime > bookClub.CloseTime)
+                {
+                    TempData["Message"] = $"{MessagePrefix.ERROR}Đặt thất bại khung giờ bạn chọn club chưa mở cửa";
+                    return RedirectToPage("Book", new { id });
+                }
+
                 if (BookingRequestDto.BookingTypeId == (int)BookingTypeEnum.LichNgay)
                 {
-                    var availableCourt = _service.CourtService.GetAllCourts();
-                    var bookingDetailInSlotAndDate = _service.BookingDetailService.GetAllBookingDetails().Where(e => e.BookDate == BookingRequestDto.BookDate && e.SlotId == slotId && e.Court.CourtTypeId == BookingRequestDto.CourtTypeId);
+                    bool isSuccess = _service.BookingService.BookLichNgay(BookingRequestDto);
 
-                    availableCourt = availableCourt.Where(e => !bookingDetailInSlotAndDate.Any(ee => ee.CourtId == e.CourtId)).ToList();
-
-                    if (availableCourt.Any())
+                    if (isSuccess)
                     {
-                        Booking booking = new()
-                        {
-                            BookingTypeId = BookingRequestDto.BookingTypeId,
-                            ClubId = id,
-                            PaymentStatus = false,
-                            UserId = LoginedAccount.UserId,
-                        };
-
-                        _service.BookingService.AddBooking(booking);
-
-                        BookingDetail bookingDetail = new()
-                        {
-                            BookingId = booking.BookingId,
-                            BookDate = BookingRequestDto.BookDate,
-                            CourtId = availableCourt.ElementAt(0).CourtId,
-                            SlotId = slotId,
-                        };
-
-                        _service.BookingDetailService.AddBookingDetail(bookingDetail);
-
                         TempData["Message"] = $"{MessagePrefix.SUCCESS}Đặt thành công";
                         return RedirectToPage("Book", new { id });
                     }
-                    else
-                    {
-                        TempData["Message"] = $"{MessagePrefix.WARNING}Câu lạc bộ không còn sân trống";
-                        return RedirectToPage("Book", new { id });
-                    }
+
+                    TempData["Message"] = $"{MessagePrefix.ERROR}Đặt thất bại";
+                    return RedirectToPage("Book", new { id });
                 }
 
                 if (BookingRequestDto.BookingTypeId == (int)BookingTypeEnum.LichCoDinh)
                 {
-                    var availableCourt = _service.CourtService.GetAllCourts();
-                    var date = BookingRequestDto.BookDate;
+                    bool isSuccess = _service.BookingService.BookLichCoDinh(BookingRequestDto);
 
-                    for (int i = 1; i <= BookingRequestDto.WeekCount; i++)
+                    if (isSuccess)
                     {
-                        var bookingDetailInSlotAndDate = _service.BookingDetailService.GetAllBookingDetails().Where(e => e.BookDate == date && e.SlotId == slotId && e.Court.CourtTypeId == BookingRequestDto.CourtTypeId);
-
-                        availableCourt = availableCourt.Where(e => !bookingDetailInSlotAndDate.Any(ee => ee.CourtId == e.CourtId)).ToList();
-
-                        date = date.AddDays(7);
-                    }
-
-                    if (availableCourt.Any())
-                    {
-                        Booking booking = new()
-                        {
-                            BookingTypeId = BookingRequestDto.BookingTypeId,
-                            ClubId = id,
-                            PaymentStatus = false,
-                            UserId = LoginedAccount.UserId,
-                        };
-
-                        _service.BookingService.AddBooking(booking);
-
-                        date = BookingRequestDto.BookDate;
-
-                        for (int i = 1; i <= BookingRequestDto.WeekCount; i++)
-                        {
-                            BookingDetail bookingDetail = new()
-                            {
-                                BookingId = booking.BookingId,
-                                BookDate = date,
-                                CourtId = availableCourt.ElementAt(0).CourtId,
-                                SlotId = slotId,
-                            };
-
-                            _service.BookingDetailService.AddBookingDetail(bookingDetail);
-
-                            date = date.AddDays(7);
-                        }
-
                         TempData["Message"] = $"{MessagePrefix.SUCCESS}Đặt thành công";
                         return RedirectToPage("Book", new { id });
                     }
-                    else
-                    {
-                        TempData["Message"] = $"{MessagePrefix.WARNING}Câu lạc bộ không còn sân trống";
-                        return RedirectToPage("Book", new { id });
-                    }
+
+                    TempData["Message"] = $"{MessagePrefix.ERROR}Đặt thất bại";
+                    return RedirectToPage("Book", new { id });
                 }
 
                 return RedirectToPage("/Index");
