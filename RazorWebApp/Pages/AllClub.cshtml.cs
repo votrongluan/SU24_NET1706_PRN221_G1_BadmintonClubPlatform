@@ -35,7 +35,7 @@ namespace WebAppRazor.Pages
 
             FilterClubs = Clubs;
 
-            ViewData["CityId"] = new SelectList(Cities, "CityId", "CityName");
+                ViewData["CityId"] = new SelectList(Cities, "CityId", "CityName");
         }
 
         private void Paging(string searchString, string searchProperty, string sortProperty, int sortOrder, int page = 0, int cityId = 0, int districtId = 0)
@@ -82,7 +82,7 @@ namespace WebAppRazor.Pages
             FilterClubs = FilterClubs.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
         }
 
-        public IActionResult OnGet(string startTime, string endTime, int cityId, int districtId, string searchString, string searchProperty, string sortProperty, int sortOrder)
+        public IActionResult OnGet(int cityId, int districtId, string searchString, string searchProperty, string sortProperty, int sortOrder)
         {
             LoadAccountFromSession();
 

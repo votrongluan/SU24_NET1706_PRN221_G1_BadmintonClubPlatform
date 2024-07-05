@@ -11,6 +11,7 @@ namespace WebAppRazor.Mappers
             {
                 CourtId = e.CourtId,
                 CourtTypeId = e.CourtTypeId,
+                TypeName = e.CourtType?.TypeName,
                 ClubId = e.ClubId
             };
         }

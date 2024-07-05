@@ -46,17 +46,23 @@ public class ClubRepository : IClubRepository
 
     public List<Club> GetMostRatingClubs ()
     {
-        return ClubDao.GetAll().OrderByDescending(e => e.TotalStar).Take(4).ToList();
+        return ClubDao.GetAll()
+            .Include(x => x.District).ThenInclude(x => x.City)
+            .OrderByDescending(e => e.TotalStar).Take(4).ToList();
     }
 
     public List<Club> GetMostBookingClubs ()
     {
-        return ClubDao.GetAll().Include(e => e.Bookings).OrderByDescending(e => e.Bookings.Count).Take(4).ToList();
+        return ClubDao.GetAll()
+            .Include(x => x.District).ThenInclude(x => x.City)
+            .Include(e => e.Bookings).OrderByDescending(e => e.Bookings.Count).Take(4).ToList();
     }
 
     public List<Club> GetMostPopularClubs ()
     {
-        return ClubDao.GetAll().OrderByDescending(e => e.TotalReview).Take(4).ToList();
+        return ClubDao.GetAll()
+            .Include(x => x.District).ThenInclude(x => x.City)
+            .OrderByDescending(e => e.TotalReview).Take(4).ToList();
     }
 
     public double GetAverageRatingStar (int clubId)

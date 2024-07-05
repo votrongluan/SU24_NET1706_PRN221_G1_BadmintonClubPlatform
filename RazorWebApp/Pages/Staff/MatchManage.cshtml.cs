@@ -31,7 +31,7 @@ namespace WebAppRazor.Pages.Staff
         private void InitializeData()
         {
             Matches = _service.MatchService.GetAllMatches();
-            MatchesDto = Matches.Select(e => e.ToMatch()).ToList();
+            MatchesDto = Matches.Select(e => e.ToMatchResponseDto()).ToList();
             BookingTypes = _service.BookingTypeService.GetAllBookingTypes();
             Slots = _service.SlotService.GetAllSlot();
 
