@@ -21,22 +21,10 @@ namespace WebAppRazor.Mappers
                 };
             }
 
-            var slot = firstBookingDetail.Slot;
-            debug.AppendLine($"Slot null? {slot == null}");
-
-            string bookingTime = slot == null ? "No slot assigned" : "No time information";
-
-            if (slot != null && slot.StartTime.HasValue && slot.EndTime.HasValue)
-            {
-                var formatStartTime = slot.StartTime.Value.ToString("HH:mm");
-                var formatEndTime = slot.EndTime.Value.ToString("HH:mm");
-                bookingTime = $"{formatStartTime} - {formatEndTime}";
-                debug.AppendLine($"Formatted BookingTime: {bookingTime}");
-            }
-            else
-            {
-                debug.AppendLine("Unable to format BookingTime due to missing or incomplete slot information");
-            }
+            var formatStartTime = firstBookingDetail.StartTime.Value.ToString("HH:mm");
+            var formatEndTime = firstBookingDetail.EndTime.Value.ToString("HH:mm");
+            var bookingTime = $"{formatStartTime} - {formatEndTime}";
+            debug.AppendLine($"Formatted BookingTime: {bookingTime}");
 
             return new BookingHistoryResponseDto()
             {

@@ -18,7 +18,6 @@ public class BookingRepository : IBookingRepository
             .Include(x => x.BookingDetails)
             .ThenInclude(x => x.Court)
             .Include(b => b.BookingDetails)
-            .ThenInclude(bd => bd.Slot)
             .Include(b => b.BookingType)
             .OrderByDescending(e => e.BookingId).ToList();
     }

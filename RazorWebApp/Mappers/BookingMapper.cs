@@ -10,8 +10,8 @@ namespace WebAppRazor.Mappers
         public static BookingResponseDto ToBooking(this Booking booking)
         {
             var formatDate = booking.BookingDetails.ElementAt(0).BookDate.Value.ToString("dd/MM/yyyy");
-            var formatStartTime = booking.BookingDetails.ElementAt(0).Slot.StartTime.Value.Hour.ToString("D2") + ":" + booking.BookingDetails.ElementAt(0).Slot.StartTime.Value.Minute.ToString("D2");
-            var formatEndTime = booking.BookingDetails.ElementAt(0).Slot.EndTime.Value.Hour.ToString("D2") + ":" + booking.BookingDetails.ElementAt(0).Slot.EndTime.Value.Minute.ToString("D2");
+            var formatStartTime = booking.BookingDetails.ElementAt(0).StartTime.Value.Hour.ToString("D2") + ":" + booking.BookingDetails.ElementAt(0).StartTime.Value.Minute.ToString("D2");
+            var formatEndTime = booking.BookingDetails.ElementAt(0).EndTime.Value.Hour.ToString("D2") + ":" + booking.BookingDetails.ElementAt(0).EndTime.Value.Minute.ToString("D2");
 
             return new BookingResponseDto()
             {
