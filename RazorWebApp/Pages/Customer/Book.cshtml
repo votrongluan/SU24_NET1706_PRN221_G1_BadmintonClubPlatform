@@ -70,14 +70,14 @@
             <div class="d-flex justify-content-center align-content-center">
                 <section style="width: 50%">
                     <h2 class="fs-4 text-center">Đặt sân</h2>
-                    
+
                     @* CHECK IF MESSAGE NOT NULL *@
                     @if (!string.IsNullOrEmpty(Model.Message))
                     {
                         var messageClass = Model.Message.StartsWith(Constants.MessagePrefix.ERROR.ToString()) ? "alert-danger" :
-                            Model.Message.StartsWith(Constants.MessagePrefix.SUCCESS.ToString()) ? "alert-success" :
-                            Model.Message.StartsWith(Constants.MessagePrefix.WARNING.ToString()) ? "alert-warning" :
-                            "alert-info";
+                        Model.Message.StartsWith(Constants.MessagePrefix.SUCCESS.ToString()) ? "alert-success" :
+                        Model.Message.StartsWith(Constants.MessagePrefix.WARNING.ToString()) ? "alert-warning" :
+                        "alert-info";
 
                         <div class="alert @messageClass" role="alert">
                             <p class="m-0 p-1">@Model.Message.Substring(1)</p>
@@ -100,12 +100,14 @@
                             </select>
                             <span asp-validation-for="BookingRequestDto.CourtTypeId" class="text-danger"></span>
                         </div>
+
                         <div class="mt-4">
                             <p style="margin-top: 8px;" class="mt-4">Ngày</p>
                             <input asp-for="BookingRequestDto.BookDate" class="form-control" type="date">
-                            <p class="mt-2">Lưu ý: Ngày đặt tính từ 2 ngày sau và không được quá 2 tuần</p>
+                            <p class="mt-2">Lưu ý: Ngày đặt tính từ 3 ngày sau</p>
                             <span asp-validation-for="BookingRequestDto.CourtTypeId" class="text-danger"></span>
                         </div>
+
                         <div class="mt-4">
                             <p style="margin-top: 8px;" class="mt-4">Loại dịch vụ</p>
                             <select asp-for="BookingRequestDto.BookingTypeId" class="form-select" id="type">
@@ -116,23 +118,38 @@
                             </select>
                             <span asp-validation-for="BookingRequestDto.BookingTypeId" class="text-danger"></span>
                         </div>
-                        <div class="mt-4">
-                            <p class="mt-4">Khung giờ</p>
-                            <div class="d-flex flex-column justify-content-center align-items-center style="column-gap: 16px;row-gap: 16px;">
-                                @foreach (var item in Model.Slots)
-                                {
-                                    var formatStartTime = item.StartTime.Value.Hour.ToString("D2") + ":" + item.StartTime.Value.Minute.ToString("D2");
-                                    var formatEndTime = item.EndTime.Value.Hour.ToString("D2") + ":" + item.EndTime.Value.Minute.ToString("D2");
-                                    var priceFormat = string.Format("{0:N0}", item.Price);
 
-                                    <div class="form-check">
-                                        <input value="@item.SlotId" asp-for="BookingRequestDto.SlotId" name="slotId" class="form-check-input" type="radio" id="@item.SlotId">
-                                        <label class="form-check-label" for="@item.SlotId">
-                                            @formatStartTime - @formatEndTime : <span class="fw-bold">@priceFormat đồng</span>
-                                        </label>
-                                    </div>
-                                }
-                                <span asp-validation-for="BookingRequestDto.SlotId" class="text-danger"></span>
+                        <div class="mt-4">
+                            <p style="margin-top: 8px;" class="mt-4">Giờ đặt sân</p>
+
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <input asp-for="BookingRequestDto.StartTimeHour" class="form-control" type="number" min="7" max="20" step="1">
+                                    <span asp-validation-for="BookingRequestDto.StartTimeHour" class="text-danger"></span>
+                                </div>
+                                <div class="mx-4">:</div>
+                                <div>
+                                    <select asp-for="BookingRequestDto.StartTimeMinute" class="form-select">
+                                        <option value="0">00</option>
+                                        <option value="15">15</option>
+                                        <option value="30">30</option>
+                                        <option value="45">45</option>
+                                    </select>
+                                    <span asp-validation-for="BookingRequestDto.StartTimeMinute" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <p style="margin-top: 8px;" class="mt-4">Thời lượng</p>
+
+                            <div class="d-flex align-items-center">
+                                <select asp-for="BookingRequestDto.Duration" class="form-select">
+                                    <option value="1">1 tiếng</option>
+                                    <option value="2">2 tiếng</option>
+                                    <option value="3">3 tiếng</option>
+                                </select>
+                                <span asp-validation-for="BookingRequestDto.Duration" class="text-danger"></span>
                             </div>
                         </div>
 
@@ -195,6 +212,12 @@
     <script>
         const type = document.getElementById("type");
         const weekCount = document.getElementById("weekcount");
+
+        if (type.value == "1") {
+            weekCount.style.display = "block";
+        } else {
+            weekCount.style.display = "none"
+        }
 
         type.onchange = (e) => {
             if (e.target.value == "1") {

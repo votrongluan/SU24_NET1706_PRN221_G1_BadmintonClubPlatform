@@ -1,4 +1,5 @@
-﻿using BusinessObjects.Entities;
+﻿using BusinessObjects.Dtos.Booking;
+using BusinessObjects.Entities;
 
 namespace Services.IService;
 
@@ -9,4 +10,6 @@ public interface IBookingService
     void DeleteBooking(int bookingId);
     Booking GetBookingById(int bookingId);
     void UpdateBooking(Booking booking);
+    bool BookLichNgay(BookingRequestDto dto);
+    bool BookLichCoDinh(BookingRequestDto dto);
 }
