@@ -38,6 +38,11 @@ namespace WebAppRazor.Pages.Customer
         }
         public IActionResult OnGet(string searchString, string searchProperty, string sortProperty, int sortOrder, int page = 1, DateOnly? bookingDate = null)
         {
+            LoadAccountFromSession();
+            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Customer.ToString());
+
+            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+
             _logger.LogInformation("OnGet called with: searchString={SearchString}, searchProperty={SearchProperty}, sortProperty={SortProperty}, sortOrder={SortOrder}, page={Page}, bookingDate={BookingDate}",
                 searchString, searchProperty, sortProperty, sortOrder, page, bookingDate);
 
@@ -117,9 +122,5 @@ namespace WebAppRazor.Pages.Customer
             _logger.LogInformation("After paging: FilterBookings count = {FilterBookingsCount}, currentPage={CurrentPage}, totalPage={TotalPage}",
                 FilterBookings.Count, currentPage, totalPage);
         }
-        //LoadAccountFromSession();
-        //var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Customer.ToString());
-
-        //if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
     }
 }
