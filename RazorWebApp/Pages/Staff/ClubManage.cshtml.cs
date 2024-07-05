@@ -127,6 +127,11 @@ namespace WebAppRazor.Pages.Staff
 
             try
             {
+                var existingClub = _serviceManager.ClubService.GetClubById(id);
+
+                Club.TotalStar = existingClub.TotalStar;
+                Club.TotalReview = existingClub.TotalReview;
+
                 _serviceManager.ClubService.UpdateClub(Club);
 
                 // Delete existing booking types for the club

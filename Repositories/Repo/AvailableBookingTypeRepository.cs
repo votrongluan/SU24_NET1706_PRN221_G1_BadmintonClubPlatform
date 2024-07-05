@@ -12,6 +12,11 @@ public class AvailableBookingTypeRepository : IAvailableBookingTypeRepository
         return AvailableBookingTypeDao.GetAll().Include(e => e.BookingType).OrderByDescending(e => e.AvailableBookingTypeId).ToList();
     }
 
+    public List<AvailableBookingType> GetAllAvailableBookingTypesByClubId(int clubId)
+    {
+        return AvailableBookingTypeDao.GetAll().Include(e => e.BookingType).OrderByDescending(e => e.AvailableBookingTypeId).Where(e => e.ClubId == clubId).ToList();
+    }
+
     public AvailableBookingType GetAvailableBookingTypeById(int availableBookingTypeId)
     {
         return GetAllAvailableBookingTypes().FirstOrDefault(e => e.AvailableBookingTypeId == availableBookingTypeId);
