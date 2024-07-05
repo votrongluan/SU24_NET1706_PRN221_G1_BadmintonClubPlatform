@@ -9,7 +9,10 @@ public class MatchRepository : IMatchRepository
 {
     public List<Match> GetAllMatches()
     {
-        return MatchDao.GetAll().Include(e => e.Booking).ThenInclude(e => e.BookingDetails).ThenInclude(e => e.Slot).OrderByDescending(e => e.MatchId).ToList();
+        return MatchDao.GetAll()
+            .Include(x => x.Booking).ThenInclude(x => x.Club)
+            .ThenInclude(x => x.District).ThenInclude(x => x.City)
+            .Include(e => e.Booking).ThenInclude(e => e.BookingDetails).ThenInclude(e => e.Slot).OrderByDescending(e => e.MatchId).ToList();
     }
 
     public Match GetMatchById(int matchId)

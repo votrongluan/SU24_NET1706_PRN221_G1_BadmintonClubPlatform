@@ -14,6 +14,7 @@ namespace WebAppRazor.Pages.Staff
         private readonly IServiceManager _service;
         [BindProperty] public CreateCourtDto CreateCourt { get; set; }
         public string Message { get; set; } = string.Empty;
+        public int TotalCourts { get; set; }
         public List<Court> Courts { get; set; }
         public List<Club> Clubs { get; set; }
         public List<CourtType> CourtTypes { get; set; }
@@ -29,7 +30,7 @@ namespace WebAppRazor.Pages.Staff
 
             CourtsDto = Courts.Select(e => e.ToResponseCourtDto()).ToList();
             FilterCourtsDto = CourtsDto;
-
+            TotalCourts = Courts.Count;
             ViewData["CourtTypeId"] = new SelectList(CourtTypes, "CourtTypeId", "TypeName");
         }
         public CourtManageModel(IServiceManager service)
@@ -42,8 +43,8 @@ namespace WebAppRazor.Pages.Staff
             {
                 FilterCourtsDto = searchProperty switch
                 {
-                    "CourtId" => CourtsDto.Where(e => e.CourtId.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList(),
-                    "TypeName" => CourtsDto.Where(e => CourtTypes.FirstOrDefault(ct => ct.CourtTypeId == e.CourtTypeId)?.TypeName.Contains(searchString, StringComparison.OrdinalIgnoreCase) ?? false).ToList(),
+                    "CourtId" => FilterCourtsDto.Where(e => e.CourtId.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList(),
+                    "TypeName" => FilterCourtsDto.Where(e => e.TypeName.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList(),
                     _ => FilterCourtsDto,
                 };
             }
@@ -53,12 +54,14 @@ namespace WebAppRazor.Pages.Staff
                 FilterCourtsDto = sortProperty switch
                 {
                     "CourtId" => sortOrder == -1 ? FilterCourtsDto.OrderByDescending(e => e.CourtId).ToList() : sortOrder == 1 ? FilterCourtsDto.OrderBy(e => e.CourtId).ToList() : FilterCourtsDto,
-                    "TypeName" => sortOrder == -1 ? FilterCourtsDto.OrderByDescending(e => e.CourtTypeId).ThenBy(e => e.CourtId).ToList() :
-                         sortOrder == 1 ? FilterCourtsDto.OrderBy(e => e.CourtTypeId).ThenBy(e => e.CourtId).ToList() :
-                         FilterCourtsDto.OrderBy(e => e.CourtTypeId == 1 ? 0 : e.CourtTypeId == 2 ? 1 : 2).ThenBy(e => e.CourtId).ToList(),
+                    "TypeName" => sortOrder == -1 ? FilterCourtsDto.OrderByDescending(e => e.TypeName).ThenBy(e => e.TypeName).ToList() :
+                    sortOrder == 1 ? FilterCourtsDto.OrderBy(e => e.TypeName).ThenBy(e => e.TypeName).ToList() :
+                    FilterCourtsDto.OrderBy(e => e.CourtTypeId == 1 ? 0 : e.CourtTypeId == 2 ? 1 : 2).ThenBy(e => e.CourtId).ToList(),
                     _ => FilterCourtsDto,
                 };
             }
+
+            TotalCourts = FilterCourtsDto.Count;
         }
 
         public IActionResult OnGet(string searchString, string searchProperty, string sortProperty, int sortOrder)
@@ -68,7 +71,6 @@ namespace WebAppRazor.Pages.Staff
 
             if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
 
-            // Set and clear the message
             if (!string.IsNullOrWhiteSpace(Message))
             {
                 Message = string.Empty;

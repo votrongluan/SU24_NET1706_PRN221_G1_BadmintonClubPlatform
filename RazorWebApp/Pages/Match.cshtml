@@ -67,147 +67,100 @@
     </header>
     <main class="bg-light" style="padding-bottom: 2rem;min-height: 80vh;">
         <div class="container bg-light">
-            <section>
-                <h2 class="fs-4 text-center">Lịch thi đấu</h2>
-                <form style="margin-top: 16px;">
-                    <input class="form-control" type="search" placeholder="Tiêu đề của cuộc thi">
-                    <div class="d-flex flex-column justify-content-between flex-lg-row">
-                        <div>
-                            <p style="margin-bottom: 8px;margin-top: 8px;">Thành phố</p><select class="form-select">
-                                <optgroup label="This is a group">
-                                    <option value="12" selected="">This is item 1</option>
-                                    <option value="13">This is item 2</option>
-                                    <option value="14">This is item 3</option>
-                                </optgroup>
-                            </select>
+                <section>
+                    <h2 class="fs-4 text-center">Lịch thi đấu</h2>
+                    <form style="margin-top: 16px;">
+                        <input name="searchString" class="form-control" type="search" placeholder="Từ khóa để tìm kiếm" value="@Request.Query["searchString"]">
+                        <div class="d-flex flex-column justify-content-between flex-lg-row">
+                            <div>
+                                <p style="margin-bottom: 8px;margin-top: 8px;">Thành phố</p>
+                                <select name="cityId" id="CityId" class="form-control form-select mt-2" asp-items="ViewBag.CityId"></select>
+                            </div>
+                            <div>
+                                <p style="margin-bottom: 8px;margin-top: 8px;">Quận / huyện</p>
+                                <select name="districtId" id="DistrictId" class="form-select mt-2">
+                                    <!-- Dynamic loading from AJAX -->
+                                </select>
+                            </div>
+                            <div>
+                                <p style="margin-bottom: 8px;margin-top: 8px;">Ngày thi đấu</p>
+                                <input name="matchDate" class="form-control" type="date" value="@Request.Query["matchDate"]">
+                            </div>
+                            <div>
+                                <p style="margin-bottom: 8px;margin-top: 8px;">Tìm kiếm theo</p>
+                                <select name="searchProperty" class="form-select">
+                                    <option value="Title" selected>Tiêu đề</option>
+                                    <option value="Description">Mô tả</option>
+                                    <option value="ClubName">Câu lạc bộ</option>
+                                    <option value="MatchDate">Ngày thi đấu</option>
+                                    <option value="MatchTime">Giờ thi đấu</option>
+                                    <option value="Address">Địa chỉ</option>
+                                </select>
+                            </div>
+                            <div>
+                                <p style="margin-bottom: 8px;margin-top: 8px;">Sắp xếp theo</p>
+                                <select name="sortProperty" class="form-select">
+                                    <option value="MatchId">Mã trận đấu</option>
+                                    <option value="Title">Tiêu đề</option>
+                                    <option value="Description">Mô tả</option>
+                                    <option value="MatchDate">Ngày thi đấu</option>
+                                    <option value="MatchTime">Giờ thi đấu</option>
+                                </select>
+                            </div>
+                            <div>
+                                <p style="margin-bottom: 8px;margin-top: 8px;">Thứ tự sắp xếp</p>
+                                <select name="sortOrder" class="form-select">
+                                    <option value="0" selected="">Mặc định</option>
+                                    <option value="1">Tăng dần</option>
+                                    <option value="-1">Giảm dần</option>
+                                </select>
+                            </div>
+                            <input class="btn btn-primary align-self-end" type="submit" style="margin-top: 8px;height: fit-content;" value="Tìm kiếm">
                         </div>
-                        <div>
-                            <p style="margin-bottom: 8px;margin-top: 8px;">Quận / huyện</p><select class="form-select">
-                                <optgroup label="This is a group">
-                                    <option value="12" selected="">This is item 1</option>
-                                    <option value="13">This is item 2</option>
-                                    <option value="14">This is item 3</option>
-                                </optgroup>
-                            </select>
-                        </div>
-                        <div>
-                            <p style="margin-bottom: 8px;margin-top: 8px;">Ngày thi đấu</p><input class="form-control"
-                                type="date">
-                        </div>
-                        <div>
-                            <p style="margin-bottom: 8px;margin-top: 8px;">Sắp xếp theo</p><select class="form-select">
-                                <optgroup label="This is a group">
-                                    <option value="12" selected="">This is item 1</option>
-                                    <option value="13">This is item 2</option>
-                                    <option value="14">This is item 3</option>
-                                </optgroup>
-                            </select>
-                        </div>
-                        <div>
-                            <p style="margin-bottom: 8px;margin-top: 8px;">Thứ tự sắp xếp</p><select
-                                class="form-select">
-                                <optgroup label="This is a group">
-                                    <option value="12" selected="">This is item 1</option>
-                                    <option value="13">This is item 2</option>
-                                    <option value="14">This is item 3</option>
-                                </optgroup>
-                            </select>
-                        </div><input class="btn btn-primary align-self-end" type="submit"
-                            style="margin-top: 8px;height: fit-content;" value="Tìm kiếm">
+                    </form>
+                    <div style="margin-top: 16px;" class="mt-4">
+                        <p class="text-secondary">Tìm thấy @Model.TotalMatches trận đấu</p>
+                        @foreach (var match in Model.FilterMatches)
+                        {
+                            <div class="card" style="margin-top: 16px;">
+                                <div class="card-body">
+                                    <h4 class="fs-5 card-title">@match.Title</h4>
+                                    <h6 class="text-muted card-subtitle mb-2">Địa điểm: Câu lạc bộ @match.ClubName, @match.Address</h6>
+                                    <h6 class="text-muted card-subtitle mb-2">Thời gian: @match.MatchTime, ngày @match.MatchDate</h6>
+                                    <p class="card-text">@match.Description</p>
+                                    <a class="btn btn-primary" role="button" asp-page="ClubDetail" asp-route-id="@match.ClubName">Xem câu lạc bộ</a>
+                                </div>
+                            </div>
+                        }
                     </div>
-                </form>
-                <div style="margin-top: 16px;" class="mt-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="fs-5 card-title">Trận thi đấu giữa anh A và chị B</h4>
-                            <h6 class="text-muted card-subtitle mb-2">
-                                Câu lạc bộ SpringBoot, 123 đường CMT8, quận 9,
-                                Thành phố Hồ Chí Minh
-                            </h6>
-                            <h6 class="text-muted card-subtitle mb-2">Thời gian: 17h15 - 18h15, ngày 17/05/2024</h6>
-                            <p class="card-text">Vô cùng gay cấn đến từng hơi thở</p><a class="card-link" href="#">
-                                Xem
-                                câu lạc bộ
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card" style="margin-top: 16px;">
-                        <div class="card-body" style="margin-top: 16px;">
-                            <h4 class="fs-5 card-title">Trận thi đấu giữa anh A và chị B</h4>
-                            <h6 class="text-muted card-subtitle mb-2">
-                                Câu lạc bộ SpringBoot, 123 đường CMT8, quận 9,
-                                Thành phố Hồ Chí Minh
-                            </h6>
-                            <h6 class="text-muted card-subtitle mb-2">Thời gian: 17h15 - 18h15, ngày 17/05/2024</h6>
-                            <p class="card-text">Vô cùng gay cấn đến từng hơi thở</p><a class="card-link" href="#">
-                                Xem
-                                câu lạc bộ
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card" style="margin-top: 16px;">
-                        <div class="card-body" style="margin-top: 16px;">
-                            <h4 class="fs-5 card-title">Trận thi đấu giữa anh A và chị B</h4>
-                            <h6 class="text-muted card-subtitle mb-2">
-                                Câu lạc bộ SpringBoot, 123 đường CMT8, quận 9,
-                                Thành phố Hồ Chí Minh
-                            </h6>
-                            <h6 class="text-muted card-subtitle mb-2">Thời gian: 17h15 - 18h15, ngày 17/05/2024</h6>
-                            <p class="card-text">Vô cùng gay cấn đến từng hơi thở</p><a class="card-link" href="#">
-                                Xem
-                                câu lạc bộ
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card" style="margin-top: 16px;">
-                        <div class="card-body" style="margin-top: 16px;">
-                            <h4 class="fs-5 card-title">Trận thi đấu giữa anh A và chị B</h4>
-                            <h6 class="text-muted card-subtitle mb-2">
-                                Câu lạc bộ SpringBoot, 123 đường CMT8, quận 9,
-                                Thành phố Hồ Chí Minh
-                            </h6>
-                            <h6 class="text-muted card-subtitle mb-2">Thời gian: 17h15 - 18h15, ngày 17/05/2024</h6>
-                            <p class="card-text">Vô cùng gay cấn đến từng hơi thở</p><a class="card-link" href="#">
-                                Xem
-                                câu lạc bộ
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card" style="margin-top: 16px;">
-                        <div class="card-body" style="margin-top: 16px;">
-                            <h4 class="fs-5 card-title">Trận thi đấu giữa anh A và chị B</h4>
-                            <h6 class="text-muted card-subtitle mb-2">
-                                Câu lạc bộ SpringBoot, 123 đường CMT8, quận 9,
-                                Thành phố Hồ Chí Minh
-                            </h6>
-                            <h6 class="text-muted card-subtitle mb-2">Thời gian: 17h15 - 18h15, ngày 17/05/2024</h6>
-                            <p class="card-text">Vô cùng gay cấn đến từng hơi thở</p><a class="card-link" href="#">
-                                Xem
-                                câu lạc bộ
-                            </a>
-                        </div>
-                    </div>
-                    <nav style="margin-top: 16px;">
+
+                    <nav>
                         <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link" aria-label="Previous" href="#">
-                                    <span aria-hidden="true">«</span>
-                                </a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">4</a></li>
-                            <li class="page-item"><a class="page-link" href="#">5</a></li>
-                            <li class="page-item">
-                                <a class="page-link" aria-label="Next" href="#">
-                                    <span aria-hidden="true">»</span>
-                                </a>
-                            </li>
+                            @if (Model.currentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" aria-label="Previous" href="?page=@(Model.currentPage - 1)&searchString=@Request.Query["searchString"]&searchProperty=@Request.Query["searchProperty"]&sortProperty=@Request.Query["sortProperty"]&sortOrder=@Request.Query["sortOrder"]&cityId=@Request.Query["cityId"]&districtId=@Request.Query["districtId"]&matchDate=@Request.Query["matchDate"]">
+                                        <span aria-hidden="true">«</span>
+                                    </a>
+                                </li>
+                            }
+                            @for (int i = 1; i <= Model.totalPage; i++)
+                            {
+                                <li class="page-item @(i == Model.currentPage ? "active" : "")">
+                                    <a class="page-link" href="?page=@i&searchString=@Request.Query["searchString"]&searchProperty=@Request.Query["searchProperty"]&sortProperty=@Request.Query["sortProperty"]&sortOrder=@Request.Query["sortOrder"]&cityId=@Request.Query["cityId"]&districtId=@Request.Query["districtId"]&matchDate=@Request.Query["matchDate"]">@i</a>
+                                </li>
+                            }
+                            @if (Model.currentPage < Model.totalPage)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" aria-label="Next" href="?page=@(Model.currentPage + 1)&searchString=@Request.Query["searchString"]&searchProperty=@Request.Query["searchProperty"]&sortProperty=@Request.Query["sortProperty"]&sortOrder=@Request.Query["sortOrder"]&cityId=@Request.Query["cityId"]&districtId=@Request.Query["districtId"]&matchDate=@Request.Query["matchDate"]">
+                                        <span aria-hidden="true">»</span>
+                                    </a>
+                                </li>
+                            }
                         </ul>
                     </nav>
-                </div>
-            </section>
+                </section>
         </div>
     </main>
     <footer class="text-center bg-dark" style="padding-top: 1rem;padding-bottom: 1rem;">
@@ -241,10 +194,38 @@
     <script src="~/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/assets/js/Simple-Slider-swiper-bundle.min.js"></script>
     <script src="~/assets/js/Simple-Slider.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        const citySelect = document.getElementById("CityId");
+        citySelect.addEventListener("change", handleCitySelectChange);
+
+        handleCitySelectChange();
+
+        function handleCitySelectChange() {
+            var cityId = citySelect.value;
+            var districtSelect = document.getElementById("DistrictId");
+
+            fetch(`/AllClub?handler=DistrictsByCityId&cityId=${cityId}`)
+                .then(response => response.json())
+                .then(data => {
+                    districtSelect.innerHTML = '';
+                    data.forEach(district => {
+                        var option = document.createElement("option");
+                        option.value = district.districtId;
+                        option.text = district.districtName;
+                        districtSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching districts:', error));
+        }
+    </script>
 </body>
 
 </html>

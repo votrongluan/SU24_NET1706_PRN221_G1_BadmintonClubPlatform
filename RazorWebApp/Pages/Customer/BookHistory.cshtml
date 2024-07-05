@@ -69,70 +69,91 @@
             <section>
                 <h2 class="fs-4 text-center">Lịch sử đặt sân</h2>
                 <form style="margin-top: 16px;">
-                    <input class="form-control" type="search" placeholder="Mã đơn">
+                    <input name="searchString" class="form-control" type="search" placeholder="Nhập từ khóa cần tìm kiếm" value="@Request.Query["searchString"]">
                     <div class="d-flex flex-column justify-content-between flex-lg-row">
                         <div>
-                            <p style="margin-bottom: 8px;margin-top: 8px;">Ngày đặt</p><input class="form-control"
-                                type="date">
+                            <p style="margin-bottom: 8px;margin-top: 8px;">Ngày đặt</p>
+                            <input name="BookingDate" class="form-control" type="date" value="@Request.Query["BookingDate"]">
                         </div>
                         <div>
-                            <p style="margin-bottom: 8px;margin-top: 8px;">Sắp xếp theo</p><select class="form-select">
-                                <optgroup label="This is a group">
-                                    <option value="12" selected="">This is item 1</option>
-                                    <option value="13">This is item 2</option>
-                                    <option value="14">This is item 3</option>
-                                </optgroup>
+                            <p style="margin-bottom: 8px;margin-top: 8px;">Tìm kiếm theo</p>
+                            <select name="searchProperty" class="form-select">
+                                <option value="BookingId" selected="">Mã đặt sân</option>
+                                <option value="ClubName">Câu lạc bộ</option>
+                                <option value="DistrictName">Quận</option>
+                                <option value="CityName">Thành phố</option>
+                                <option value="BookingDate">Ngày đặt</option>
+                                <option value="BookingTime">Thời gian đặt</option>
                             </select>
                         </div>
                         <div>
-                            <p style="margin-bottom: 8px;margin-top: 8px;">Thứ tự sắp xếp</p><select
-                                class="form-select">
-                                <optgroup label="This is a group">
-                                    <option value="12" selected="">This is item 1</option>
-                                    <option value="13">This is item 2</option>
-                                    <option value="14">This is item 3</option>
-                                </optgroup>
+                            <p style="margin-bottom: 8px;margin-top: 8px;">Sắp xếp theo</p>
+                            <select name="sortProperty" class="form-select">
+                                <option value="BookingId" selected="">Mã đặt sân</option>
+                                <option value="ClubName">Câu lạc bộ</option>
+                                <option value="DistrictName">Quận</option>
+                                <option value="CityName">Thành phố</option>
+                                <option value="BookingDate">Ngày đặt</option>
+                                <option value="BookingTime">Thời gian đặt</option>
                             </select>
-                        </div><input class="btn btn-primary align-self-end mt-4" type="submit"
+                        </div>
+                        <div>
+                            <p style="margin-bottom: 8px;margin-top: 8px;">Thứ tự sắp xếp</p>
+                                <select name="sortOrder" class="form-select">
+                                    <option value="0" selected="">Mặc định</option>
+                                    <option value="1">Tăng dần</option>
+                                    <option value="-1">Giảm dần</option>
+                            </select>
+                        </div>
+                        <input class="btn btn-primary align-self-end mt-4" type="submit"
                             style="height: fit-content;margin-top: 11px;" value="Tìm kiếm">
                     </div>
                 </form>
                 <div style="margin-top: 16px;" class="mt-4">
-                    <div class="card mt-4">
-                        <div class="card-body">
-                            <h4 class="fs-5 card-title">Mã đơn: 1</h4>
-                            <h6 class="text-muted card-subtitle mb-2">
-                                Câu lạc bộ: SpringBoot, 123 đường CMT8, quận 9,
-                                Thành phố Hồ Chí Minh
-                            </h6>
-                            <h6 class="text-muted card-subtitle mb-2">Thời gian: 17h15 - 18h15, ngày 17/05/2024</h6>
-                            <div class="d-flex justify-content-between mt-4">
-                                <a class="btn btn-light" role="button" href="../ClubDetail">Xem câu lạc bộ</a><a
-                                    class="btn btn-primary" role="button" href="BookDetail">Chi tiết</a>
+                    <p class="text-secondary">Tìm thấy @Model.TotalBookingHistory lịch đã đặt</p>
+                    @foreach (var booking in Model.FilterBookings)
+                    {
+                        <div class="card" style="margin-top: 16px;">
+                            <div class="card-body">
+                                <h4 class="fs-5 card-title">Mã đặt: @booking.BookingId</h4>
+                                <h5 class="fs-5 card-title">Người đặt: @booking.FullName</h5>
+                                <h6 class="text-muted card-subtitle mb-2">Địa điểm: Câu lạc bộ @booking.ClubName, @booking.Address, @booking.CityName, @booking.DistrictName</h6>
+                                <h6 class="text-muted card-subtitle mb-2">Thời gian: @booking.BookingTime, Ngày: @booking.BookingDate</h6>
+                                <p class="card-text">Mã sân: @booking.CourtId, Đặt theo: @booking.BookingTypeDescription</p>
+                                <a class="btn btn-primary" role="button" asp-page="ClubDetail" asp-route-id="@booking.ClubName">
+                                Xem câu lạc bộ
+                               </a>
                             </div>
                         </div>
-                    </div>
+                    }
+                </div>
 
-                    <nav style="margin-top: 16px;">
+                    <nav>
                         <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link" aria-label="Previous" href="#">
-                                    <span aria-hidden="true">«</span>
-                                </a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">4</a></li>
-                            <li class="page-item"><a class="page-link" href="#">5</a></li>
-                            <li class="page-item">
-                                <a class="page-link" aria-label="Next" href="#">
-                                    <span aria-hidden="true">»</span>
-                                </a>
-                            </li>
+                            @if (Model.currentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" aria-label="Previous" href="?page=@(Model.currentPage - 1)&searchString=@Request.Query["searchString"]&searchProperty=@Request.Query["searchProperty"]&sortProperty=@Request.Query["sortProperty"]&sortOrder=@Request.Query["sortOrder"]">
+                                        <span aria-hidden="true">«</span>
+                                    </a>
+                                </li>
+                            }
+                            @for (int i = 1; i <= Model.totalPage; i++)
+                            {
+                                <li class="page-item @(i == Model.currentPage ? "active" : "")">
+                                    <a class="page-link" href="?page=@i&searchString=@Request.Query["searchString"]&searchProperty=@Request.Query["searchProperty"]&sortProperty=@Request.Query["sortProperty"]&sortOrder=@Request.Query["sortOrder"]">@i</a>
+                                </li>
+                            }
+                            @if (Model.currentPage < Model.totalPage)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" aria-label="Next" href="?page=@(Model.currentPage + 1)&searchString=@Request.Query["searchString"]&searchProperty=@Request.Query["searchProperty"]&sortProperty=@Request.Query["sortProperty"]&sortOrder=@Request.Query["sortOrder"]">
+                                        <span aria-hidden="true">»</span>
+                                    </a>
+                                </li>
+                            }
                         </ul>
                     </nav>
-                </div>
             </section>
         </div>
     </main>
@@ -167,8 +188,11 @@
     <script src="~/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/assets/js/Simple-Slider-swiper-bundle.min.js"></script>
     <script src="~/assets/js/Simple-Slider.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 </body>

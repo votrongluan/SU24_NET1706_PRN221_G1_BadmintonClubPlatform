@@ -88,9 +88,16 @@
                 </div>
 
                 <form method="get" style="margin-top: 16px;" class="mt-4">
-                    <input name="searchString" class="form-control" type="search" placeholder="Nhập từ khóa để tìm kiếm">
+                    <input name="searchString" class="form-control" type="search" placeholder="Nhập từ khóa để tìm kiếm" value="@Request.Query["searchString"]">
                     <div class="d-flex flex-lg-row">
                         <div class="d-flex" style="column-gap: 1rem;margin-left: auto;">
+                            <div>
+                                <p style="margin-bottom: 8px;margin-top: 8px;">Tìm kiếm theo</p>
+                                <select name="searchProperty" class="form-select">
+                                    <option value="CourtId" selected="">Mã sân</option>
+                                    <option value="TypeName">Loại sân</option>
+                                </select>
+                            </div>
                             <div>
                                 <p style="margin-bottom: 8px;margin-top: 8px;">Sắp xếp theo</p>
                                 <select name="sortProperty" class="form-select">
@@ -121,6 +128,7 @@
                         </thead>
                         <tbody>
                             <tr>
+                                <p class="text-secondary">Tìm thấy @Model.TotalCourts sân</p>
                                 @foreach (var court in Model.FilterCourtsDto)
                                 {
                                 <tr class="text-center">

@@ -12,4 +12,7 @@ public interface IClubService
     Club GetClubById(int clubId);
     Club GetDeActiveClubById(int clubId);
     void UpdateClub(Club c);
+    List<Club> GetMostRatingClubs();
+    List<Club> GetMostBookingClubs();
+    List<Club> GetMostPopularClubs();
 }

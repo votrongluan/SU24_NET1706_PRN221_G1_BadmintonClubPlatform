@@ -52,4 +52,19 @@ public class ClubService : IClubService
     {
         _repo.Club.UpdateClub(c);
     }
+
+    public List<Club> GetMostRatingClubs()
+    {
+        return _repo.Club.GetMostRatingClubs();
+    }
+
+    public List<Club> GetMostBookingClubs()
+    {
+        return _repo.Club.GetMostBookingClubs();
+    }
+
+    public List<Club> GetMostPopularClubs()
+    {
+        return _repo.Club.GetMostPopularClubs();
+    }
 }

@@ -13,5 +13,6 @@ namespace BusinessObjects.Dtos.Court
         public int CourtTypeId { get; set; }
         public int ClubId { get; set; }
         public bool? Status { get; set; }
+        public string? TypeName { get; set; }
     }
 }

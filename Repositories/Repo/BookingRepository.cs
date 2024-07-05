@@ -1,5 +1,6 @@
 ﻿using BusinessObjects.Entities;
 using DataAccessObjects;
+using Microsoft.EntityFrameworkCore;
 using Repositories.IRepo;
 
 namespace Repositories.Repo;
@@ -8,7 +9,18 @@ public class BookingRepository : IBookingRepository
 {
     public List<Booking> GetAllBookings()
     {
-        return BookingDao.GetAll().OrderByDescending(e => e.BookingId).ToList();
+        return BookingDao.GetAll()
+            .Include(b => b.User)
+            .Include(b => b.Club)
+            .ThenInclude(c => c.District)
+                .ThenInclude(d => d.City)
+            .Include(x => x.Club)
+            .Include(x => x.BookingDetails)
+            .ThenInclude(x => x.Court)
+            .Include(b => b.BookingDetails)
+            .ThenInclude(bd => bd.Slot)
+            .Include(b => b.BookingType)
+            .OrderByDescending(e => e.BookingId).ToList();
     }
 
     public Booking GetBookingById(int bookingId)
