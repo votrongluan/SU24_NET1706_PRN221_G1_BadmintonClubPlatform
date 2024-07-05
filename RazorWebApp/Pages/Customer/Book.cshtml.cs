@@ -78,11 +78,11 @@ namespace WebAppRazor.Pages.Customer
                 var bookingDetail = _service.BookingDetailService.GetAllBookingDetails()
                     .Where(e => e.BookDate == BookingRequestDto.BookDate);
 
-                //if (bookingDetail != null)
-                //{
-                //    TempData["Message"] = $"{MessagePrefix.ERROR}Đặt thất bại, bạn đã đặt lịch cho ngày hôm đó";
-                //    return RedirectToPage("Book", new { id });
-                //}
+                if (bookingDetail != null)
+                {
+                    TempData["Message"] = $"{MessagePrefix.ERROR}Đặt thất bại, bạn đã đặt lịch cho ngày hôm đó";
+                    return RedirectToPage("Book", new { id });
+                }
 
                 BookingRequestDto.ClubId = id;
                 BookingRequestDto.UserId = LoginedAccount.UserId;

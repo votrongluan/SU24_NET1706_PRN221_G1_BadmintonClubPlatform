@@ -47,23 +47,41 @@
         <div class="d-flex">
             <div style="min-height: 80vh;background: var(--bs-white);">
                 <div class="p-4 pb-2 pt-2">
-                    <a href="ClubManage" style="text-decoration: none;color: var(--bs-black);">Quản lý club</a>
+                    <a href="/Staff/ClubManage"
+                       style="text-decoration: none;color: var(--bs-black);">Quản lý club</a>
                 </div>
                 <div class="p-4 pb-2 pt-2">
-                    <a href="CourtManage" style="text-decoration: none;color: var(--bs-black);">Quản lý sân</a>
+                    <a href="/Staff/CourtManage"
+                       style="text-decoration: none;color: var(--bs-black);">Quản lý sân</a>
                 </div>
                 <div class="p-4 pb-2 pt-2">
-                    <a href="SlotManage" style="text-decoration: none;color: var(--bs-black);">Quản lý giờ, giá</a>
+                    <a href="/Staff/SlotManage"
+                       style="text-decoration: none;color: var(--bs-black);">Quản lý giờ, giá</a>
                 </div>
                 <div class="p-4 pb-2 pt-2">
-                    <a href="ClubBookManage" style="text-decoration: none;color: var(--bs-black);">Lịch đặt sân</a>
+                    <a href="/Staff/ClubBookManage"
+                       style="text-decoration: none;color: var(--bs-black);">Lịch đặt sân</a>
                 </div>
                 <div class="p-4 pb-2 pt-2">
-                    <a href="MatchManage" style="text-decoration: none;color: var(--bs-black);">Lịch thi đấu</a>
+                    <a href="/Staff/MatchManage"
+                       style="text-decoration: none;color: var(--bs-black);">Lịch thi đấu</a>
                 </div>
             </div>
             <div style="flex: 1;" class="p-4">
                 <h2 class="fs-4 text-center mt-0">Lịch thi đấu</h2>
+
+                @* CHECK IF MESSAGE NOT NULL *@
+                @if (!string.IsNullOrEmpty(Model.Message))
+                {
+                    var messageClass = Model.Message.StartsWith(Constants.MessagePrefix.ERROR.ToString()) ? "alert-danger" :
+                    Model.Message.StartsWith(Constants.MessagePrefix.SUCCESS.ToString()) ? "alert-success" :
+                    Model.Message.StartsWith(Constants.MessagePrefix.WARNING.ToString()) ? "alert-warning" :
+                    "alert-info";
+
+                    <div class="alert @messageClass" role="alert">
+                        <p class="m-0 p-1">@Model.Message.Substring(1)</p>
+                    </div>
+                }
 
                 <div class="tab-pane" role="tabpanel" id="tab-4">
                     <div>
@@ -85,7 +103,7 @@
                                             <option value="Description">Mô tả</option>
                                             <option value="MatchDate">Ngày thi</option>
                                             <option value="MatchTime">Giờ thi</option>
-                                            <option value="CourtId">Giờ thi</option>
+                                            <option value="CourtId">Mã sân</option>
                                         </select>
                                     </div>
                                     <div>
@@ -95,7 +113,7 @@
                                             <option value="Description">Mô tả</option>
                                             <option value="MatchDate">Ngày thi</option>
                                             <option value="MatchTime">Giờ thi</option>
-                                            <option value="CourtId">Giờ thi</option>
+                                            <option value="CourtId">Mã sân</option>
                                         </select>
                                     </div>
                                     <div>
@@ -140,7 +158,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         <nav>
                             <ul class="pagination">
                                 @if (Model.CurrentPage > 1)
@@ -175,41 +193,49 @@
         <div class="modal fade" role="dialog" tabindex="-1" id="modal-1">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form>
+                    <form method="post">
                         <div class="modal-header">
                             <h4 class="modal-title fs-5">Đặt lịch thi đấu</h4><button class="btn-close" type="button"
                                                                                       aria-label="Close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
                             <label class="form-label" style="display: block;/*width: 100%;*/">
-                                Tiêu đề<input class="form-control mt-2" type="text"
-                                              placeholder="Nhập tiêu đề thi đấu">
-                            </label><label class="form-label mt-4"
-                                           style="display: block;/*width: 100%;*/">
-                                Nội dung<input class="form-control mt-2"
-                                               type="text" placeholder="Nhập nội dung thi đấu">
-                            </label><label class="form-label mt-4" style="display: block;/*width: 100%;*/">
+                                Tiêu đề
+                                <input asp-for="CreatedMatch.Title" class="form-control mt-2" type="text" placeholder="Nhập tiêu đề thi đấu">
+                                <span asp-validation-for="CreatedMatch.Title" class="text-danger"></span>
+                            </label>
+                            <label class="form-label mt-4"
+                                   style="display: block;/*width: 100%;*/">
+                                Nội dung<textarea asp-for="CreatedMatch.Description" class="form-control mt-2"
+                                                  type="text" placeholder="Nhập nội dung thi đấu"></textarea>
+                                <span asp-validation-for="CreatedMatch.Description" class="text-danger"></span>
+                            </label>
+                            <label class="form-label mt-4" style="display: block;/*width: 100%;*/">
                                 Loại sân
-                                <select class="form-select mt-2">
-                                    <optgroup label="This is a group">
-                                        <option value="12" selected="">This is item 1</option>
-                                        <option value="13">This is item 2</option>
-                                        <option value="14">This is item 3</option>
-                                    </optgroup>
+                                <select asp-for="CreatedMatch.CourtTypeId" class="form-select mt-2">
+                                    @foreach (var courtType in Model.CourtTypes)
+                                    {
+                                        <option value="@courtType.CourtTypeId">@courtType.TypeName</option>
+                                    }
                                 </select>
-                            </label><label class="form-label mt-4" style="display: block;/*width: 100%;*/">
+                                <span asp-validation-for="CreatedMatch.CourtTypeId" class="text-danger"></span>
+                            </label>
+                            <label class="form-label mt-4" style="display: block;/*width: 100%;*/">
                                 Ngày thi
-                                đấu<input class="form-control mt-4" type="date">
-                            </label><label class="form-label mt-4"
-                                           style="display: block;/*width: 100%;*/">
-                                Khung giờ
-                                <select class="form-select mt-2">
-                                    <optgroup label="This is a group">
-                                        <option value="12" selected="">This is item 1</option>
-                                        <option value="13">This is item 2</option>
-                                        <option value="14">This is item 3</option>
-                                    </optgroup>
-                                </select>
+                                đấu<input asp-for="CreatedMatch.MatchDate" class="form-control mt-4" type="date">
+                                <span asp-validation-for="CreatedMatch.MatchDate" class="text-danger"></span>
+                            </label>
+                            <label class="form-label mt-4"
+                                   style="display: block;/*width: 100%;*/">
+                                Giờ bắt đầu thi đấu
+                                <input class="form-control" type="time" asp-for="CreatedMatch.StartTime">
+                                <span asp-validation-for="CreatedMatch.StartTime" class="text-danger"></span>
+                            </label>
+                            <label class="form-label mt-4"
+                                   style="display: block;/*width: 100%;*/">
+                                Giờ kết thúc thi đấu
+                                <input class="form-control" type="time" asp-for="CreatedMatch.EndTime">
+                                <span asp-validation-for="CreatedMatch.EndTime" class="text-danger"></span>
                             </label>
                         </div>
                         <div class="modal-footer">
