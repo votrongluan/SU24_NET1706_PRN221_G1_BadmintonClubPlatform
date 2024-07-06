@@ -124,6 +124,7 @@ CREATE TABLE Review (
   Comment NVARCHAR(MAX),
   ClubId INT NOT NULL,
   UserId INT NOT NULL,
+  ReviewDate DATE,
   PRIMARY KEY (ReviewId)
 );
 
