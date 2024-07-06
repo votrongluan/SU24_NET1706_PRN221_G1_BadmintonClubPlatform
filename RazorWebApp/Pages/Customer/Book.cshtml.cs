@@ -78,7 +78,7 @@ namespace WebAppRazor.Pages.Customer
                 var bookingDetail = _service.BookingDetailService.GetAllBookingDetails()
                     .Where(e => e.BookDate == BookingRequestDto.BookDate);
 
-                if (bookingDetail != null)
+                if (bookingDetail.Count() > 0)
                 {
                     TempData["Message"] = $"{MessagePrefix.ERROR}Đặt thất bại, bạn đã đặt lịch cho ngày hôm đó";
                     return RedirectToPage("Book", new { id });
