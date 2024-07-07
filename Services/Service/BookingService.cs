@@ -176,7 +176,7 @@ public class BookingService : IBookingService
         return total;
     }
 
-    public bool BookLichCoDinh(BookingRequestDto dto)
+    public (bool status, int bookId) BookLichCoDinh(BookingRequestDto dto)
     {
         var availableCourt = _repo.Court.GetCourtsByClubId(dto.ClubId).ToList();
         Court selectedCourt = null;
@@ -265,13 +265,13 @@ public class BookingService : IBookingService
                 bookDate = bookDate.AddDays(7);
             }
 
-            return true;
+            return (true, booking.BookingId);
         }
 
-        return false;
+        return (false, -1);
     }
 
-    public bool BookLichNgay(BookingRequestDto dto)
+    public (bool status, int bookId) BookLichNgay(BookingRequestDto dto)
     {
         var availableCourt = _repo.Court.GetCourtsByClubId(dto.ClubId).ToList();
         var bookingDetailInSlotAndDate = _repo.BookingDetail.GetAllBookingDetails().Where(e =>
@@ -344,9 +344,9 @@ public class BookingService : IBookingService
 
             _repo.BookingDetail.AddBookingDetail(bookingDetail);
 
-            return true;
+            return (true, booking.BookingId);
         }
 
-        return false;
+        return (false, -1);
     }
 }
