@@ -30,6 +30,16 @@ public class BookingService : IBookingService
         _repo.Booking.DeleteBooking(bookingId);
     }
 
+    public void DeleteBookingDetail(int bookingId)
+    {
+        var bookingDetails = _repo.BookingDetail.GetAllBookingDetails().Where(e => e.BookingId == bookingId);
+
+        foreach (var bookingDetail in bookingDetails)
+        {
+            _repo.BookingDetail.DeleteBookingDetail(bookingDetail.BookingDetailId);
+        }
+    }
+
     public Booking GetBookingById(int bookingId)
     {
         return _repo.Booking.GetBookingById(bookingId);
@@ -128,7 +138,7 @@ public class BookingService : IBookingService
             var slotStartTime = (TimeOnly)slot.StartTime!;
             var slotEndTime = (TimeOnly)slot.EndTime!;
 
-            if (startTime >= slot.StartTime)
+            if (startTime >= slot.StartTime && startTime <= slot.EndTime)
             {
                 if (endTime > slot.EndTime)
                 {
@@ -142,27 +152,25 @@ public class BookingService : IBookingService
                     int passMinute = (endTime.Hour * 60 + endTime.Minute) -
                                      (startTime.Hour * 60 + startTime.Minute);
                     total += passMinute * ((int)slot.Price! / 60);
+                    startTime = endTime;
                     break;
                 }
             }
-            else if (endTime >= slot.StartTime)
+            else if (endTime >= slot.StartTime && endTime <= slot.EndTime)
             {
                 int passMinute = (endTime.Hour * 60 + endTime.Minute) -
                                  (slotStartTime.Hour * 60 + slotStartTime.Minute);
                 total += passMinute * ((int)slot.Price! / 60);
                 endTime = new TimeOnly(slotStartTime.Hour, slotStartTime.Minute);
             }
-            else
-            {
-                int passMinute = (endTime.Hour * 60 + endTime.Minute) -
-                                 (startTime.Hour * 60 + startTime.Minute);
-                total += passMinute * (defaultPrice / 60);
-                break;
-            }
         }
 
+        int lastMinute = (endTime.Hour * 60 + endTime.Minute) -
+                         (startTime.Hour * 60 + startTime.Minute);
+        total += lastMinute * (defaultPrice / 60);
+
         var tienVND = total / 1000;
-        var sodu = total % tienVND * 1000;
+        var sodu = total % (tienVND * 1000);
         total = sodu > 0 ? tienVND * 1000 + 1000 : tienVND * 1000;
 
         return total;

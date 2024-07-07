@@ -14,6 +14,7 @@ public static class MatchMapper
 
         return new MatchResponseDto()
         {
+            ClubId = match.Booking.ClubId,
             MatchId = match.MatchId,
             CourtId = match.Booking.BookingDetails.ElementAt(0).CourtId,
             Description = match.Description,

@@ -47,7 +47,7 @@
                         <div class="dropdown" style="margin-right: 40px;">
                             <a class="dropdown-toggle d-table-cell" aria-expanded="false" data-bs-toggle="dropdown" href="#"
                                style="text-decoration: none;color: var(--bs-navbar-active-color);">
-                                <img class="rounded-circle img-fluid" alt="man in black button-up shirt"
+                                <img class="rounded-circle img-fluid" alt=""
                                      style="width: 40px;height: 40px;margin-right: 8px;"
                                      src="@Model.LoginedAccount.AvatarLink">@Model.LoginedAccount.Fullname
                             </a>
@@ -109,7 +109,7 @@
                                style="height: fit-content;margin-top: 11px;" value="Tìm kiếm">
                     </div>
                 </form>
-                <div style="margin-top: 16px;" class="mt-4">
+                <div style="margin-top: 16px;" class="my-4">
                     <p class="text-secondary">Tìm thấy @Model.TotalBookingHistory lịch đã đặt</p>
                     @foreach (var booking in Model.FilterBookings)
                     {
@@ -120,7 +120,7 @@
                                 <h6 class="text-muted card-subtitle mb-2">Địa điểm: Câu lạc bộ @booking.ClubName, @booking.Address, @booking.CityName, @booking.DistrictName</h6>
                                 <h6 class="text-muted card-subtitle mb-2">Thời gian: @booking.BookingTime, Ngày: @booking.BookingDate</h6>
                                 <p class="card-text">Mã sân: @booking.CourtId, Đặt theo: @booking.BookingTypeDescription</p>
-                                <a class="btn btn-outline-primary" role="button" asp-page="/Customer/BookDetail" asp-route-id="@booking.BookingId">
+                                <a class="btn btn-outline-primary" role="button" asp-page="/Customer/BookDetail" asp-route-bookId="@booking.BookingId">
                                     Xem chi tiết
                                 </a>
                                 <a class="mx-4 btn btn-outline-secondary" role="button" asp-page="/ClubDetail" asp-route-id="@booking.ClubId">

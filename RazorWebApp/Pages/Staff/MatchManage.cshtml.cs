@@ -21,7 +21,6 @@ namespace WebAppRazor.Pages.Staff
         public List<MatchResponseDto> MatchesDto { get; set; }
         public List<MatchResponseDto> FilterMatchesDto { get; set; }
         public List<CourtType> CourtTypes { get; set; }
-        public List<Slot> Slots { get; set; }
 
         // Pagination properties
         public int CurrentPage { get; set; }
