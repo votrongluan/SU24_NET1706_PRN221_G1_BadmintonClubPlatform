@@ -83,6 +83,8 @@ namespace WebAppRazor.Pages.Customer
 
             if (Booking.UserId != LoginedAccount.UserId) return NotFound();
 
+            if (Booking.PaymentStatus == true) return RedirectToPage("BookDetail", new { bookId = Booking.BookingId });
+
             try
             {
                 PayOS payOs = new PayOS(Club.ClientId, Club.ApiKey, Club.ChecksumKey);
@@ -105,7 +107,7 @@ namespace WebAppRazor.Pages.Customer
                 long orderId = ReadNextOrderId();
 
                 PaymentData paymentData = new PaymentData(orderId, Booking?.TotalPrice ?? 0,
-                    $"Thanh toan don dat san", items, $"http://localhost:5072/Customer/BookDetail?bookId={Booking.BookingId}&handler=PayFail", "http://localhost:5072/Customer/BookDetail?bookId={Booking.BookingId}&handler=PaySuccess&orderId={orderId}");
+                    $"Thanh toan don dat san", items, $"http://localhost:5072/Customer/BookDetail?bookId={Booking.BookingId}&handler=PayFail", $"http://localhost:5072/Customer/BookDetail?bookId={Booking.BookingId}&handler=PaySuccess&orderId={orderId}");
 
                 CreatePaymentResult createPayment = await payOs.createPaymentLink(paymentData);
 
@@ -122,17 +124,20 @@ namespace WebAppRazor.Pages.Customer
 
         public IActionResult OnGetPaySuccess(int? bookId)
         {
-            LoadAccountFromSession();
-            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Customer.ToString());
-
-            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
-
             // Validate route id
             if (bookId == null) return NotFound();
 
             InitializeData((int)bookId);
 
             if (Booking == null) return NotFound();
+
+            Booking.PaymentStatus = true;
+            _service.BookingService.UpdateBooking(Booking);
+
+            LoadAccountFromSession();
+            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Customer.ToString());
+
+            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
 
             if (Booking.UserId != LoginedAccount.UserId) return NotFound();
 
