@@ -8,7 +8,7 @@ using WebAppRazor.Mappers;
 
 namespace WebAppRazor.Pages
 {
-    public class AuthenticationModel : PageModel
+    public class AuthenticationModel : AuthorPageServiceModel
     {
         public readonly IServiceManager _service;
 
@@ -19,18 +19,30 @@ namespace WebAppRazor.Pages
         public string SuccessMessage { get; set; }
         public int TabIndex { get; set; }
 
-        public AuthenticationModel (IServiceManager service)
+        public AuthenticationModel(IServiceManager service)
         {
             _service = service;
             TabIndex = 1;
         }
 
-        public void OnGet ()
+        public IActionResult OnGet()
         {
+            LoadAccountFromSession();
+
+            if (LoginedAccount != null)
+            {
+                var role = (string)LoginedAccount.Role;
+                if (role == AccountRoleEnum.Admin.ToString()) return RedirectToPage("/Admin/Index");
+                if (role == AccountRoleEnum.Staff.ToString()) return RedirectToPage("/Staff/Index");
+                return RedirectToPage("/Index");
+            }
+
             InitialData();
+
+            return Page();
         }
 
-        public IActionResult OnPostLogin ([Bind("UserName, Password")] AccountLoginDto AccountLogin)
+        public IActionResult OnPostLogin([Bind("UserName, Password")] AccountLoginDto AccountLogin)
         {
             if (!ModelState.IsValid)
             {
@@ -54,11 +66,11 @@ namespace WebAppRazor.Pages
                     switch (role)
                     {
                         case "Admin":
-                        return RedirectToPage("/Admin/Index");
+                            return RedirectToPage("/Admin/Index");
                         case "Staff":
-                        return RedirectToPage("/Staff/Index");
+                            return RedirectToPage("/Staff/Index");
                         default:
-                        return RedirectToPage("/Index");
+                            return RedirectToPage("/Index");
                     }
 
                 }
@@ -75,7 +87,7 @@ namespace WebAppRazor.Pages
         }
 
         // ON POST REGISTER
-        public IActionResult OnPostRegister ([Bind("Username, Password, ConfirmPassword, Fullname, UserPhone, Email")] AccountRegisterDto AccountRegister)
+        public IActionResult OnPostRegister([Bind("Username, Password, ConfirmPassword, Fullname, UserPhone, Email")] AccountRegisterDto AccountRegister)
         {
             // Check if model state is valid
             if (!ModelState.IsValid)
@@ -134,7 +146,7 @@ namespace WebAppRazor.Pages
             }
         }
 
-        public IActionResult OnPostOwnerRegister ([Bind("Username, Password, ConfirmPassword, UserPhone, Email")] AccountRegisterDto AccountRegister)
+        public IActionResult OnPostOwnerRegister([Bind("Username, Password, ConfirmPassword, UserPhone, Email")] AccountRegisterDto AccountRegister)
         {
             // Check if model state is valid
             if (!ModelState.IsValid)
@@ -194,7 +206,7 @@ namespace WebAppRazor.Pages
             }
         }
 
-        private void InitialData ()
+        private void InitialData()
         {
             if (TempData["SuccessMessage"] is string msg)
             {

@@ -4,7 +4,6 @@ namespace WebAppRazor.Pages
     {
         public void OnGet()
         {
-            LoadAccountFromSession();
         }
     }
 }

@@ -1,4 +1,5 @@
 using BusinessObjects.Entities;
+using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Services.IService;
@@ -29,8 +30,15 @@ namespace WebAppRazor.Pages
         {
             LoadAccountFromSession();
 
+            if (LoginedAccount != null)
+            {
+                var role = (string)LoginedAccount.Role;
+                if (role == AccountRoleEnum.Admin.ToString()) return RedirectToPage("/Admin/Index");
+                if (role == AccountRoleEnum.Staff.ToString()) return RedirectToPage("/Staff/Index");
+            }
+
             InitializeData();
-            
+
             return Page();
         }
     }

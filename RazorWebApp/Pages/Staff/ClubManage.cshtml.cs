@@ -163,7 +163,7 @@ namespace WebAppRazor.Pages.Staff
             {
                 if (!ClubExists(Club.ClubId))
                 {
-                    return NotFound();
+                    return RedirectToPage("/NotFound");
                 }
                 else
                 {

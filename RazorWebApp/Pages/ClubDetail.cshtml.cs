@@ -1,5 +1,6 @@
 ﻿using BusinessObjects.Dtos.Review;
 using BusinessObjects.Entities;
+using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Services.IService;
@@ -69,6 +70,13 @@ namespace WebAppRazor.Pages
         public IActionResult OnGet(int? id)
         {
             LoadAccountFromSession();
+
+            if (LoginedAccount != null)
+            {
+                var role = (string)LoginedAccount.Role;
+                if (role == AccountRoleEnum.Admin.ToString()) return RedirectToPage("/Admin/Index");
+                if (role == AccountRoleEnum.Staff.ToString()) return RedirectToPage("/Staff/Index");
+            }
 
             if (id.HasValue)
             {

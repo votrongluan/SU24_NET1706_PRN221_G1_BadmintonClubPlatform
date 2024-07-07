@@ -37,7 +37,7 @@ namespace WebAppRazor.Pages.Customer
 
         public IActionResult OnGet(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToPage("/NotFound");
 
             // Authorize
             LoadAccountFromSession();
