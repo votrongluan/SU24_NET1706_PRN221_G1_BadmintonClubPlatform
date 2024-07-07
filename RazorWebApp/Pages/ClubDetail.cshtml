@@ -102,12 +102,12 @@
                             <p style="margin-bottom: 4px;">Giờ hoạt động: <strong>@Model.Club.OpenTime</strong></p>
                             <p style="margin-bottom: 4px;">Email: <strong>@Model.Club.ClubEmail</strong></p>
                             <p style="margin-bottom: 4px;">Số điện thoại: <strong>@Model.Club.ClubPhone</strong></p>
+                            <p style="margin-bottom: 4px;">Loại hình dịch vụ: <strong>@Model.Services</strong></p>
                             <p style="margin-bottom: 4px;">Tổng lượt đặt sân: <strong>@(Model.Club.Bookings?.Count ?? 0)</strong></p>
                             <p style="margin-bottom: 4px;">Fanpage: <strong>@Model.Club.FanpageLink</strong></p>
-                        </div><a class="btn btn-primary" role="button" href="Customer/Book"
+                        </div><a class="btn btn-primary" role="button" asp-page="/Customer/Book" asp-route-id="@Model.Club.ClubId"
                                  style="margin-top: 16px;width: 50%;margin-left: 50%;/*display: block;*//*position: static;*//*top: 50%;*//*right: 50%;*//*transform: translateX(15%);*/">
-                            Đặt
-                            sân
+                            Đặt sân
                         </a>
                     </div>
                 </div>

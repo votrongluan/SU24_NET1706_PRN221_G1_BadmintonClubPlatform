@@ -123,6 +123,46 @@ Use built-in continuous integration and continuous deployment (CI/CD) pipelines 
 
 ## Screenshots
 
+<div style="text-align: center;">
+    <img src="Others/img/screenshot1.png" alt="Login form" style="width: 70%;"/>
+    <p><em>Screenshot 1</em></p>
+</div>
+
+<hr/>
+<br/>
+
+<div style="text-align: center;">
+    <img src="Others/img/screenshot2.png" alt="Admin dashboard" style="width: 70%;"/>
+    <p><em>Screenshot 2</em></p>
+</div>
+
+<hr/>
+<br/>
+
+<div style="text-align: center;">
+    <img src="Others/img/screenshot3.png" alt="Admin dashboard" style="width: 70%;"/>
+    <p><em>Screenshot 3</em></p>
+</div>
+
+<hr/>
+<br/>
+
+<div style="text-align: center;">
+    <img src="Others/img/screenshot4.png" alt="Admin dashboard" style="width: 70%;"/>
+    <p><em>Screenshot 4</em></p>
+</div>
+
+<hr/>
+<br/>
+
+<div style="text-align: center;">
+    <img src="Others/img/screenshot5.png" alt="Admin dashboard" style="width: 70%;"/>
+    <p><em>Screenshot 5</em></p>
+</div>
+
+<hr/>
+<br/>
+
 ## Support
 
 If you need help, you can reach out via:

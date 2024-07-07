@@ -89,12 +89,6 @@ namespace WebAppRazor.Pages.Customer
             {
                 PayOS payOs = new PayOS(Club.ClientId, Club.ApiKey, Club.ChecksumKey);
 
-                PaymentLinkInformation paymentLinkInformation =
-                    await payOs.getPaymentLinkInformation(Booking.BookingId);
-
-                var dateArray = Booking.BookingDetails.Select(e => e.BookDate.Value.ToString("dd/MM/yyyy"));
-                var dateString = string.Join(" , ", dateArray);
-
                 var itemDataName = $"Thanh toan ma don dat san {Booking.BookingId}";
                 var itemDataQuantity = Booking.BookingDetails.Count;
                 var itemDataPrice = Booking?.TotalPrice ?? 0;

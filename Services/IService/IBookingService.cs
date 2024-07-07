@@ -12,6 +12,6 @@ public interface IBookingService
     Booking GetBookingById(int bookingId);
     void UpdateBooking(Booking booking);
     (bool status, int bookId) BookLichThiDau(BookingRequestDto dto);
-    bool BookLichNgay(BookingRequestDto dto);
-    bool BookLichCoDinh(BookingRequestDto dto);
+    (bool status, int bookId) BookLichNgay(BookingRequestDto dto);
+    (bool status, int bookId) BookLichCoDinh(BookingRequestDto dto);
 }

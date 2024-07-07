@@ -1,4 +1,4 @@
-using BusinessObjects.Dtos.Review;
+﻿using BusinessObjects.Dtos.Review;
 using BusinessObjects.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -24,13 +24,14 @@ namespace WebAppRazor.Pages
         // Pagination properties
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
+        public string Services { get; set; }
 
-        public ClubDetailModel (IServiceManager service)
+        public ClubDetailModel(IServiceManager service)
         {
             _service = service;
         }
 
-        private void Paging (int page = 0)
+        private void Paging(int page = 0)
         {
             const int PageSize = 5;  // Set the number of items per page
 
@@ -65,9 +66,10 @@ namespace WebAppRazor.Pages
             FilterReviewList = ReviewList.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
         }
 
-        public IActionResult OnGet (int? id)
+        public IActionResult OnGet(int? id)
         {
             LoadAccountFromSession();
+
             if (id.HasValue)
             {
                 InitialData(id.Value);
@@ -78,7 +80,7 @@ namespace WebAppRazor.Pages
             return Page();
         }
 
-        public IActionResult OnPost (int? id)
+        public IActionResult OnPost(int? id)
         {
             LoadAccountFromSession();
             InitialData(id.Value);
@@ -100,12 +102,23 @@ namespace WebAppRazor.Pages
             return RedirectToPage("./ClubDetail", new { id = id.Value });
         }
 
-        private void InitialData (int id)
+        private void InitialData(int id)
         {
             Club = _service.ClubService.GetClubById(id);
             ClubAverageRating = _service.ClubService.GetAverageRatingStar(id);
             SlotList = _service.SlotService.GetAllByClubId(id);
             ReviewList = _service.ReviewService.GetAllByClubId(id);
+            var availableServices = _service.AvailableBookingTypeService.GetAvailableBookingTypesByClubId(id);
+
+            if (availableServices.Count == 0)
+            {
+                Services = "Chưa có dịch vụ";
+            }
+            else
+            {
+                var serviceArray = availableServices.Select(e => e.BookingType.Description).ToArray();
+                Services = string.Join(", ", serviceArray);
+            }
         }
     }
 }
