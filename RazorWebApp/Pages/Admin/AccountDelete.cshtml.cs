@@ -24,8 +24,7 @@ namespace WebAppRazor.Pages.Admin
             // Code go from here
             if (id == null)
             {
-                return NotFound();
-
+                return RedirectToPage("/NotFound");
             }
 
             Account = _service.AccountService.GetStaffAccountById(id.Value);
@@ -37,7 +36,7 @@ namespace WebAppRazor.Pages.Admin
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToPage("/NotFound");
             }
 
             _service.AccountService.DeleteAccount(id.Value);

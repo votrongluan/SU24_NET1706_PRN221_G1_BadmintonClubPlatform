@@ -45,13 +45,13 @@ namespace WebAppRazor.Pages.Customer
             }
 
             // Validate route id
-            if (bookId == null) return NotFound();
+            if (bookId == null) return RedirectToPage("/NotFound");
 
             InitializeData((int)bookId);
 
-            if (Booking == null) return NotFound();
+            if (Booking == null) return RedirectToPage("/NotFound");
 
-            if (Booking.UserId != LoginedAccount.UserId) return NotFound();
+            if (Booking.UserId != LoginedAccount.UserId) return RedirectToPage("/NotFound");
 
             return Page();
         }
@@ -75,13 +75,13 @@ namespace WebAppRazor.Pages.Customer
             }
 
             // Validate route id
-            if (bookId == null) return NotFound();
+            if (bookId == null) return RedirectToPage("/NotFound");
 
             InitializeData((int)bookId);
 
-            if (Booking == null) return NotFound();
+            if (Booking == null) return RedirectToPage("/NotFound");
 
-            if (Booking.UserId != LoginedAccount.UserId) return NotFound();
+            if (Booking.UserId != LoginedAccount.UserId) return RedirectToPage("/NotFound");
 
             if (Booking.PaymentStatus == true) return RedirectToPage("BookDetail", new { bookId = Booking.BookingId });
 
@@ -119,11 +119,11 @@ namespace WebAppRazor.Pages.Customer
         public IActionResult OnGetPaySuccess(int? bookId)
         {
             // Validate route id
-            if (bookId == null) return NotFound();
+            if (bookId == null) return RedirectToPage("/NotFound");
 
             InitializeData((int)bookId);
 
-            if (Booking == null) return NotFound();
+            if (Booking == null) return RedirectToPage("/NotFound");
 
             Booking.PaymentStatus = true;
             _service.BookingService.UpdateBooking(Booking);
@@ -133,7 +133,7 @@ namespace WebAppRazor.Pages.Customer
 
             if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
 
-            if (Booking.UserId != LoginedAccount.UserId) return NotFound();
+            if (Booking.UserId != LoginedAccount.UserId) return RedirectToPage("/NotFound");
 
             TempData["Message"] = $"{MessagePrefix.SUCCESS} Đơn đặt sân thanh toán thành công";
             return RedirectToPage("BookDetail", new { bookId = Booking.BookingId });
@@ -147,13 +147,13 @@ namespace WebAppRazor.Pages.Customer
             if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
 
             // Validate route id
-            if (bookId == null) return NotFound();
+            if (bookId == null) return RedirectToPage("/NotFound");
 
             InitializeData((int)bookId);
 
-            if (Booking == null) return NotFound();
+            if (Booking == null) return RedirectToPage("/NotFound");
 
-            if (Booking.UserId != LoginedAccount.UserId) return NotFound();
+            if (Booking.UserId != LoginedAccount.UserId) return RedirectToPage("/NotFound");
 
             try
             {

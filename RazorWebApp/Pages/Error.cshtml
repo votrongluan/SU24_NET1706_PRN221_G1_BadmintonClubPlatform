@@ -1,5 +1,5 @@
 ﻿@page
-@model WebAppRazor.Pages.NotFoundModel
+@model WebAppRazor.Pages.ErrorModel
 @{
 }
 <!DOCTYPE html>
@@ -22,15 +22,15 @@
     <main style="padding-bottom: 2rem;min-height: 80vh;">
         <div class="container">
             <section>
-                <h2 class="fs-4 text-center">Có lỗi xảy ra</h2>
+                <h2 class="fs-4 text-center">Lỗi hệ thống</h2>
                 <p class="text-center">
-                    Trang mà bạn đang truy cập không thể tìm thấy hoặc bạn không có quyền truy cập
+                    Vui lòng liên hệ đội ngũ phát triển để được hỗ trợ
                 </p>
                 <div class="d-flex flex-column justify-content-center align-items-center">
-                    <div style="width:50%;height: 500px;background: url(&quot;assets/img/notfound.jpg&quot;) center / cover no-repeat;"></div>
+                    <div style="width:50%;height: 500px;background: url(&quot;assets/img/error.jpg&quot;) center / cover no-repeat;"></div>
                     <a asp-page="/Index" class="mt-4 btn btn-outline-info" role="button">Quay về trang chủ</a>
                 </div>
-                
+
             </section>
         </div>
     </main>

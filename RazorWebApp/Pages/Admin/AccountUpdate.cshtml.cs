@@ -33,7 +33,7 @@ namespace WebAppRazor.Pages.Admin
             // Code go from here
             if (id == null)
             {
-                return NotFound();
+                return RedirectToPage("/NotFound");
             }
 
             AccountUpdate = _service.AccountService.GetStaffAccountById(id.Value).ToAccountUpdate();

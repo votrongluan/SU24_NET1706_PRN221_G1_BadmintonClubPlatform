@@ -37,13 +37,13 @@ namespace WebAppRazor.Pages.Staff
             if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
 
             // Validate route id
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToPage("/NotFound");
 
             InitializeData((int)id);
 
-            if (Match == null) return NotFound();
+            if (Match == null) return RedirectToPage("/NotFound");
 
-            if (Match?.Booking?.ClubId != LoginedAccount.ClubManageId) return NotFound();
+            if (Match?.Booking?.ClubId != LoginedAccount.ClubManageId) return RedirectToPage("/NotFound");
 
             var bookingDetail = Match.Booking.BookingDetails.ElementAt(0);
             UpdatedMatch.Title = Match.Title;
