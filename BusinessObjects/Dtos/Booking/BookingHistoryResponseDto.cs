@@ -8,6 +8,7 @@ namespace BusinessObjects.Dtos.Booking
 {
     public class BookingHistoryResponseDto
     {
+        public int? ClubId { get; set; }
         public int? BookingId { get; set; }
         public string? FullName { get; set; }
         public string? ClubName { get; set; }

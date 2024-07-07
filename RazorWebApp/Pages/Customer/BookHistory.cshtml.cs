@@ -19,7 +19,7 @@ namespace WebAppRazor.Pages.Customer
         }
         public List<Booking> Bookings { get; set; }
         public List<Account> Accounts { get; set; }
-        public int TotalBookingHistory {  get; set; }
+        public int TotalBookingHistory { get; set; }
         public List<Court> Courts { get; set; }
         public List<BookingHistoryResponseDto> bookingHistoryResponsesDto { get; set; }
         public List<BookingHistoryResponseDto> FilterBookings { get; set; }
@@ -30,7 +30,7 @@ namespace WebAppRazor.Pages.Customer
         public void InitializeData()
         {
             Courts = _serviceManager.CourtService.GetAllCourts();
-            Bookings = _serviceManager.BookingService.GetAllBookings();
+            Bookings = _serviceManager.BookingService.GetAllBookings().Where(e => e.UserId == LoginedAccount.UserId).ToList();
             Accounts = _serviceManager.AccountService.GetAllAccount();
             TotalBookingHistory = Bookings.Count;
             bookingHistoryResponsesDto = Bookings.Select(e => e.ToBookingHistory()).ToList();
