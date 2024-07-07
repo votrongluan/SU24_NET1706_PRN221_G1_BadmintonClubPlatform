@@ -124,9 +124,12 @@
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-center mt-4">
-                    <a asp-route-bookId=@Model.Booking.BookingId asp-page="/Customer/BookDetail" class="btn btn-outline-primary" asp-page-handler="Pay" role="button">Thanh toán online</a>
-                </div>
+                @if (Model.Booking.PaymentStatus != true)
+                {
+                    <div class="d-flex justify-content-center mt-4">
+                        <a asp-route-bookId=@Model.Booking.BookingId asp-page="/Customer/BookDetail" class="btn btn-outline-primary" asp-page-handler="Pay" role="button">Thanh toán online</a>
+                    </div>
+                }
             </section>
         </div>
     </main>
