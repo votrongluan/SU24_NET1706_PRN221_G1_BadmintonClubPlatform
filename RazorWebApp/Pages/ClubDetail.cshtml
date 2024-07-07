@@ -1,4 +1,6 @@
 ﻿@page
+@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model WebAppRazor.Pages.ClubDetailModel
 @{
 }
@@ -115,22 +117,29 @@
                     <div class="col">
                         <div>
                             <h3 class="fs-5">Khung giờ và giá</h3>
-                            <div class="table-responsive" style="margin-top: 16px;">
+                            <div class="table-responsive border rounded bg-white" style="margin-top: 16px;">
                                 <table class="table">
                                     <thead>
                                         <tr>
                                             <th>Khung giờ</th>
-                                            <th>Giá</th>
+                                            <th>Giá / giờ</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <tr>
+                                            <td>Giá mặc định</td>
+                                            <td>@string.Format(CultureInfo.InvariantCulture, "{0:N0}", Model.Club.DefaultPricePerHour).Replace(",", ".") đồng</td>
+                                        </tr>
                                         @if (Model.SlotList != null && Model.SlotList.Count > 0)
                                         {
                                             @foreach (var item in Model.SlotList)
                                             {
+                                                string formattedNumber = string.Format(CultureInfo.InvariantCulture, "{0:N0}", item.Price).Replace(",", ".");
+                                                var formatStartTime = item?.StartTime?.Hour.ToString("D2") + ":" + item?.StartTime?.Minute.ToString("D2");
+                                                var formatEndTime = item?.EndTime?.Hour.ToString("D2") + ":" + item?.EndTime?.Minute.ToString("D2");
                                                 <tr>
-                                                    <td>@item.StartTime - @item.EndTime</td>
-                                                    <td>@Model.Club.DefaultPricePerHour đồng</td>
+                                                    <td>@formatStartTime - @formatEndTime</td>
+                                                    <td>@formattedNumber đồng</td>
                                                 </tr>
                                             }
                                         }
