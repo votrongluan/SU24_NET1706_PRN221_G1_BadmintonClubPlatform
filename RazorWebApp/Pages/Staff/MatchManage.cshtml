@@ -132,6 +132,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
+                                        <th class="text-center">Mã thi đấu</th>
                                         <th class="text-start">Tiêu đề</th>
                                         <th class="text-start">Mô tả</th>
                                         <th class="text-center">Ngày thi</th>
@@ -141,9 +142,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <p class="text-secondary">Tìm thấy @Model.TotalFindMatch lịch thi đấu</p>
                                     @foreach (var item in Model.FilterMatchesDto)
                                     {
                                         <tr>
+                                            <td class="text-center">@item.MatchId</td>
                                             <td class="text-start">@item.Title</td>
                                             <td class="text-start">@item.Description</td>
                                             <td class="text-center">@item.MatchDate</td>

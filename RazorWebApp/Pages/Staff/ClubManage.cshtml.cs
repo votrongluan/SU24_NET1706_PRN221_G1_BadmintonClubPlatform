@@ -63,13 +63,13 @@ namespace WebAppRazor.Pages.Staff
             {
                 Value = bt.BookingTypeId.ToString(),
                 Text = bt.Description
-            }).ToList();
+            }).Where(e => e.Value != ((int)BookingTypeEnum.LichThiDau).ToString()).ToList();
 
             if (LoginedAccount.ClubManageId != null)
             {
                 Club = _serviceManager.ClubService.GetClubById((int)LoginedAccount.ClubManageId);
 
-                if (Club == null) 
+                if (Club == null)
                 {
                     TempData["Message"] = $"{MessagePrefix.INFO}Đơn đăng ký Club của bạn đang được xử lý";
 

@@ -29,6 +29,7 @@ namespace WebAppRazor.Pages.Staff
 
         // MESSAGE FOR ACTION
         public string Message { get; set; }
+        public int TotalFindMatch { get; set; }
 
         private void InitializeData()
         {
@@ -73,6 +74,8 @@ namespace WebAppRazor.Pages.Staff
                     _ => FilterMatchesDto,
                 };
             }
+
+            TotalFindMatch = FilterMatchesDto?.Count ?? 0;
 
             // Pagination logic
             page = page == 0 ? 1 : page;
@@ -132,7 +135,7 @@ namespace WebAppRazor.Pages.Staff
                     StartTime = CreatedMatch.StartTime,
                     EndTime = CreatedMatch.EndTime,
                     UserId = (int)LoginedAccount.UserId,
-                    BookingTypeId = (int) BookingTypeEnum.LichThiDau,
+                    BookingTypeId = (int)BookingTypeEnum.LichThiDau,
                     CourtTypeId = CreatedMatch.CourtTypeId,
                     DefaultPrice = 0,
                 };
