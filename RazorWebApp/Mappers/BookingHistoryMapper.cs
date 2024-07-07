@@ -26,13 +26,17 @@ namespace WebAppRazor.Mappers
             var bookingTime = $"{formatStartTime} - {formatEndTime}";
             debug.AppendLine($"Formatted BookingTime: {bookingTime}");
 
+            var bookDateStringArray = booking.BookingDetails.Select(e => e.BookDate?.ToString("dd/MM/yyyy") ?? "").ToArray();
+            var bookDate = string.Join(" , ", bookDateStringArray);
+
             return new BookingHistoryResponseDto()
             {
+                ClubId = booking.ClubId,
                 BookingId = booking.BookingId,
                 FullName = booking.User?.Fullname,
                 ClubName = booking.Club?.ClubName,
                 CourtId = firstBookingDetail.CourtId,
-                BookingDate = firstBookingDetail.BookDate?.ToString("dd/MM/yyyy") ?? "No date",
+                BookingDate = bookDate,
                 BookingTime = bookingTime,
                 BookingTimeDebug = debug.ToString(),
                 Address = booking.Club?.Address,

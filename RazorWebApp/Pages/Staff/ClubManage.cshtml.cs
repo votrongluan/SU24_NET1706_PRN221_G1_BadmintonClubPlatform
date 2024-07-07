@@ -131,6 +131,7 @@ namespace WebAppRazor.Pages.Staff
 
                 Club.TotalStar = existingClub.TotalStar;
                 Club.TotalReview = existingClub.TotalReview;
+                Club.DefaultPricePerHour = existingClub.DefaultPricePerHour;
 
                 _serviceManager.ClubService.UpdateClub(Club);
 

@@ -254,7 +254,7 @@ public class BookingService : IBookingService
                 };
 
                 _repo.BookingDetail.AddBookingDetail(bookingDetail);
-                bookDate.AddDays(7);
+                bookDate = bookDate.AddDays(7);
             }
 
             return true;
