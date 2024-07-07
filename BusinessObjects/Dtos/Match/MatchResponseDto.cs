@@ -2,6 +2,7 @@
 
 public class MatchResponseDto
 {
+    public int ClubId { get; set; }
     public int MatchId { get; set; }
     public string? Title { get; set; }
     public string? Description { get; set; }

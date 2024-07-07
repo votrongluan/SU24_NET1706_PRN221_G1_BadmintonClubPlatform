@@ -121,6 +121,8 @@ namespace WebAppRazor.Pages
 
         public IActionResult OnGet(string searchString, string searchProperty, string sortProperty, int sortOrder, int cityId, int districtId, int page = 1, DateOnly? matchDate = null)
         {
+            LoadAccountFromSession();
+
             if (TempData.ContainsKey("Message"))
             {
                 Message = TempData["Message"].ToString();
