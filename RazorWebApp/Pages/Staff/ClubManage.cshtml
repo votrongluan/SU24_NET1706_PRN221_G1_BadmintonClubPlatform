@@ -146,19 +146,23 @@
                     <!-- New Fields for ClientId, ApiKey, ChecksumKey -->
                     <div class="mt-4">
                         <p>Client ID</p>
-                        <input class="form-control" type="password" asp-for="Club.ClientId">
+                        <input class="form-control" type="password" asp-for="Club.ClientId" placeholder="•••••">
                         <span asp-validation-for="Club.ClientId" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
                         <p>API Key</p>
-                        <input class="form-control" type="password" asp-for="Club.ApiKey">
+                        <input class="form-control" type="password" asp-for="Club.ApiKey" placeholder="•••••">
                         <span asp-validation-for="Club.ApiKey" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
                         <p>Checksum Key</p>
-                        <input class="form-control" type="password" asp-for="Club.ChecksumKey">
+                        <input class="form-control" type="password" asp-for="Club.ChecksumKey" placeholder="•••••">
                         <span asp-validation-for="Club.ChecksumKey" class="text-danger"></span>
                     </div>
+
+                    <input type="hidden" asp-for="Club.ClientId" value="@Model.Club?.ClientId" />
+                    <input type="hidden" asp-for="Club.ApiKey" value="@Model.Club?.ApiKey" />
+                    <input type="hidden" asp-for="Club.ChecksumKey" value="@Model.Club?.ChecksumKey" />
 
                     <div class="mt-4">
                         <div class="form-group">
