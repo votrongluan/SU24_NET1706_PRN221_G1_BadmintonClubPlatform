@@ -7,6 +7,11 @@ namespace Repositories.Repo;
 
 public class BookingRepository : IBookingRepository
 {
+    public Booking GetBookingByIdNoInclude(int bookingId)
+    {
+        return BookingDao.FindByCondition(e => e.BookingId == bookingId).FirstOrDefault();
+    }
+
     public List<Booking> GetAllBookings()
     {
         return BookingDao.GetAll()

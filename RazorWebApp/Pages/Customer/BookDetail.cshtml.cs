@@ -121,22 +121,22 @@ namespace WebAppRazor.Pages.Customer
             // Validate route id
             if (bookId == null) return RedirectToPage("/NotFound");
 
-            InitializeData((int)bookId);
+            var booking = _service.BookingService.GetBookingByIdNoInclude((int)bookId);
 
-            if (Booking == null) return RedirectToPage("/NotFound");
+            if (booking == null) return RedirectToPage("/NotFound");
 
-            Booking.PaymentStatus = true;
-            _service.BookingService.UpdateBooking(Booking);
+            booking.PaymentStatus = true;
+            _service.BookingService.UpdateBooking(booking);
 
             LoadAccountFromSession();
             var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Customer.ToString());
 
             if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
 
-            if (Booking.UserId != LoginedAccount.UserId) return RedirectToPage("/NotFound");
+            if (booking.UserId != LoginedAccount.UserId) return RedirectToPage("/NotFound");
 
             TempData["Message"] = $"{MessagePrefix.SUCCESS} Đơn đặt sân thanh toán thành công";
-            return RedirectToPage("BookDetail", new { bookId = Booking.BookingId });
+            return RedirectToPage("BookDetail", new { bookId = booking.BookingId });
         }
 
         public IActionResult OnGetPayFail(int? bookId, long orderId)

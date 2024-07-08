@@ -11,6 +11,7 @@ public interface IBookingService
     void DeleteBooking(int bookingId);
     void DeleteBookingDetail(int bookingId);
     Booking GetBookingById(int bookingId);
+    Booking GetBookingByIdNoInclude(int bookingId);
     void UpdateBooking(Booking booking);
     (bool status, int bookId) BookLichThiDau(BookingRequestDto dto);
     (bool status, int bookId) BookLichNgay(BookingRequestDto dto);

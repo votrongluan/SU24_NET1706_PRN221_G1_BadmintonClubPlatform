@@ -47,6 +47,11 @@ public class BookingService : IBookingService
         return _repo.Booking.GetBookingById(bookingId);
     }
 
+    public Booking GetBookingByIdNoInclude(int bookingId)
+    {
+        return _repo.Booking.GetBookingByIdNoInclude(bookingId);
+    }
+
     public void UpdateBooking(Booking booking)
     {
         _repo.Booking.UpdateBooking(booking);
