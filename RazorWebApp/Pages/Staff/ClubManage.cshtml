@@ -138,20 +138,25 @@
                         <input class="form-control" type="time" asp-for="Club.CloseTime">
                         <span asp-validation-for="Club.CloseTime" class="text-danger"></span>
                     </div>
+                    <div class="mt-4">
+                        <p>Giá mặc định</p>
+                        <input class="form-control" type="text" asp-for="Club.DefaultPricePerHour">
+                        <span asp-validation-for="Club.DefaultPricePerHour" class="text-danger"></span>
+                    </div>
                     <!-- New Fields for ClientId, ApiKey, ChecksumKey -->
                     <div class="mt-4">
                         <p>Client ID</p>
-                        <input class="form-control" type="text" asp-for="Club.ClientId">
+                        <input class="form-control" type="password" asp-for="Club.ClientId">
                         <span asp-validation-for="Club.ClientId" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
                         <p>API Key</p>
-                        <input class="form-control" type="text" asp-for="Club.ApiKey">
+                        <input class="form-control" type="password" asp-for="Club.ApiKey">
                         <span asp-validation-for="Club.ApiKey" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
                         <p>Checksum Key</p>
-                        <input class="form-control" type="text" asp-for="Club.ChecksumKey">
+                        <input class="form-control" type="password" asp-for="Club.ChecksumKey">
                         <span asp-validation-for="Club.ChecksumKey" class="text-danger"></span>
                     </div>
 

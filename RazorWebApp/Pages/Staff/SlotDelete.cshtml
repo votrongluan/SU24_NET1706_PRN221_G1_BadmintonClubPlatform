@@ -16,7 +16,17 @@
     <link rel="stylesheet" href="~/assets/css/Navbar-With-Button-icons.css">
     <link rel="stylesheet" href="~/assets/css/Simple-Slider-swiper-bundle.min.css">
     <link rel="stylesheet" href="~/assets/css/Simple-Slider.css">
+
+    <style>
+        .readonly-gray[readonly] {
+            background-color: #f0f0f0;
+            color: #333;
+            cursor: not-allowed;
+        }
+    </style>
+
 </head>
+
 
 <body>
     <header>
@@ -62,9 +72,19 @@
             </div>
             <div style="flex: 1;" class="p-4">
                 <h2 class="fs-4 text-center mt-0">Xác nhận xóa khung giờ</h2>
-                <form>
-                    <label class="form-label d-block mt-4">Khung giờ<input class="form-control mt-2" type="text" readonly=""></label><label class="form-label d-block mt-4">Giá tiền<input class="form-control mt-2" type="text" readonly=""></label>
-                    <div class="d-flex justify-content-between mt-4"><a class="btn btn-secondary" role="button" href="Staff/SlotManage">Quay lại</a><a class="btn btn-primary" role="button">Xác nhận</a></div>
+                <form method="post">
+                    <label class="form-label d-block mt-4">
+                        Khung giờ
+                        <input class="form-control mt-2 readonly-gray" type="text" value="@Model.TimeSlot" readonly>
+                    </label>
+                    <label class="form-label d-block mt-4">
+                        Giá
+                        <input class="form-control mt-2 readonly-gray" type="number" name="Price" value="@Model.Slot.Price" readonly>
+                    </label>
+                    <div class="d-flex justify-content-between mt-4">
+                        <a class="btn btn-secondary" role="button" href="./SlotManage">Quay lại</a>
+                        <button type="submit" class="btn btn-primary">Xóa</button>
+                    </div>
                 </form>
             </div>
         </div>

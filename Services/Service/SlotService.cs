@@ -17,7 +17,7 @@ public class SlotService : ISlotService
 
     public void DeleteSlot(int slotId)
     {
-        throw new NotImplementedException();
+        _repo.Slot.DeleteSlot(slotId);
     }
 
     public List<Slot> GetAllByClubId (int id)

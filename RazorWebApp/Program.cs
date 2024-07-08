@@ -14,9 +14,6 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddSession();
 
-builder.Services.AddDbContext<BcbpContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<IClubRepository, ClubRepository>();
 builder.Services.AddScoped<IClubService, ClubService>();

@@ -11,7 +11,8 @@ public class SlotRepository : ISlotRepository
 
     public void DeleteSlot (int id)
     {
-        throw new NotImplementedException();
+        var slot = GetSlotById(id);
+        SlotDao.Delete(slot);
     }
 
     public List<Slot> GetAllByClubId (int id)
