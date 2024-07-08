@@ -1,5 +1,7 @@
-﻿using BusinessObjects.Dtos.Booking;
+﻿using System.Reflection.Metadata.Ecma335;
+using BusinessObjects.Dtos.Booking;
 using BusinessObjects.Entities;
+using BusinessObjects.Enums;
 using Repositories.IRepo;
 using Services.IService;
 using static System.Reflection.Metadata.BlobBuilder;
@@ -48,6 +50,76 @@ public class BookingService : IBookingService
     public void UpdateBooking(Booking booking)
     {
         _repo.Booking.UpdateBooking(booking);
+    }
+
+    public (bool status, int bookId) BookLichOffline(DateOnly date, TimeOnly startTime, TimeOnly endTime, int courtId, int clubId, int userId)
+    {
+        var club = _repo.Club.GetClubById(clubId);
+        var courtSchedule = _repo.BookingDetail.GetAllBookingDetails().Where(e =>
+            e.BookDate == date && e.Court.CourtId == courtId).OrderBy(e => e.StartTime).ToList();
+
+        bool canBook = false;
+
+        if (courtSchedule.Any())
+        {
+            // 9-11, 12-14, 14-17 ...
+            // 7-9
+            if (endTime <= courtSchedule[0].StartTime || startTime >= courtSchedule[courtSchedule.Count - 1].EndTime)
+            {
+                canBook = true;
+            }
+
+            if (courtSchedule.Count == 1)
+            {
+                canBook = false;
+            }
+            else
+            {
+                for (int i = 1; i < courtSchedule.Count - 1; i++)
+                {
+                    if (courtSchedule[i - 1].EndTime <= startTime && courtSchedule[i].StartTime <= endTime)
+                    {
+                        canBook = true;
+                        break;
+                    }
+                }
+            }
+        }
+        else
+        {
+            canBook = true;
+        }
+
+        if (canBook)
+        {
+            var slots = _repo.Slot.GetAllByClubId(clubId);
+
+            Booking booking = new()
+            {
+                BookingTypeId = (int)BookingTypeEnum.LichNgay,
+                ClubId = clubId,
+                PaymentStatus = false,
+                UserId = userId,
+                TotalPrice = CalculatePrice(slots, startTime, endTime, (int)club.DefaultPricePerHour)
+            };
+
+            _repo.Booking.AddBooking(booking);
+
+            BookingDetail bookingDetail = new()
+            {
+                BookingId = booking.BookingId,
+                BookDate = date,
+                CourtId = courtId,
+                StartTime = startTime,
+                EndTime = endTime,
+            };
+
+            _repo.BookingDetail.AddBookingDetail(bookingDetail);
+
+            return (true, booking.BookingId);
+        }
+
+        return (false, -1);
     }
 
     public (bool status, int bookId) BookLichThiDau(BookingRequestDto dto)
