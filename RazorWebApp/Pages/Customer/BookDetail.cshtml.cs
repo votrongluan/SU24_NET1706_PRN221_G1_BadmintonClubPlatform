@@ -19,7 +19,7 @@ namespace WebAppRazor.Pages.Customer
         private void InitializeData(int id)
         {
             Booking = _service.BookingService.GetBookingById(id);
-            Court = _service.CourtService.GetCourtById(Booking?.BookingId ?? -1);
+            Court = _service.CourtService.GetCourtById(Booking?.BookingDetails.ElementAt(0).CourtId ?? -1);
             Club = _service.ClubService.GetClubById(Booking?.ClubId ?? -1);
         }
 

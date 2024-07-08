@@ -110,8 +110,10 @@
 
                             @foreach (var date in Model.Booking.BookingDetails)
                             {
+                                var formatStartTime = date.StartTime.Value.Hour.ToString("D2") + ":" + date.StartTime.Value.Minute.ToString("D2");
+                                var formatEndTime = date.EndTime.Value.Hour.ToString("D2") + ":" + date.EndTime.Value.Minute.ToString("D2");
                                 <p class="fw-bold mb-0">
-                                    @date.BookDate (@date.StartTime - @date.EndTime)
+                                    @date.BookDate.Value.ToString("dd/MM/yyyy") (@formatStartTime - @formatEndTime)
                                     <br>
                                 </p>
                             }
