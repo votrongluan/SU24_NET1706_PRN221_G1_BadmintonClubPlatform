@@ -87,39 +87,47 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <p class="text-secondary mb-0">Mã đơn:</p>
-                            <p class="fw-bold mb-0">1</p>
+                            <p class="fw-bold mb-0">@Model.Booking.BookingId</p>
                         </div>
                         <div class="d-flex justify-content-between">
                             <p class="text-secondary mb-0">Câu lạc bộ:</p>
-                            <p class="fw-bold mb-0">SpringBoot</p>
+                            <p class="fw-bold mb-0">@Model.Booking.Club.ClubName</p>
                         </div>
                         <div class="d-flex justify-content-between">
                             <p class="text-secondary mb-0">Địa chỉ:</p>
-                            <p class="fw-bold mb-0">17753 Amazon Street, America United State</p>
+                            <p class="fw-bold mb-0">@Model.Booking.Club.Address, @Model.Booking.Club.District.DistrictName</p>
                         </div>
                         <div class="d-flex justify-content-between">
                             <p class="text-secondary mb-0">Mã sân:</p>
-                            <p class="fw-bold mb-0">1</p>
+                            <p class="fw-bold mb-0">@Model.Booking.BookingDetails.ElementAt(0).Court.CourtId</p>
                         </div>
                         <div class="d-flex justify-content-between">
                             <p class="text-secondary mb-0">Loại sân:</p>
-                            <p class="fw-bold mb-0">Đôi</p>
+                            <p class="fw-bold mb-0">@Model.Court.CourtType.TypeName</p>
                         </div>
                         <div class="d-flex justify-content-between flex-wrap">
                             <p class="text-secondary mb-0">Ngày đặt và khung giờ:</p>
-                            <p class="fw-bold mb-0">17/05/2025 (06h00 - 07h15)<br>16/05/2026&nbsp;(06h00 - 07h15)</p>
+
+                            @foreach (var date in Model.Booking.BookingDetails)
+                            {
+                                <p class="fw-bold mb-0">
+                                    @date.BookDate (@date.StartTime - @date.EndTime)
+                                    <br>
+                                </p>
+                            }
+                            @* <p class="fw-bold mb-0">17/05/2025 (06h00 - 07h15)<br>16/05/2026&nbsp;(06h00 - 07h15)</p> *@
                         </div>
                         <div class="d-flex justify-content-between flex-wrap">
                             <p class="text-secondary mb-0">Số điện thoại:</p>
-                            <p class="fw-bold mb-0">09912323233</p>
+                            <p class="fw-bold mb-0">@Model.Booking.User.UserPhone</p>
                         </div>
                         <div class="d-flex justify-content-between flex-wrap">
                             <p class="text-secondary mb-0">Thành tiền:</p>
-                            <p class="fw-bold mb-0">15.000 đồng</p>
+                            <p class="fw-bold mb-0">@($"{Model.Booking.TotalPrice:N0} VNĐ")</p>
                         </div>
                         <div class="d-flex justify-content-between flex-wrap">
                             <p class="text-secondary mb-0">Tình trạng thanh toán:</p>
-                            <p class="fw-bold mb-0">Đã thanh toán</p>
+                            <p class="fw-bold mb-0">@(Model.Booking.PaymentStatus == true ? "Đã thanh toán" : "Chưa thanh toán")</p>
                         </div>
                     </div>
                 </div>
