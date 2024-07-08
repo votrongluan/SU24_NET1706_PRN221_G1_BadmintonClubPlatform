@@ -18,6 +18,9 @@ namespace WebAppRazor.Pages.Staff
 
         public List<BookingViewModel> Bookings { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public int TabIndex { get; set; } = 1;
+
         public IActionResult OnGet()
         {
             LoadAccountFromSession();
@@ -26,8 +29,13 @@ namespace WebAppRazor.Pages.Staff
             if (!string.IsNullOrWhiteSpace(navigatePage))
                 return RedirectToPage(navigatePage);
 
-            // Code go from here
             Bookings = GetBookings();
+
+            if (Request.Query.ContainsKey("selectedTabIndex"))
+            {
+                TabIndex = int.Parse(Request.Query["selectedTabIndex"]);
+            }
+
             return Page();
         }
 
@@ -35,7 +43,8 @@ namespace WebAppRazor.Pages.Staff
         {
             var clubId = LoginedAccount.ClubManageId;
             var bookings = new List<BookingViewModel>();
-            var bookingEntities = serviceManager.BookingService.GetAllBookingsWithBookingDetails().Where(x => x.ClubId == clubId);
+            var bookingEntities = serviceManager.BookingService.GetAllBookingsWithBookingDetails()
+                .Where(x => x.ClubId == clubId);
 
             if (bookingEntities == null || !bookingEntities.Any())
                 return bookings;
@@ -54,10 +63,15 @@ namespace WebAppRazor.Pages.Staff
                         StartTime = detail.StartTime?.ToTimeSpan(),
                         EndTime = detail.EndTime?.ToTimeSpan(),
                         PaymentStatus = booking.PaymentStatus == true ? "Đã thanh toán" : "Chưa thanh toán"
-                    }); ;
+                    });
                 }
             }
             return bookings;
+        }
+
+        public void OnGetViewSlotByOrder()
+        {
+            TabIndex = 2;
         }
 
         public class BookingViewModel
