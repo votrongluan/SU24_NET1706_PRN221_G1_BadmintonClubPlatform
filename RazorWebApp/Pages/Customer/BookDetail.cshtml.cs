@@ -13,11 +13,13 @@ namespace WebAppRazor.Pages.Customer
         private IServiceManager _service;
         public Booking Booking { get; set; }
         public Club Club { get; set; }
+        public Court Court { get; set; }
         public string Message { get; set; }
 
         private void InitializeData(int id)
         {
             Booking = _service.BookingService.GetBookingById(id);
+            Court = _service.CourtService.GetCourtById(Booking?.BookingId ?? -1);
             Club = _service.ClubService.GetClubById(Booking?.ClubId ?? -1);
         }
 
