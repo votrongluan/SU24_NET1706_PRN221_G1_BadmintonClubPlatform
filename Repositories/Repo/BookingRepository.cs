@@ -27,6 +27,15 @@ public class BookingRepository : IBookingRepository
             .OrderByDescending(e => e.BookingId).ToList();
     }
 
+    public List<Booking> GetAllBookingsWithBookingDetails()
+    {
+        return BookingDao.GetAll()
+            .Include(b => b.BookingDetails)
+            .Include(b => b.BookingType)
+            .Include(b => b.User)
+            .ToList();
+    }
+
     public Booking GetBookingById(int bookingId)
     {
         return GetAllBookings().FirstOrDefault(e => e.BookingId == bookingId);

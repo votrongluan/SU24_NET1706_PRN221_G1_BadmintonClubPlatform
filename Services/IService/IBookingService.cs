@@ -6,6 +6,7 @@ namespace Services.IService;
 public interface IBookingService
 {
     List<Booking> GetAllBookings();
+    List<Booking> GetAllBookingsWithBookingDetails();
     void AddBooking(Booking booking);
     void DeleteBooking(int bookingId);
     void DeleteBookingDetail(int bookingId);

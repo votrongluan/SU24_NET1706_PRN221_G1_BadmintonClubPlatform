@@ -426,4 +426,9 @@ public class BookingService : IBookingService
 
         return (false, -1);
     }
+
+    public List<Booking> GetAllBookingsWithBookingDetails()
+    {
+        return _repo.Booking.GetAllBookingsWithBookingDetails();
+    }
 }
