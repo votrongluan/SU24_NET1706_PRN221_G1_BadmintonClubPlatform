@@ -37,7 +37,7 @@ namespace WebAppRazor.Pages.Staff
 
             if (Slot == null)
             {
-                return NotFound();
+                return RedirectToPage("/NotFound");
             }
 
             // Format the time slot as StartTime - EndTime
@@ -53,7 +53,7 @@ namespace WebAppRazor.Pages.Staff
 
             if (slotToUpdate == null)
             {
-                return NotFound();
+                return RedirectToPage("/NotFound");
             }
 
             slotToUpdate.Price = Slot.Price;

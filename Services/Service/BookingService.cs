@@ -1,5 +1,7 @@
-﻿using BusinessObjects.Dtos.Booking;
+﻿using System.Reflection.Metadata.Ecma335;
+using BusinessObjects.Dtos.Booking;
 using BusinessObjects.Entities;
+using BusinessObjects.Enums;
 using Repositories.IRepo;
 using Services.IService;
 using static System.Reflection.Metadata.BlobBuilder;
@@ -30,6 +32,16 @@ public class BookingService : IBookingService
         _repo.Booking.DeleteBooking(bookingId);
     }
 
+    public void DeleteBookingDetail(int bookingId)
+    {
+        var bookingDetails = _repo.BookingDetail.GetAllBookingDetails().Where(e => e.BookingId == bookingId);
+
+        foreach (var bookingDetail in bookingDetails)
+        {
+            _repo.BookingDetail.DeleteBookingDetail(bookingDetail.BookingDetailId);
+        }
+    }
+
     public Booking GetBookingById(int bookingId)
     {
         return _repo.Booking.GetBookingById(bookingId);
@@ -38,6 +50,76 @@ public class BookingService : IBookingService
     public void UpdateBooking(Booking booking)
     {
         _repo.Booking.UpdateBooking(booking);
+    }
+
+    public (bool status, int bookId) BookLichOffline(DateOnly date, TimeOnly startTime, TimeOnly endTime, int courtId, int clubId, int userId)
+    {
+        var club = _repo.Club.GetClubById(clubId);
+        var courtSchedule = _repo.BookingDetail.GetAllBookingDetails().Where(e =>
+            e.BookDate == date && e.Court.CourtId == courtId).OrderBy(e => e.StartTime).ToList();
+
+        bool canBook = false;
+
+        if (courtSchedule.Any())
+        {
+            // 9-11, 12-14, 14-17 ...
+            // 7-9
+            if (endTime <= courtSchedule[0].StartTime || startTime >= courtSchedule[courtSchedule.Count - 1].EndTime)
+            {
+                canBook = true;
+            }
+
+            if (courtSchedule.Count == 1)
+            {
+                canBook = false;
+            }
+            else
+            {
+                for (int i = 1; i < courtSchedule.Count - 1; i++)
+                {
+                    if (courtSchedule[i - 1].EndTime <= startTime && courtSchedule[i].StartTime <= endTime)
+                    {
+                        canBook = true;
+                        break;
+                    }
+                }
+            }
+        }
+        else
+        {
+            canBook = true;
+        }
+
+        if (canBook)
+        {
+            var slots = _repo.Slot.GetAllByClubId(clubId);
+
+            Booking booking = new()
+            {
+                BookingTypeId = (int)BookingTypeEnum.LichNgay,
+                ClubId = clubId,
+                PaymentStatus = false,
+                UserId = userId,
+                TotalPrice = CalculatePrice(slots, startTime, endTime, (int)club.DefaultPricePerHour)
+            };
+
+            _repo.Booking.AddBooking(booking);
+
+            BookingDetail bookingDetail = new()
+            {
+                BookingId = booking.BookingId,
+                BookDate = date,
+                CourtId = courtId,
+                StartTime = startTime,
+                EndTime = endTime,
+            };
+
+            _repo.BookingDetail.AddBookingDetail(bookingDetail);
+
+            return (true, booking.BookingId);
+        }
+
+        return (false, -1);
     }
 
     public (bool status, int bookId) BookLichThiDau(BookingRequestDto dto)
@@ -128,7 +210,7 @@ public class BookingService : IBookingService
             var slotStartTime = (TimeOnly)slot.StartTime!;
             var slotEndTime = (TimeOnly)slot.EndTime!;
 
-            if (startTime >= slot.StartTime)
+            if (startTime >= slot.StartTime && startTime <= slot.EndTime)
             {
                 if (endTime > slot.EndTime)
                 {
@@ -142,33 +224,31 @@ public class BookingService : IBookingService
                     int passMinute = (endTime.Hour * 60 + endTime.Minute) -
                                      (startTime.Hour * 60 + startTime.Minute);
                     total += passMinute * ((int)slot.Price! / 60);
+                    startTime = endTime;
                     break;
                 }
             }
-            else if (endTime >= slot.StartTime)
+            else if (endTime >= slot.StartTime && endTime <= slot.EndTime)
             {
                 int passMinute = (endTime.Hour * 60 + endTime.Minute) -
                                  (slotStartTime.Hour * 60 + slotStartTime.Minute);
                 total += passMinute * ((int)slot.Price! / 60);
                 endTime = new TimeOnly(slotStartTime.Hour, slotStartTime.Minute);
             }
-            else
-            {
-                int passMinute = (endTime.Hour * 60 + endTime.Minute) -
-                                 (startTime.Hour * 60 + startTime.Minute);
-                total += passMinute * (defaultPrice / 60);
-                break;
-            }
         }
 
+        int lastMinute = (endTime.Hour * 60 + endTime.Minute) -
+                         (startTime.Hour * 60 + startTime.Minute);
+        total += lastMinute * (defaultPrice / 60);
+
         var tienVND = total / 1000;
-        var sodu = total % tienVND * 1000;
+        var sodu = total % (tienVND * 1000);
         total = sodu > 0 ? tienVND * 1000 + 1000 : tienVND * 1000;
 
         return total;
     }
 
-    public bool BookLichCoDinh(BookingRequestDto dto)
+    public (bool status, int bookId) BookLichCoDinh(BookingRequestDto dto)
     {
         var availableCourt = _repo.Court.GetCourtsByClubId(dto.ClubId).ToList();
         Court selectedCourt = null;
@@ -254,16 +334,16 @@ public class BookingService : IBookingService
                 };
 
                 _repo.BookingDetail.AddBookingDetail(bookingDetail);
-                bookDate.AddDays(7);
+                bookDate = bookDate.AddDays(7);
             }
 
-            return true;
+            return (true, booking.BookingId);
         }
 
-        return false;
+        return (false, -1);
     }
 
-    public bool BookLichNgay(BookingRequestDto dto)
+    public (bool status, int bookId) BookLichNgay(BookingRequestDto dto)
     {
         var availableCourt = _repo.Court.GetCourtsByClubId(dto.ClubId).ToList();
         var bookingDetailInSlotAndDate = _repo.BookingDetail.GetAllBookingDetails().Where(e =>
@@ -336,10 +416,10 @@ public class BookingService : IBookingService
 
             _repo.BookingDetail.AddBookingDetail(bookingDetail);
 
-            return true;
+            return (true, booking.BookingId);
         }
 
-        return false;
+        return (false, -1);
     }
 
     public List<Booking> GetAllBookingsWithBookingDetails()

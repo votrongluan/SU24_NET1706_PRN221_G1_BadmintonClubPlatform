@@ -1,0 +1,46 @@
+﻿@page
+@model WebAppRazor.Pages.ErrorModel
+@{
+}
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Badminton Booking Platform</title>
+    <link rel="stylesheet" href="~/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets/css/swiper-icons.css">
+    <link rel="stylesheet" href="~/assets/css/bs-theme-overrides.css">
+    <link rel="stylesheet" href="~/assets/css/Banner-Heading-Image-images.css">
+    <link rel="stylesheet" href="~/assets/css/Navbar-With-Button-icons.css">
+    <link rel="stylesheet" href="~/assets/css/Simple-Slider-swiper-bundle.min.css">
+    <link rel="stylesheet" href="~/assets/css/Simple-Slider.css">
+</head>
+
+<body>
+    <main style="padding-bottom: 2rem;min-height: 80vh;">
+        <div class="container">
+            <section>
+                <h2 class="fs-4 text-center">Lỗi hệ thống</h2>
+                <p class="text-center">
+                    Vui lòng liên hệ đội ngũ phát triển để được hỗ trợ
+                </p>
+                <div class="d-flex flex-column justify-content-center align-items-center">
+                    <div style="width:50%;height: 500px;background: url(&quot;assets/img/error.jpg&quot;) center / cover no-repeat;"></div>
+                    <a asp-page="/Index" class="mt-4 btn btn-outline-info" role="button">Quay về trang chủ</a>
+                </div>
+
+            </section>
+        </div>
+    </main>
+    <script src="~/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/assets/js/Simple-Slider-swiper-bundle.min.js"></script>
+    <script src="~/assets/js/Simple-Slider.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+
+</html>

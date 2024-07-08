@@ -25,6 +25,7 @@ namespace WebAppRazor.Pages.Admin
 
         // MESSAGE FOR ACTION
         public string Message { get; set; }
+        public int TotalFindClub { get; set; } = 0;
 
         private void InitializeData()
         {
@@ -69,6 +70,8 @@ namespace WebAppRazor.Pages.Admin
                     _ => FilterClubsDto,
                 };
             }
+
+            TotalFindClub = FilterClubsDto?.Count ?? 0;
 
             // Pagination logic
             page = page == 0 ? 1 : page;

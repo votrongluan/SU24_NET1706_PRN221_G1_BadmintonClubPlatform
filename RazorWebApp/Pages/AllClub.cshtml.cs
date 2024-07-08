@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.Entities;
+using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Services.IService;
@@ -35,7 +36,7 @@ namespace WebAppRazor.Pages
 
             FilterClubs = Clubs;
 
-                ViewData["CityId"] = new SelectList(Cities, "CityId", "CityName");
+            ViewData["CityId"] = new SelectList(Cities, "CityId", "CityName");
         }
 
         private void Paging(string searchString, string searchProperty, string sortProperty, int sortOrder, int page = 0, int cityId = 0, int districtId = 0)
@@ -85,6 +86,13 @@ namespace WebAppRazor.Pages
         public IActionResult OnGet(int cityId, int districtId, string searchString, string searchProperty, string sortProperty, int sortOrder)
         {
             LoadAccountFromSession();
+
+            if (LoginedAccount != null)
+            {
+                var role = (string)LoginedAccount.Role;
+                if (role == AccountRoleEnum.Admin.ToString()) return RedirectToPage("/Admin/Index");
+                if (role == AccountRoleEnum.Staff.ToString()) return RedirectToPage("/Staff/Index");
+            }
 
             InitializeData();
 

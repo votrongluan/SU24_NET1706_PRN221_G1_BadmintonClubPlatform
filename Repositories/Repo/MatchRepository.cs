@@ -12,7 +12,7 @@ public class MatchRepository : IMatchRepository
         return MatchDao.GetAll()
             .Include(x => x.Booking).ThenInclude(x => x.Club)
             .ThenInclude(x => x.District).ThenInclude(x => x.City)
-            .Include(e => e.Booking).ThenInclude(e => e.BookingDetails).OrderByDescending(e => e.MatchId).ToList();
+            .Include(e => e.Booking).ThenInclude(e => e.BookingDetails).ThenInclude(e => e.Court).OrderByDescending(e => e.MatchId).ToList();
     }
 
     public Match GetMatchById(int matchId)

@@ -37,7 +37,7 @@ namespace WebAppRazor.Pages.Customer
 
         public IActionResult OnGet(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToPage("/NotFound");
 
             // Authorize
             LoadAccountFromSession();
@@ -99,12 +99,11 @@ namespace WebAppRazor.Pages.Customer
 
                 if (BookingRequestDto.BookingTypeId == (int)BookingTypeEnum.LichNgay)
                 {
-                    bool isSuccess = _service.BookingService.BookLichNgay(BookingRequestDto);
+                    var result = _service.BookingService.BookLichNgay(BookingRequestDto);
 
-                    if (isSuccess)
+                    if (result.status)
                     {
-                        TempData["Message"] = $"{MessagePrefix.SUCCESS}Đặt thành công";
-                        return RedirectToPage("Book", new { id });
+                        return RedirectToPage("/Customer/BookDetail", new { bookId = result.bookId });
                     }
 
                     TempData["Message"] = $"{MessagePrefix.ERROR}Đặt thất bại";
@@ -113,12 +112,11 @@ namespace WebAppRazor.Pages.Customer
 
                 if (BookingRequestDto.BookingTypeId == (int)BookingTypeEnum.LichCoDinh)
                 {
-                    bool isSuccess = _service.BookingService.BookLichCoDinh(BookingRequestDto);
+                    var result = _service.BookingService.BookLichCoDinh(BookingRequestDto);
 
-                    if (isSuccess)
+                    if (result.status)
                     {
-                        TempData["Message"] = $"{MessagePrefix.SUCCESS}Đặt thành công";
-                        return RedirectToPage("Book", new { id });
+                        return RedirectToPage("/Customer/BookDetail", new { bookId = result.bookId });
                     }
 
                     TempData["Message"] = $"{MessagePrefix.ERROR}Đặt thất bại";

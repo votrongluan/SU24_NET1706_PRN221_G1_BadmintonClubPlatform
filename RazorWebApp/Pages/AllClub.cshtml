@@ -48,7 +48,7 @@
                         <div class="dropdown" style="margin-right: 40px;">
                             <a class="dropdown-toggle d-table-cell" aria-expanded="false" data-bs-toggle="dropdown" href="#"
                                style="text-decoration: none;color: var(--bs-navbar-active-color);">
-                                <img class="rounded-circle img-fluid" alt="man in black button-up shirt"
+                                <img class="rounded-circle img-fluid" alt=""
                                      style="width: 40px;height: 40px;margin-right: 8px;"
                                      src="@Model.LoginedAccount.AvatarLink">@Model.LoginedAccount.Fullname
                             </a>
@@ -165,11 +165,11 @@
 
                                 <div class="d-flex d-md-flex justify-content-between align-items-md-center"
                                      style="margin-top: 16px;">
-                                    <a class="btn btn-primary" role="button" asp-page="ClubDetail"
+                                    <a class="btn btn-outline-secondary" role="button" asp-page="/ClubDetail"
                                        asp-route-id="@club.ClubId">
                                         Chi tiết
                                     </a>
-                                    <a class="btn btn-primary" role="button" asp-page="Customer/Book"
+                                    <a class="btn btn-outline-primary" role="button" asp-page="/Customer/Book"
                                        asp-route-id="@club.ClubId">
                                         Đặt
                                         sân

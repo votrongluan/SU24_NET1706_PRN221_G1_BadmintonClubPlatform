@@ -132,6 +132,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
+                                        <th class="text-center">Mã thi đấu</th>
                                         <th class="text-start">Tiêu đề</th>
                                         <th class="text-start">Mô tả</th>
                                         <th class="text-center">Ngày thi</th>
@@ -141,17 +142,19 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <p class="text-secondary">Tìm thấy @Model.TotalFindMatch lịch thi đấu</p>
                                     @foreach (var item in Model.FilterMatchesDto)
                                     {
                                         <tr>
+                                            <td class="text-center">@item.MatchId</td>
                                             <td class="text-start">@item.Title</td>
                                             <td class="text-start">@item.Description</td>
                                             <td class="text-center">@item.MatchDate</td>
                                             <td class="text-center">@item.MatchTime</td>
                                             <td class="text-center">@item.CourtId</td>
                                             <td class="text-center">
-                                                <a asp-page="./AccountUpdate" class="btn btn-light" role="button" asp-route-id="@item?.MatchId">Cập nhật</a>
-                                                <a asp-page="./AccountDelete" class="btn btn-danger ms-4" role="button" asp-route-id="@item?.MatchId">Xóa</a>
+                                                <a asp-page="./MatchUpdate" class="btn btn-light" role="button" asp-route-id="@item.MatchId">Cập nhật</a>
+                                                <a asp-page="./MatchDelete" class="btn btn-danger ms-4" role="button" asp-route-id="@item.MatchId">Xóa</a>
                                             </td>
                                         </tr>
                                     }
@@ -222,19 +225,19 @@
                             </label>
                             <label class="form-label mt-4" style="display: block;/*width: 100%;*/">
                                 Ngày thi
-                                đấu<input asp-for="CreatedMatch.MatchDate" class="form-control mt-4" type="date">
+                                đấu<input asp-for="CreatedMatch.MatchDate" class="form-control mt-2" type="date">
                                 <span asp-validation-for="CreatedMatch.MatchDate" class="text-danger"></span>
                             </label>
                             <label class="form-label mt-4"
                                    style="display: block;/*width: 100%;*/">
                                 Giờ bắt đầu thi đấu
-                                <input class="form-control" type="time" asp-for="CreatedMatch.StartTime">
+                                <input class="form-control mt-2" type="time" asp-for="CreatedMatch.StartTime">
                                 <span asp-validation-for="CreatedMatch.StartTime" class="text-danger"></span>
                             </label>
                             <label class="form-label mt-4"
                                    style="display: block;/*width: 100%;*/">
                                 Giờ kết thúc thi đấu
-                                <input class="form-control" type="time" asp-for="CreatedMatch.EndTime">
+                                <input class="form-control mt-2" type="time" asp-for="CreatedMatch.EndTime">
                                 <span asp-validation-for="CreatedMatch.EndTime" class="text-danger"></span>
                             </label>
                         </div>

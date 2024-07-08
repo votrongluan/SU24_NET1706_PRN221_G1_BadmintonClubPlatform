@@ -11,7 +11,7 @@ public class MatchCreateDto
 
     [Required(ErrorMessage = "Cần phải nhập nội dung thi đấu")]
     [MinLength(4, ErrorMessage = "Tối thiểu 4 kí tự")]
-    [MaxLength(50, ErrorMessage = "Tối đa 500 kí tự")]
+    [MaxLength(500, ErrorMessage = "Tối đa 500 kí tự")]
     public string Description { get; set; } = null!;
 
     [Required(ErrorMessage = "Cần phải chọn loại sân")]

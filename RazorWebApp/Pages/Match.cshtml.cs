@@ -1,5 +1,6 @@
 ﻿using BusinessObjects.Dtos.Match;
 using BusinessObjects.Entities;
+using BusinessObjects.Enums;
 using DataAccessObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -121,6 +122,15 @@ namespace WebAppRazor.Pages
 
         public IActionResult OnGet(string searchString, string searchProperty, string sortProperty, int sortOrder, int cityId, int districtId, int page = 1, DateOnly? matchDate = null)
         {
+            LoadAccountFromSession();
+
+            if (LoginedAccount != null)
+            {
+                var role = (string)LoginedAccount.Role;
+                if (role == AccountRoleEnum.Admin.ToString()) return RedirectToPage("/Admin/Index");
+                if (role == AccountRoleEnum.Staff.ToString()) return RedirectToPage("/Staff/Index");
+            }
+
             if (TempData.ContainsKey("Message"))
             {
                 Message = TempData["Message"].ToString();
