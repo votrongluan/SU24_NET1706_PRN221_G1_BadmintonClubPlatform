@@ -15,6 +15,6 @@ namespace BusinessObjects.Dtos.Review
         public string? Comment { get; set; }
         public int ClubId { get; set; }
         public int UserId { get; set; }
-
+        public DateOnly ReviewDate { get; set; }
     }
 }

@@ -102,10 +102,24 @@
                                 <h3 class="fs-5" style="margin-bottom: 0px;margin-top: 8px;">@club.ClubName</h3>
                                 <p style="margin-bottom: 16px;margin-top: 8px;height: 50px;">Địa chỉ: @club.Address, @club.District.DistrictName, @club.District.City.CityName</p>
                                 <p class="text-light-emphasis d-lg-flex align-items-lg-center" style="margin-bottom: 0px;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                         viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
-                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                                    </svg>&nbsp;@club.TotalStar 
+                                    @if (club.TotalStar == 0)
+                                    {
+                                        <span>Chưa có đánh giá</span>
+                                    }
+                                    else
+                                    {
+                                        double totalStar = (double)club.TotalStar;
+                                        double totalReview = (double)club.TotalReview;
+                                        double averageRating = totalStar / totalReview;
+                                        string roundedAverageRating = averageRating.ToString("0.0");
+
+                                    <p class="d-flex align-items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
+                                             viewBox="0 0 16 16" class="bi bi-star-fill" style="color: var(--bs-yellow);">
+                                            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                        </svg>&nbsp;@roundedAverageRating
+                                    </p>
+                                    }
                                 </p>
                                 <div class="d-flex d-md-flex justify-content-between align-items-md-center"
                                      style="margin-top: 16px;">
