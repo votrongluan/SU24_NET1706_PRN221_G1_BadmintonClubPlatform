@@ -25,7 +25,7 @@ namespace WebAppRazor.Pages
 
         // Pagination properties
         public int currentPage { get; set; }
-        public int totalPage { get; set; }
+        public int totalPages { get; set; }
 
         public MatchModel(IServiceManager service)
         {
@@ -47,7 +47,7 @@ namespace WebAppRazor.Pages
             ViewData["CityId"] = new SelectList(Cities, "CityId", "CityName");
         }
 
-        private void Paging(string searchString, string searchProperty, string sortProperty, int sortOrder, int page = 1, int cityId = 0, int districtId = 0, DateOnly? matchDate = null)
+        private void Paging(string searchString, string searchProperty, string sortProperty, int sortOrder, int page = 0, int cityId = 0, int districtId = 0, DateOnly? matchDate = null)
         {
             const int pageSize = 5;
 
@@ -109,18 +109,19 @@ namespace WebAppRazor.Pages
                     FilterMatches = FilterMatches.Where(e => e.Address.Contains(city.CityName)).ToList();
                 }
             }
-            if (matchDate != null)
+            if (matchDate.HasValue)
             {
-                FilterMatches = FilterMatches.Where(e => e.MatchDate.Equals(matchDate)).ToList();
+                FilterMatches = FilterMatches.Where(e => e.MatchDate.Equals(matchDate.Value.ToString("dd/MM/yyyy"))).ToList();
             }
 
+            page = page == 0 ? 1 : page;
             TotalMatches = FilterMatches.Count;
-            totalPage = (int)Math.Ceiling(TotalMatches / (double)pageSize);
-            currentPage = Math.Max(1, Math.Min(page, totalPage));
+            totalPages = (int)Math.Ceiling(FilterMatches.Count / (double)pageSize);
+            currentPage = page;
             FilterMatches = FilterMatches.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
         }
 
-        public IActionResult OnGet(string searchString, string searchProperty, string sortProperty, int sortOrder, int cityId, int districtId, int page = 1, DateOnly? matchDate = null)
+        public IActionResult OnGet(string searchString, string searchProperty, string sortProperty, int sortOrder, int cityId, int districtId, DateOnly? matchDate)
         {
             LoadAccountFromSession();
 
@@ -137,7 +138,8 @@ namespace WebAppRazor.Pages
             }
 
             InitializeData();
-            Paging(searchString, searchProperty, sortProperty, sortOrder, page, cityId, districtId, matchDate);
+            int page = Convert.ToInt32(Request.Query["page"]);
+            Paging(searchString, searchProperty, sortProperty, sortOrder, page, cityId: cityId, districtId: districtId, matchDate : matchDate);
 
             return Page();
         }
