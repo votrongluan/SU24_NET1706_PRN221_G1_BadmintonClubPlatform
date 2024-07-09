@@ -137,21 +137,22 @@
                                 </table>
                             </div>
                         </div>
+                        
 
                         <div class="tab-pane @(Model.TabIndex == 2 ? "active" : "")" role="tabpanel" id="tab-2">
                             <div class="bg-white p-5 pt-4">
-                                <form class="mt-4 p-0" method="get" asp-page-handler="ViewSlotByOrder">
+                                <form class="mt-4 p-0" method="post" asp-page-handler="ViewSlotByOrder">
                                     <label class="form-label d-block">
                                         Chọn ngày<input class="form-control mt-4"
-                                                        type="date">
-                                    </label><label class="form-label d-block mt-4">
+                                                        type="date" name="SelectedDate" value="@Model.SelectedDate">
+                                    </label>
+                                    <label class="form-label d-block mt-4">
                                         Chọn mã sân
-                                        <select class="form-select mt-4">
-                                            <optgroup label="This is a group">
-                                                <option value="12" selected="">This is item 1</option>
-                                                <option value="13">This is item 2</option>
-                                                <option value="14">This is item 3</option>
-                                            </optgroup>
+                                        <select class="form-select mt-4" name="SelectedCourtId">
+                                            @foreach (var court in Model.Courts)
+                                            {
+                                                <option value="@court.CourtId">@court.CourtId</option>
+                                            }
                                         </select>
                                     </label>
                                     <div class="d-flex">
@@ -160,8 +161,40 @@
                                         <input type="hidden" id="selectedTabIndex" name="selectedTabIndex" value="@Model.TabIndex" />
                                     </div>
                                 </form>
+
+                                @if (Model.BookingDetails != null && Model.BookingDetails.Any())
+                                {
+                                    <div class="mt-4">
+                                        <h4>
+                                            Lịch Đặt Sân - @Model.BookingDetails.ElementAt(0).BookDate.Value.ToString("dd/MM/yyyy") - Mã Sân @Model.BookingDetails.ElementAt(0).CourtId</h4>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Giờ bắt đầu</th>
+                                                    <th>Giờ kết thúc</th>
+                                                    <th>Loại dịch vụ</th>
+                                                    <th>Tên khách hàng</th>
+                                                    <th>Số điện thoại</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var bookingDetail in Model.BookingDetails)
+                                                {
+                                                    <tr>
+                                                        <td>@bookingDetail.StartTime</td>
+                                                        <td>@bookingDetail.EndTime</td>
+                                                        <td>@bookingDetail.Booking.BookingType.Description</td>
+                                                        <td>@bookingDetail.Booking.User.Fullname</td>
+                                                        <td>@bookingDetail.Booking.User.UserPhone</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
                             </div>
                         </div>
+
 
                         <div class="tab-pane @(Model.TabIndex == 3 ? "active" : "")" role="tabpanel" id="tab-3">
                             <div class="bg-white p-5 pt-4">

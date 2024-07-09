@@ -72,4 +72,9 @@ public class AccountService : IAccountService
     {
         _repo.Account.UpdateAccount(account);
     }
+
+    public void UpdateAccount(Account account)
+    {
+        _repo.Account.UpdateAccount(account);
+    }
 }

@@ -9,4 +9,5 @@ public interface IBookingDetailService
     void DeleteBookingDetail(int bookingDetailId);
     BookingDetail GetBookingDetailById(int bookingDetailId);
     void UpdateBookingDetail(BookingDetail bookingDetail);
+    List<BookingDetail> GetBookingsByDateAndCourt(DateOnly date, int courtId);
 }
