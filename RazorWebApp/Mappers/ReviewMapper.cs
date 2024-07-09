@@ -13,7 +13,8 @@ namespace WebAppRazor.Mappers
                 Star = e.Star,
                 Comment = e.Comment,
                 ClubId = e.ClubId,
-                UserId = e.UserId
+                UserId = e.UserId,
+                ReviewDate = e.ReviewDate
             };
         }
     }
