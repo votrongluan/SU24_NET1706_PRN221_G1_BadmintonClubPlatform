@@ -1,6 +1,8 @@
-﻿using BusinessObjects.Enums;
+﻿using BusinessObjects.Entities;
+using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Services.IService;
+using Services.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,18 @@ namespace WebAppRazor.Pages.Staff
 
         public List<BookingViewModel> Bookings { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public int TabIndex { get; set; } = 1;
+
+        [BindProperty(SupportsGet = true)]
+        public DateOnly SelectedDate { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int SelectedCourtId { get; set; }
+
+        public List<Court> Courts { get; set; }
+        public List<BookingDetail> BookingDetails { get; set; }
+
         public IActionResult OnGet()
         {
             LoadAccountFromSession();
@@ -26,8 +40,16 @@ namespace WebAppRazor.Pages.Staff
             if (!string.IsNullOrWhiteSpace(navigatePage))
                 return RedirectToPage(navigatePage);
 
-            // Code go from here
             Bookings = GetBookings();
+
+            int clubId = (int)LoginedAccount.ClubManageId;
+            Courts = serviceManager.CourtService.GetCourtsByClubId(clubId);
+
+            if (Request.Query.ContainsKey("selectedTabIndex"))
+            {
+                TabIndex = int.Parse(Request.Query["selectedTabIndex"]);
+            }
+
             return Page();
         }
 
@@ -35,7 +57,8 @@ namespace WebAppRazor.Pages.Staff
         {
             var clubId = LoginedAccount.ClubManageId;
             var bookings = new List<BookingViewModel>();
-            var bookingEntities = serviceManager.BookingService.GetAllBookingsWithBookingDetails().Where(x => x.ClubId == clubId);
+            var bookingEntities = serviceManager.BookingService.GetAllBookingsWithBookingDetails()
+                .Where(x => x.ClubId == clubId);
 
             if (bookingEntities == null || !bookingEntities.Any())
                 return bookings;
@@ -54,10 +77,39 @@ namespace WebAppRazor.Pages.Staff
                         StartTime = detail.StartTime?.ToTimeSpan(),
                         EndTime = detail.EndTime?.ToTimeSpan(),
                         PaymentStatus = booking.PaymentStatus == true ? "Đã thanh toán" : "Chưa thanh toán"
-                    }); ;
+                    });
                 }
             }
             return bookings;
+        }
+
+        public IActionResult OnPostViewSlotByOrder()
+        {
+            if (SelectedDate != default && SelectedCourtId != 0)
+            {
+                BookingDetails = serviceManager.BookingDetailService.GetBookingsByDateAndCourt(SelectedDate, SelectedCourtId);
+            }
+
+            LoadAccountFromSession();
+            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Staff.ToString());
+
+            if (!string.IsNullOrWhiteSpace(navigatePage))
+                return RedirectToPage(navigatePage);
+
+            Bookings = GetBookings();
+
+            int clubId = (int)LoginedAccount.ClubManageId;
+            Courts = serviceManager.CourtService.GetCourtsByClubId(clubId);
+
+            TabIndex = 2;
+
+            if (Request.Query.ContainsKey("selectedTabIndex"))
+            {
+                TabIndex = int.Parse(Request.Query["selectedTabIndex"]);
+            }
+
+            return Page();
+
         }
 
         public class BookingViewModel

@@ -26,7 +26,7 @@ public class CourtService : ICourtService
     {
         _repo.Court.AddCourt(court);
     }
-
+    
     public void DeleteCourt(int courtId)
     {
         _repo.Court.DeleteCourt(courtId);

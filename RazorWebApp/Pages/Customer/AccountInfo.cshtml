@@ -22,13 +22,10 @@
     <header>
         <nav class="navbar navbar-expand-md py-3">
             <div class="container-fluid">
-                <a class="navbar-brand d-flex align-items-center"
-                    href="#"><span><strong>Bacol</strong></span></a><button data-bs-toggle="collapse"
-                    class="navbar-toggler" data-bs-target="#navcol-1">
-                    <span class="visually-hidden">
-                        Toggle
-                        navigation
-                    </span><span class="navbar-toggler-icon"></span>
+                <a class="navbar-brand d-flex align-items-center" href="#"><span><strong>Bacol</strong></span></a>
+                <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1">
+                    <span class="visually-hidden">Toggle navigation</span>
+                    <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navcol-1">
                     <ul class="navbar-nav me-auto">
@@ -45,18 +42,12 @@
                     else
                     {
                         <div class="dropdown" style="margin-right: 40px;">
-                            <a class="dropdown-toggle d-table-cell" aria-expanded="false" data-bs-toggle="dropdown" href="#"
-                                style="text-decoration: none;color: var(--bs-navbar-active-color);">
-                                <img class="rounded-circle img-fluid" alt=""
-                                    style="width: 40px;height: 40px;margin-right: 8px;"
-                                    src="@Model.LoginedAccount.AvatarLink">@Model.LoginedAccount.Fullname
+                            <a class="dropdown-toggle d-table-cell" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="text-decoration: none;color: var(--bs-navbar-active-color);">
+                                <img class="rounded-circle img-fluid" alt="" style="width: 40px;height: 40px;margin-right: 8px;" src="@Model.LoginedAccount.AvatarLink">@Model.LoginedAccount.Fullname
                             </a>
                             <div class="dropdown-menu" style="min-width: 100px;">
                                 <a class="dropdown-item" asp-page="/Customer/AccountInfo">Tài khoản</a>
-                                <a class="dropdown-item" asp-page="/Customer/BookHistory">
-                                    Lịch
-                                    sử đặt
-                                </a>
+                                <a class="dropdown-item" asp-page="/Customer/BookHistory">Lịch sử đặt</a>
                                 <a asp-page-handler="Logout" class="dropdown-item">Đăng xuất</a>
                             </div>
                         </div>
@@ -69,54 +60,71 @@
         <div class="container bg-light">
             <section>
                 <h2 class="fs-4 text-center">Quản lý tài khoản</h2>
+                @if (!string.IsNullOrEmpty(Model.Message))
+                {
+                    var messageClass = Model.Message.StartsWith(Constants.MessagePrefix.ERROR.ToString()) ? "alert-danger" :
+                    Model.Message.StartsWith(Constants.MessagePrefix.SUCCESS.ToString()) ? "alert-success" :
+                    Model.Message.StartsWith(Constants.MessagePrefix.WARNING.ToString()) ? "alert-warning" :
+                    "alert-info";
+
+                    <div class="alert @messageClass" role="alert">
+                        <p class="m-0 p-1">@Model.Message.Substring(1)</p>
+                    </div>
+                }
                 <div style="margin-top: 16px;">
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link active" role="tab" data-bs-toggle="tab" href="#tab-1"
-                                style="color: var(--bs-body-color);">
-                                Tài khoản của
-                                tôi
-                            </a>
+                            <a class="nav-link @(Model.TabIndex == 1 ? "active" : "")" role="tab" data-bs-toggle="tab" href="#tab-1" onclick="setTabIndex(1)">Tài khoản của tôi</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-2"
-                                style="color: var(--bs-body-color);">Đổi mật khẩu</a>
+                            <a class="nav-link @(Model.TabIndex == 2 ? "active" : "")" role="tab" data-bs-toggle="tab" href="#tab-2" onclick="setTabIndex(2)">Đổi mật khẩu</a>
                         </li>
                     </ul>
-                    <div class="tab-content" style="margin-top: 16px;">
-                        <div class="tab-pane active" role="tabpanel" id="tab-1">
-                            <form>
+
+                    <div class="tab-content">
+                        <div class="tab-pane @(Model.TabIndex == 1 ? "active" : "")" role="tabpanel" id="tab-1">
+                            <form method="post">
+                                <input type="hidden" asp-for="Account.UserId" />
                                 <div class="mt-4">
-                                    <p>Họ và tên</p><input class="form-control" type="text">
+                                    <p>Họ và tên</p>
+                                    <input class="form-control" type="text" asp-for="Account.Fullname">
+                                    <span asp-validation-for="Account.Fullname" class="text-danger"></span>
                                 </div>
                                 <div class="mt-4">
-                                    <p style="margin-top: 8px;">Số điện thoại</p><input class="form-control"
-                                        type="text">
+                                    <p style="margin-top: 8px;">Số điện thoại</p>
+                                    <input class="form-control" type="text" asp-for="Account.UserPhone">
+                                    <span asp-validation-for="Account.UserPhone" class="text-danger"></span>
                                 </div>
                                 <div class="mt-4">
-                                    <p style="margin-top: 8px;">Email</p><input class="form-control" type="text">
+                                    <p style="margin-top: 8px;">Email</p>
+                                    <input class="form-control" type="text" asp-for="Account.Email">
+                                    <span asp-validation-for="Account.Email" class="text-danger"></span>
                                 </div>
                                 <div class="mt-4">
-                                    <p class="mt-2">Ảnh đại diện</p><input class="form-control" type="text">
-                                </div><input class="btn btn-primary mt-4" type="submit"
-                                    style="width: 100%;margin-top: 16px;" value="Cập nhật">
+                                    <p class="mt-2">Ảnh đại diện</p>
+                                    <input class="form-control" type="text" asp-for="Account.AvatarLink">
+                                </div>
+                                <input class="btn btn-primary mt-4" type="submit" style="width: 100%;margin-top: 16px;" value="Cập nhật">
                             </form>
                         </div>
-                        <div class="tab-pane" role="tabpanel" id="tab-2">
-                            <form>
+
+                        <div class="tab-pane @(Model.TabIndex == 2 ? "active" : "")" role="tabpanel" id="tab-2">
+                            <form class="mt-4 p-0" method="post" asp-page-handler="UpdatePassword">
                                 <div class="mt-4">
-                                    <p>Nhập mật khẩu</p><input class="form-control" type="text">
+                                    <p>Nhập mật khẩu</p>
+                                    <input class="form-control" type="password" asp-for="OldPassword">
                                 </div>
                                 <div class="mt-4">
-                                    <p style="margin-top: 8px;">Nhập mật khẩu mới</p><input class="form-control"
-                                        type="text">
+                                    <p style="margin-top: 8px;">Nhập mật khẩu mới</p>
+                                    <input class="form-control" type="password" asp-for="InputNewPassword">
                                 </div>
                                 <div class="mt-4">
-                                    <p style="margin-top: 8px;">Nhập lại mật khẩu mới</p><input class="form-control"
-                                        type="text">
-                                </div><input class="btn btn-primary mt-4" type="submit"
-                                    style="width: 100%;margin-top: 16px;" value="Cập nhật">
+                                    <p style="margin-top: 8px;">Nhập lại mật khẩu mới</p>
+                                    <input class="form-control" type="password" asp-for="InputAgainNewPassword">
+                                </div>
+                                <input class="btn btn-primary mt-4" type="submit" style="width: 100%;margin-top: 16px;" value="Cập nhật">
                             </form>
+
                         </div>
                     </div>
                 </div>
@@ -158,6 +166,12 @@
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        function setTabIndex(index) {
+            document.getElementById("selectedTabIndex").value = index;
+        }
+    </script>
 </body>
 
 </html>

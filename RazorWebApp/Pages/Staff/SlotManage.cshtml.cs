@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Azure;
 using BusinessObjects.Entities;
 using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +29,7 @@ namespace WebAppRazor.Pages.Staff
 
         public string Message { get; set; }
 
-        public async Task<IActionResult> OnGet()
+        public async Task<IActionResult> OnGet(string sortProperty = "Hour", int sortOrder = 0)
         {
             LoadAccountFromSession();
             var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Staff.ToString());
@@ -49,17 +50,41 @@ namespace WebAppRazor.Pages.Staff
             int id = (int)LoginedAccount.ClubManageId;
 
             Slots = _serviceManager.SlotService.GetAllSlot().Where(e => e.ClubId == id).ToList();
+
+            switch (sortProperty)
+            {
+                case "Hour":
+                    if (sortOrder == 1)
+                    {
+                        Slots = Slots.OrderBy(s => s.StartTime).ToList();
+                    }
+                    else if (sortOrder == -1)
+                    {
+                        Slots = Slots.OrderByDescending(s => s.StartTime).ToList();
+                    }
+                    break;
+                case "Price":
+                    if (sortOrder == 1)
+                    {
+                        Slots = Slots.OrderBy(s => s.Price).ToList();
+                    }
+                    else if (sortOrder == -1)
+                    {
+                        Slots = Slots.OrderByDescending(s => s.Price).ToList();
+                    }
+                    break;
+            }
+
+
             return Page();
         }
 
         public IActionResult OnPostAddSlot()
         {
-            // Calculate EndTime based on StartTime and Duration
             NewSlot.EndTime = NewSlot.StartTime.Value.AddMinutes(Duration);
 
             Slots = _serviceManager.SlotService.GetAllSlot();
 
-            // Validate the new slot's start time
             foreach (var slot in Slots)
             {
                 if (NewSlot.StartTime >= slot.StartTime && NewSlot.StartTime < slot.EndTime)
@@ -69,7 +94,6 @@ namespace WebAppRazor.Pages.Staff
                 }
             }
 
-            // If valid, add the new slot (this is just a mock, you would save to the database)
             string accountJson = HttpContext.Session.GetString("Account");
             if (accountJson == null)
             {

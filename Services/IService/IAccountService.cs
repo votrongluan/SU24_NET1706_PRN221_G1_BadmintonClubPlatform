@@ -7,6 +7,7 @@ public interface IAccountService
     Account GetAccount (string username, string password);
     Account GetAccountById (int id);
     Account GetStaffAccountById (int id);
+    void UpdateAccount(Account account);    
     void RegisterAccount (Account account);
     void UpdateStaffAccount (Account account);
     void DeleteAccount (int id);

@@ -37,4 +37,11 @@ public class BookingDetailService: IBookingDetailService
     {
         _repo.BookingDetail.UpdateBookingDetail(bookingDetail);
     }
+
+    public List<BookingDetail> GetBookingsByDateAndCourt(DateOnly date, int courtId)
+    {
+        return _repo.BookingDetail.GetAllBookingDetails()
+            .Where(bd => bd.BookDate == date && bd.CourtId == courtId)
+            .ToList();
+    }
 }
