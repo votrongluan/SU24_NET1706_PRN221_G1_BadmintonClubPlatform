@@ -15,7 +15,7 @@ public partial class Review
 
     public int UserId { get; set; }
 
-    public DateOnly? ReviewDate { get; set; }
+    public DateTime? ReviewDateTime { get; set; }
 
     public virtual Club Club { get; set; } = null!;
 
