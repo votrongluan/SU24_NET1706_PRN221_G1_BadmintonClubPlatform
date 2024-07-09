@@ -25,7 +25,7 @@ namespace WebAppRazor.Pages.Customer
         public List<BookingHistoryResponseDto> FilterBookings { get; set; }
         public string Message { get; set; } = string.Empty;
         public int currentPage { get; set; }
-        public int totalPage { get; set; }
+        public int totalPages { get; set; }
 
         public void InitializeData()
         {
@@ -36,10 +36,11 @@ namespace WebAppRazor.Pages.Customer
             bookingHistoryResponsesDto = Bookings.Select(e => e.ToBookingHistory()).ToList();
             FilterBookings = bookingHistoryResponsesDto;
         }
-        public IActionResult OnGet(string searchString, string searchProperty, string sortProperty, int sortOrder, int page = 1, DateOnly? bookingDate = null)
+        public IActionResult OnGet(string searchString, string searchProperty, string sortProperty, int sortOrder, DateOnly? bookingDate)
         {
             LoadAccountFromSession();
             var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Customer.ToString());
+            int page = Convert.ToInt32(Request.Query["page"]);
 
             if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
 
@@ -57,15 +58,15 @@ namespace WebAppRazor.Pages.Customer
             }
 
             InitializeData();
-            Paging(searchString, searchProperty, sortProperty, sortOrder, page, bookingDate);
+            Paging(searchString, searchProperty, sortProperty, sortOrder, page, bookingDate : bookingDate);
 
             _logger.LogInformation("After Paging: FilterBookings count = {FilterBookingsCount}, currentPage={CurrentPage}, totalPage={TotalPage}",
-                FilterBookings.Count, currentPage, totalPage);
+                FilterBookings.Count, currentPage, totalPages);
 
             return Page();
         }
 
-        private void Paging(string searchString, string searchProperty, string sortProperty, int sortOrder, int page = 1, DateOnly? bookingDate = null)
+        private void Paging(string searchString, string searchProperty, string sortProperty, int sortOrder, int page = 0, DateOnly? bookingDate = null)
         {
             _logger.LogInformation("Paging called with: searchString={SearchString}, searchProperty={SearchProperty}, sortProperty={SortProperty}, sortOrder={SortOrder}, page={Page}, bookingDate={BookingDate}",
                 searchString, searchProperty, sortProperty, sortOrder, page, bookingDate);
@@ -114,13 +115,14 @@ namespace WebAppRazor.Pages.Customer
                 FilterBookings = FilterBookings.Where(e => e.BookingDate == bookingDate.Value.ToString("dd/MM/yyyy")).ToList();
             }
 
+            page = page == 0 ? 1 : page;
             TotalBookingHistory = FilterBookings.Count;
+            totalPages = (int)Math.Ceiling(FilterBookings.Count / (double)pageSize);
             currentPage = page;
-            totalPage = (int)Math.Ceiling(FilterBookings.Count / (double)pageSize);
             FilterBookings = FilterBookings.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
 
             _logger.LogInformation("After paging: FilterBookings count = {FilterBookingsCount}, currentPage={CurrentPage}, totalPage={TotalPage}",
-                FilterBookings.Count, currentPage, totalPage);
+                FilterBookings.Count, currentPage, totalPages);
         }
     }
 }

@@ -136,21 +136,24 @@
                         @if (Model.currentPage > 1)
                         {
                             <li class="page-item">
-                                <a class="page-link" aria-label="Previous" href="?page=@(Model.currentPage - 1)&searchString=@Request.Query["searchString"]&searchProperty=@Request.Query["searchProperty"]&sortProperty=@Request.Query["sortProperty"]&sortOrder=@Request.Query["sortOrder"]">
+                                <a class="page-link" aria-label="Previous" 
+                                href="?page=@(Model.currentPage - 1)&searchString=@Request.Query["searchString"]&searchProperty=@Request.Query["searchProperty"]&sortProperty=@Request.Query["sortProperty"]&sortOrder=@Request.Query["sortOrder"]&bookingDate=@Request.Query["bookingDate"]">
                                     <span aria-hidden="true">«</span>
                                 </a>
                             </li>
                         }
-                        @for (int i = 1; i <= Model.totalPage; i++)
+                        @for (int i = 1; i <= Model.totalPages; i++)
                         {
                             <li class="page-item @(i == Model.currentPage ? "active" : "")">
-                                <a class="page-link" href="?page=@i&searchString=@Request.Query["searchString"]&searchProperty=@Request.Query["searchProperty"]&sortProperty=@Request.Query["sortProperty"]&sortOrder=@Request.Query["sortOrder"]">@i</a>
+                                <a class="page-link" 
+                                href="?page=@i&searchString=@Request.Query["searchString"]&searchProperty=@Request.Query["searchProperty"]&sortProperty=@Request.Query["sortProperty"]&sortOrder=@Request.Query["sortOrder"]&bookingDate=@Request.Query["bookingDate"]">@i</a>
                             </li>
                         }
-                        @if (Model.currentPage < Model.totalPage)
+                        @if (Model.currentPage < Model.totalPages)
                         {
                             <li class="page-item">
-                                <a class="page-link" aria-label="Next" href="?page=@(Model.currentPage + 1)&searchString=@Request.Query["searchString"]&searchProperty=@Request.Query["searchProperty"]&sortProperty=@Request.Query["sortProperty"]&sortOrder=@Request.Query["sortOrder"]">
+                                <a class="page-link" aria-label="Next" 
+                                href="?page=@(Model.currentPage + 1)&searchString=@Request.Query["searchString"]&searchProperty=@Request.Query["searchProperty"]&sortProperty=@Request.Query["sortProperty"]&sortOrder=@Request.Query["sortOrder"]&bookingDate=@Request.Query["bookingDate"]">
                                     <span aria-hidden="true">»</span>
                                 </a>
                             </li>
