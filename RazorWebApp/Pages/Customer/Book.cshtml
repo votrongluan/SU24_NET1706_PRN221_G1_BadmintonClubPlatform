@@ -103,7 +103,7 @@
 
                         <div class="mt-4">
                             <p style="margin-top: 8px;" class="mt-4">Ngày</p>
-                            <input asp-for="BookingRequestDto.BookDate" class="form-control" type="date">
+                            <input id="date" asp-for="BookingRequestDto.BookDate" class="form-control" type="date">
                             <p class="mt-2">Lưu ý: Ngày đặt tính từ 3 ngày sau</p>
                             <span asp-validation-for="BookingRequestDto.CourtTypeId" class="text-danger"></span>
                         </div>
@@ -124,12 +124,12 @@
 
                             <div class="d-flex align-items-center">
                                 <div>
-                                    <input asp-for="BookingRequestDto.StartTimeHour" class="form-control" type="number" min="7" max="20" step="1">
+                                    <input id="hour" asp-for="BookingRequestDto.StartTimeHour" class="form-control" type="number" min="6" max="20" step="1">
                                     <span asp-validation-for="BookingRequestDto.StartTimeHour" class="text-danger"></span>
                                 </div>
                                 <div class="mx-4">:</div>
                                 <div>
-                                    <select asp-for="BookingRequestDto.StartTimeMinute" class="form-select">
+                                    <select id="minute" asp-for="BookingRequestDto.StartTimeMinute" class="form-select">
                                         <option value="0">00</option>
                                         <option value="15">15</option>
                                         <option value="30">30</option>
@@ -206,6 +206,17 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
+        // handle date
+        document.addEventListener("DOMContentLoaded", function () {
+            const dateInput = document.getElementById("date");
+            const today = new Date();
+            today.setDate(today.getDate() + 3);
+            const minDate = today.toISOString().split('T')[0];
+            dateInput.setAttribute("min", minDate);
+            dateInput.setAttribute("value", minDate);
+        });
+
+        // handle week
         const type = document.getElementById("type");
         const weekCount = document.getElementById("weekcount");
 

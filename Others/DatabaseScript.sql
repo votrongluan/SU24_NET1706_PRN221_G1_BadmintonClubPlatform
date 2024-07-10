@@ -292,7 +292,7 @@ VALUES
 -- Insert data into Club table
 INSERT INTO Club (ClubName, Address, DistrictId, FanpageLink, AvatarLink, OpenTime, CloseTime, ClubEmail, ClubPhone, ClientId, ApiKey, ChecksumKey, Status, TotalStar, TotalReview, DefaultPricePerHour)
 VALUES
-(N'Xuân Đông', N'23 đường Nguyễn Bình', 12, 'https://facebook.com/xuandong', 'https://i.pinimg.com/1200x/70/bb/1e/70bb1e22f39392a3c18f983749f79409.jpg', '07:00:00.0000000', '22:00:00.0000000', 'xuandong@gmail.com', '0944441234', NULL, NULL, NULL, NULL, 5, 1, 20000),
+(N'Xuân Đông', N'23 đường Nguyễn Bình', 12, 'https://facebook.com/xuandong', 'https://i.pinimg.com/1200x/70/bb/1e/70bb1e22f39392a3c18f983749f79409.jpg', '07:00:00.0000000', '22:00:00.0000000', 'xuandong@gmail.com', '0944441234', NULL, NULL, NULL, NULL, 0, 0, 20000),
 (N'Thu Hạ', N'25 đường Nguyễn Trãi', 14, 'https://facebook.com/thuha', 'https://i.pinimg.com/1200x/27/02/0e/27020ea41f73d5078ff4f0b71fcb04d5.jpg', '07:00:00.0000000', '22:00:00.0000000', 'xuandong@gmail.com', '0944441234', NULL, NULL, NULL, NULL, 0, 0, 20000),
 (N'Hạ Chiu', N'27 đường Ngũ Lão', 22, 'https://facebook.com/hachiu', 'https://i.pinimg.com/1200x/e0/e6/30/e0e630de917d41d1952b8c446832ca36.jpg', '07:00:00.0000000', '22:00:00.0000000', 'xuandong@gmail.com', '0944441234', NULL, NULL, NULL, NULL, 0, 0, 20000),
 (N'Đông Thu', N'84 đường Nguyễn Xỉn', 26, 'https://facebook.com/dongthu', 'https://i.pinimg.com/1200x/ad/e2/f0/ade2f0f4e6eda0ecc53eaf8bc31c3e86.jpg', '07:00:00.0000000', '22:00:00.0000000', 'xuandong@gmail.com', '0944441234', NULL, NULL, NULL, NULL, 0, 0, 20000),
@@ -420,8 +420,3 @@ VALUES
 ('owner42', '12345', NULL, NULL, NULL, 'https://i.pinimg.com/1200x/2d/2a/bc/2d2abcceb7d190475adb3549f8f8d91e.jpg', 'Staff', 42),
 ('owner43', '12345', NULL, NULL, NULL, 'https://i.pinimg.com/1200x/2d/2a/bc/2d2abcceb7d190475adb3549f8f8d91e.jpg', 'Staff', 43),
 ('owner44', '12345', NULL, NULL, NULL, 'https://i.pinimg.com/1200x/2d/2a/bc/2d2abcceb7d190475adb3549f8f8d91e.jpg', 'Staff', 44);
-
--- Insert data into Review table
-INSERT INTO Review (Star, Comment, ClubId, UserId)
-VALUES
-(5, N'Tuyệt vời', 1, 3);

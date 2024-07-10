@@ -14,7 +14,7 @@ namespace WebAppRazor.Mappers
                 Comment = e.Comment,
                 ClubId = e.ClubId,
                 UserId = e.UserId,
-                ReviewDate = e.ReviewDate
+                ReviewDateTime = e.ReviewDateTime
             };
         }
     }

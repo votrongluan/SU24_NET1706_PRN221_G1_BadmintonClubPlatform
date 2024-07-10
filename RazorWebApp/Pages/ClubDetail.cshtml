@@ -182,7 +182,7 @@
                                                     </svg>
                                                 </h6>
                                                 <p class="text-muted card-subtitle mb-2">@item.Comment</p>
-                                                <p class="text-muted card-subtitle ">@item.ReviewDate</p>
+                                                <p class="text-muted card-subtitle ">@item.ReviewDateTime.Value.ToString("HH:mm") - @item.ReviewDateTime.Value.ToString("dd/MM/yyyy")</p>
                                             </div>
                                         </div>
                                     }

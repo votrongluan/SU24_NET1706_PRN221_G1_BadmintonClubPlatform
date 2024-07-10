@@ -17,7 +17,7 @@ public class BookingRequestDto
     public int BookingTypeId { get; set; }
 
     [Required(ErrorMessage = "Phải nhập giờ bắt đầu")]
-    [AllowedValues(7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ErrorMessage = "Chỉ nhập giờ trong khoảng 7 - 20")]
+    [AllowedValues(6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ErrorMessage = "Chỉ nhập giờ trong khoảng 7 - 20")]
     public int StartTimeHour { get; set; }
 
     [Required(ErrorMessage = "Phải chọn số phút")]

@@ -94,7 +94,7 @@ namespace WebAppRazor.Pages
             InitialData(id.Value);
             CreateReview.UserId = LoginedAccount.UserId;
             CreateReview.ClubId = id.Value;
-            CreateReview.ReviewDate = DateOnly.FromDateTime(DateTime.Now);
+            CreateReview.ReviewDateTime = DateTime.Now;
 
             if (!ModelState.IsValid)
             {

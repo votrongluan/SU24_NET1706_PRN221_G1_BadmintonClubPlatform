@@ -61,7 +61,7 @@ public class BookingService : IBookingService
     {
         var club = _repo.Club.GetClubById(clubId);
         var courtSchedule = _repo.BookingDetail.GetAllBookingDetails().Where(e =>
-            e.BookDate == date && e.Court.CourtId == courtId).OrderBy(e => e.StartTime).ToList();
+            e.BookDate == date && e.Court.CourtId == courtId && e.Booking.ClubId == clubId).OrderBy(e => e.StartTime).ToList();
 
         bool canBook = false;
 
@@ -129,9 +129,9 @@ public class BookingService : IBookingService
 
     public (bool status, int bookId) BookLichThiDau(BookingRequestDto dto)
     {
-        var availableCourt = _repo.Court.GetCourtsByClubId(dto.ClubId).ToList();
+        var availableCourt = _repo.Court.GetCourtsByClubId(dto.ClubId).Where(e => e.CourtTypeId == dto.CourtTypeId).ToList();
         var bookingDetailInSlotAndDate = _repo.BookingDetail.GetAllBookingDetails().Where(e =>
-            e.BookDate == dto.BookDate && e.Court.CourtTypeId == dto.CourtTypeId).OrderBy(e => e.StartTime);
+            e.BookDate == dto.BookDate && e.Court.CourtTypeId == dto.CourtTypeId && e.Booking.ClubId == dto.ClubId).OrderBy(e => e.StartTime);
         Court selectedCourt = null;
 
         foreach (var court in availableCourt)
@@ -255,7 +255,7 @@ public class BookingService : IBookingService
 
     public (bool status, int bookId) BookLichCoDinh(BookingRequestDto dto)
     {
-        var availableCourt = _repo.Court.GetCourtsByClubId(dto.ClubId).ToList();
+        var availableCourt = _repo.Court.GetCourtsByClubId(dto.ClubId).Where(e => e.CourtTypeId == dto.CourtTypeId).ToList();
         Court selectedCourt = null;
 
         foreach (var court in availableCourt)
@@ -266,7 +266,7 @@ public class BookingService : IBookingService
             for (int week = 1; week <= dto.WeekCount; week++)
             {
                 var bookingDetailInSlotAndDate = _repo.BookingDetail.GetAllBookingDetails().Where(e =>
-                    e.BookDate == date && e.Court.CourtTypeId == dto.CourtTypeId).OrderBy(e => e.StartTime);
+                    e.BookDate == date && e.Court.CourtTypeId == dto.CourtTypeId && e.Booking.ClubId == dto.ClubId).OrderBy(e => e.StartTime);
                 var courtSchedule = bookingDetailInSlotAndDate.Where(e => e.CourtId == court.CourtId).ToList();
 
                 if (courtSchedule.Any())
@@ -350,9 +350,9 @@ public class BookingService : IBookingService
 
     public (bool status, int bookId) BookLichNgay(BookingRequestDto dto)
     {
-        var availableCourt = _repo.Court.GetCourtsByClubId(dto.ClubId).ToList();
+        var availableCourt = _repo.Court.GetCourtsByClubId(dto.ClubId).Where(e => e.CourtTypeId == dto.CourtTypeId).ToList();
         var bookingDetailInSlotAndDate = _repo.BookingDetail.GetAllBookingDetails().Where(e =>
-            e.BookDate == dto.BookDate && e.Court.CourtTypeId == dto.CourtTypeId).OrderBy(e => e.StartTime);
+            e.BookDate == dto.BookDate && e.Court.CourtTypeId == dto.CourtTypeId && e.Booking.ClubId == dto.ClubId).OrderBy(e => e.StartTime);
         Court selectedCourt = null;
 
         foreach (var court in availableCourt)
