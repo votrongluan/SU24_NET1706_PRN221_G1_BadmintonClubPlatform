@@ -2,7 +2,6 @@
 using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Services.IService;
-using Services.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +31,15 @@ namespace WebAppRazor.Pages.Staff
 
         [BindProperty(SupportsGet = true)]
         public int SelectedCourtId { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string SearchTerm { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string SortBy { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string SortOrder { get; set; }
 
         public List<Court> Courts { get; set; }
         public List<BookingDetail> BookingDetails { get; set; }
@@ -75,6 +83,11 @@ namespace WebAppRazor.Pages.Staff
             var bookingEntities = serviceManager.BookingService.GetAllBookingsWithBookingDetails()
                 .Where(x => x.ClubId == clubId);
 
+            if (!string.IsNullOrWhiteSpace(SearchTerm))
+            {
+                bookingEntities = bookingEntities.Where(x => x.BookingId.ToString().Contains(SearchTerm));
+            }
+
             if (bookingEntities == null || !bookingEntities.Any())
                 return bookings;
 
@@ -96,6 +109,28 @@ namespace WebAppRazor.Pages.Staff
                     });
                 }
             }
+
+            return SortBookings(bookings);
+        }
+
+        private List<BookingViewModel> SortBookings(List<BookingViewModel> bookings)
+        {
+            if (string.IsNullOrEmpty(SortBy))
+                return bookings;
+
+            switch (SortBy)
+            {
+                case "BookingId":
+                    bookings = SortOrder == "desc" ? bookings.OrderByDescending(x => x.BookingId).ToList() : bookings.OrderBy(x => x.BookingId).ToList();
+                    break;
+                case "BookDate":
+                    bookings = SortOrder == "desc" ? bookings.OrderByDescending(x => x.BookDate).ToList() : bookings.OrderBy(x => x.BookDate).ToList();
+                    break;
+                case "StartTime":
+                    bookings = SortOrder == "desc" ? bookings.OrderByDescending(x => x.StartTime).ToList() : bookings.OrderBy(x => x.StartTime).ToList();
+                    break;
+            }
+
             return bookings;
         }
 

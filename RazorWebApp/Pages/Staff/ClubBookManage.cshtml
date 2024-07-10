@@ -90,31 +90,27 @@
                     <div class="tab-content">
                         <div class="tab-pane @(Model.TabIndex == 1 ? "active" : "")" role="tabpanel" id="tab-1">
                             <div>
-                                <form style="margin-top: 16px;" class="mt-4">
-                                    <input class="form-control" type="search" placeholder="Mã đơn">
+                                <form style="margin-top: 16px;" class="mt-4" method="get">
+                                    <input class="form-control" type="search" name="SearchTerm" placeholder="Mã đơn">
                                     <div class="d-flex flex-lg-row">
                                         <div class="d-flex" style="column-gap: 1rem;margin-left: auto;">
                                             <div>
                                                 <p style="margin-bottom: 8px;margin-top: 8px;">Sắp xếp theo</p>
-                                                <select class="form-select">
-                                                    <optgroup label="This is a group">
-                                                        <option value="12" selected="">This is item 1</option>
-                                                        <option value="13">This is item 2</option>
-                                                        <option value="14">This is item 3</option>
-                                                    </optgroup>
+                                                <select class="form-select" name="SortBy">
+                                                    <option value="BookingId" selected>Mã đơn</option>
+                                                    <option value="BookDate">Ngày đặt sân</option>
+                                                    <option value="StartTime">Giờ đặt</option>
                                                 </select>
                                             </div>
                                             <div>
                                                 <p style="margin-bottom: 8px;margin-top: 8px;">Thứ tự sắp xếp</p>
-                                                <select class="form-select">
-                                                    <optgroup label="This is a group">
-                                                        <option value="12" selected="">This is item 1</option>
-                                                        <option value="13">This is item 2</option>
-                                                        <option value="14">This is item 3</option>
-                                                    </optgroup>
+                                                <select class="form-select" name="SortOrder">
+                                                    <option value="asc" selected>Tăng dần</option>
+                                                    <option value="desc">Giảm dần</option>
                                                 </select>
-                                            </div><input class="btn btn-primary align-self-end mt-4" type="submit"
-                                                         style="height: fit-content;margin-top: 11px;" value="Tìm kiếm">
+                                            </div>
+                                            <input class="btn btn-primary align-self-end mt-4" type="submit"
+                                                   style="height: fit-content;margin-top: 11px;" value="Tìm kiếm">
                                         </div>
                                     </div>
                                 </form>
