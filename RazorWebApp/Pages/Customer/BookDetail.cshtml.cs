@@ -14,7 +14,6 @@ namespace WebAppRazor.Pages.Customer
         public Booking Booking { get; set; }
         public Club Club { get; set; }
         public Court Court { get; set; }
-        public Court Court { get; set; }
         public string Message { get; set; }
 
         private void InitializeData(int id)

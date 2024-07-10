@@ -60,6 +60,20 @@
             </div>
             <div style="flex: 1;" class="p-4">
                 <h2 class="fs-4 text-center mt-0">Lịch đặt sân</h2>
+
+                @* CHECK IF MESSAGE NOT NULL *@
+                @if (!string.IsNullOrEmpty(Model.Message))
+                {
+                    var messageClass = Model.Message.StartsWith(Constants.MessagePrefix.ERROR.ToString()) ? "alert-danger" :
+                    Model.Message.StartsWith(Constants.MessagePrefix.SUCCESS.ToString()) ? "alert-success" :
+                    Model.Message.StartsWith(Constants.MessagePrefix.WARNING.ToString()) ? "alert-warning" :
+                    "alert-info";
+
+                    <div class="alert @messageClass" role="alert">
+                        <p class="m-0 p-1">@Model.Message.Substring(1)</p>
+                    </div>
+                }
+
                 <div class="pt-0 mt-4">
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -104,12 +118,13 @@
                                         </div>
                                     </div>
                                 </form>
-                                <table class="table">
+                                <table class="table mt-4">
                                     <thead>
                                         <tr>
                                             <th scope="col">Mã đơn</th>
                                             <th scope="col">Tên khách hàng</th>
-                                            <th scope="col">Loại sân</th>
+                                            <th scope="col">Loại dịch vụ</th>
+                                            <th scope="col">Mã sân</th>
                                             <th scope="col">Số điện thoại</th>
                                             <th scope="col">Ngày đặt</th>
                                             <th scope="col">Giờ đặt</th>
@@ -122,7 +137,8 @@
                                             <tr>
                                                 <td>@booking.BookingId</td>
                                                 <td>@booking.UserName</td>
-                                                <td>@booking.CourtType</td>
+                                                <td>@booking.Service</td>
+                                                <td>@booking.CourtId</td>
                                                 <td>@booking.UserPhone</td>
                                                 <td>@(booking.BookDate.HasValue ? booking.BookDate.Value.ToString("dd/MM/yyyy") : "")</td>
                                                 <td>@(booking.StartTime.HasValue ? booking.StartTime.Value.ToString(@"hh\:mm") : "") - @(booking.EndTime.HasValue ? booking.EndTime.Value.ToString(@"hh\:mm") : "")</td>
@@ -137,7 +153,7 @@
                                 </table>
                             </div>
                         </div>
-                        
+
 
                         <div class="tab-pane @(Model.TabIndex == 2 ? "active" : "")" role="tabpanel" id="tab-2">
                             <div class="bg-white p-5 pt-4">
@@ -166,7 +182,8 @@
                                 {
                                     <div class="mt-4">
                                         <h4>
-                                            Lịch Đặt Sân - @Model.BookingDetails.ElementAt(0).BookDate.Value.ToString("dd/MM/yyyy") - Mã Sân @Model.BookingDetails.ElementAt(0).CourtId</h4>
+                                            Lịch Đặt Sân - @Model.BookingDetails.ElementAt(0).BookDate.Value.ToString("dd/MM/yyyy") - Mã Sân @Model.BookingDetails.ElementAt(0).CourtId
+                                        </h4>
                                         <table class="table">
                                             <thead>
                                                 <tr>
@@ -180,9 +197,11 @@
                                             <tbody>
                                                 @foreach (var bookingDetail in Model.BookingDetails)
                                                 {
+                                                    var formatStartTime = bookingDetail.StartTime.Value.ToString("HH:mm");
+                                                    var formatEndTime = bookingDetail.EndTime.Value.ToString("HH:mm");
                                                     <tr>
-                                                        <td>@bookingDetail.StartTime</td>
-                                                        <td>@bookingDetail.EndTime</td>
+                                                        <td>@formatStartTime</td>
+                                                        <td>@formatEndTime</td>
                                                         <td>@bookingDetail.Booking.BookingType.Description</td>
                                                         <td>@bookingDetail.Booking.User.Fullname</td>
                                                         <td>@bookingDetail.Booking.User.UserPhone</td>
@@ -192,35 +211,47 @@
                                         </table>
                                     </div>
                                 }
+                                else
+                                {
+                                    <div class="mt-4">
+                                        <h4>
+                                            Hôm nay không có đơn nào
+                                        </h4>
+                                    </div>
+                                }
                             </div>
                         </div>
 
 
                         <div class="tab-pane @(Model.TabIndex == 3 ? "active" : "")" role="tabpanel" id="tab-3">
                             <div class="bg-white p-5 pt-4">
-                                <form class="mt-4 p-0">
+                                <form method="post" asp-page-handler="BookOffline" class="mt-4 p-0">
                                     <label class="form-label d-block mt-4">
                                         Chọn mã sân
-                                        <select class="form-select mt-4">
-                                            <optgroup label="This is a group">
-                                                <option value="12" selected="">This is item 1</option>
-                                                <option value="13">This is item 2</option>
-                                                <option value="14">This is item 3</option>
-                                            </optgroup>
+                                        <select asp-for="OfflineRequestDto.CourtId" class="form-select mt-4">
+                                            @foreach (var court in Model.Courts)
+                                            {
+                                                <option value="@court.CourtId">@court.CourtId - @court.CourtType.TypeName</option>
+                                            }
                                         </select>
-                                    </label><label class="form-label d-block mt-4">
-                                        Chọn khung giờ
-                                        <select class="form-select mt-4">
-                                            <optgroup label="This is a group">
-                                                <option value="12" selected="">This is item 1</option>
-                                                <option value="13">This is item 2</option>
-                                                <option value="14">This is item 3</option>
-                                            </optgroup>
-                                        </select>
+                                        <span asp-validation-for="OfflineRequestDto.CourtId" class="text-danger"></span>
+                                    </label>
+                                    <label class="form-label mt-4"
+                                           style="display: block;/*width: 100%;*/">
+                                        Giờ bắt đầu thi đấu
+                                        <input class="form-control mt-2" type="time" asp-for="OfflineRequestDto.StartTime">
+                                        <span asp-validation-for="OfflineRequestDto.StartTime" class="text-danger"></span>
+                                    </label>
+                                    <label class="form-label mt-4"
+                                           style="display: block;/*width: 100%;*/">
+                                        Giờ kết thúc thi đấu
+                                        <input class="form-control mt-2" type="time" asp-for="OfflineRequestDto.EndTime">
+                                        <span asp-validation-for="OfflineRequestDto.EndTime" class="text-danger"></span>
                                     </label>
                                     <div class="d-flex">
                                         <input class="btn btn-primary mt-4" type="submit"
                                                value="Đặt lịch" style="margin-left: auto;">
+                                        <input type="hidden" id="selectedTabIndex" name="selectedTabIndex" value="@Model.TabIndex" />
                                     </div>
                                 </form>
                             </div>

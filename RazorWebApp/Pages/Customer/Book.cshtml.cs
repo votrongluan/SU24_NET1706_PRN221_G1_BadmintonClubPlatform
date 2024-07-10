@@ -75,14 +75,6 @@ namespace WebAppRazor.Pages.Customer
             try
             {
                 var bookClub = _service.ClubService.GetClubById(id);
-                var bookingDetail = _service.BookingDetailService.GetAllBookingDetails()
-                    .Where(e => e.BookDate == BookingRequestDto.BookDate);
-
-                if (bookingDetail.Count() > 0)
-                {
-                    TempData["Message"] = $"{MessagePrefix.ERROR}Đặt thất bại, bạn đã đặt lịch cho ngày hôm đó";
-                    return RedirectToPage("Book", new { id });
-                }
 
                 BookingRequestDto.ClubId = id;
                 BookingRequestDto.UserId = LoginedAccount.UserId;
@@ -90,6 +82,18 @@ namespace WebAppRazor.Pages.Customer
                     new TimeOnly(BookingRequestDto.StartTimeHour, BookingRequestDto.StartTimeMinute);
                 BookingRequestDto.EndTime = BookingRequestDto.StartTime.AddHours(BookingRequestDto.Duration);
                 BookingRequestDto.DefaultPrice = (int)bookClub.DefaultPricePerHour;
+
+                var bookingDetail = _service.BookingDetailService.GetAllBookingDetails()
+                    .Where(e => e.BookDate == BookingRequestDto.BookDate && e.Booking.UserId == LoginedAccount.UserId).OrderBy(e => e.StartTime).ToList();
+
+                foreach (var detail in bookingDetail)
+                {
+                    if (BookingRequestDto.StartTime < detail.EndTime && detail.EndTime < BookingRequestDto.EndTime)
+                    {
+                        TempData["Message"] = $"{MessagePrefix.ERROR}Đặt thất bại, bạn đã đặt lịch cho ngày hôm đó với giờ trùng nhau";
+                        return RedirectToPage("Book", new { id });
+                    }
+                }
 
                 if (BookingRequestDto.StartTime < bookClub.OpenTime || BookingRequestDto.EndTime > bookClub.CloseTime)
                 {
