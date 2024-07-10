@@ -32,10 +32,16 @@ namespace WebAppRazor.Pages.Staff
 
             if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
 
-            // Code go from here
+            if (Id == null) return RedirectToPage("/NotFound");
+
             Slot = serviceManager.SlotService.GetSlotById(Id);
 
             if (Slot == null)
+            {
+                return RedirectToPage("/NotFound");
+            }
+
+            if (Slot.ClubId != LoginedAccount.ClubManageId)
             {
                 return RedirectToPage("/NotFound");
             }
@@ -49,7 +55,7 @@ namespace WebAppRazor.Pages.Staff
         public async Task<IActionResult> OnPostAsync()
         {
             // Update only the price for the slot
-            var slotToUpdate =  serviceManager.SlotService.GetSlotById(Id);
+            var slotToUpdate = serviceManager.SlotService.GetSlotById(Id);
 
             if (slotToUpdate == null)
             {

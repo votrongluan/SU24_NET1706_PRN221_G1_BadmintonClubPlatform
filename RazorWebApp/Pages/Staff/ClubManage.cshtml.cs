@@ -196,6 +196,8 @@ namespace WebAppRazor.Pages.Staff
             try
             {
                 Club.Status = false;
+                Club.TotalReview = 0;
+                Club.TotalStar = 0;
                 _serviceManager.ClubService.AddClub(Club);
 
                 Account owner = LoginedAccount;

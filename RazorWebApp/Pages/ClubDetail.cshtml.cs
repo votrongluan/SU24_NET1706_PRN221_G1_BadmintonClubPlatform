@@ -4,6 +4,7 @@ using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Services.IService;
+using System.Net;
 using System.Net.WebSockets;
 using WebAppRazor.Mappers;
 
@@ -77,6 +78,9 @@ namespace WebAppRazor.Pages
                 if (role == AccountRoleEnum.Admin.ToString()) return RedirectToPage("/Admin/Index");
                 if (role == AccountRoleEnum.Staff.ToString()) return RedirectToPage("/Staff/Index");
             }
+
+            // Validate route id
+            if (id == null) return RedirectToPage("/NotFound");
 
             if (id.HasValue)
             {
