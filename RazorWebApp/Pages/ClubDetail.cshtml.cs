@@ -85,6 +85,8 @@ namespace WebAppRazor.Pages
                 Paging(page);
             }
 
+            if (Club.Status == false) return RedirectToPage("/NotFound");
+
             return Page();
         }
 
@@ -94,6 +96,7 @@ namespace WebAppRazor.Pages
             InitialData(id.Value);
             CreateReview.UserId = LoginedAccount.UserId;
             CreateReview.ClubId = id.Value;
+            CreateReview.ReviewDateTime = DateTime.Now;
 
             if (!ModelState.IsValid)
             {

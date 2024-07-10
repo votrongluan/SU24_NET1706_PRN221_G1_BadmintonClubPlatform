@@ -154,6 +154,8 @@
                             </div>
                         </div>
                     </div>
+
+                    @* REVIEW AND FEEDBACK SECTION *@
                     <div class="col">
                         <div>
                             <h3 class="fs-5">Đánh giá của khách hàng</h3>
@@ -179,7 +181,8 @@
                                                         </path>
                                                     </svg>
                                                 </h6>
-                                                <p class="card-text">@item.Comment</p>
+                                                <p class="text-muted card-subtitle mb-2">@item.Comment</p>
+                                                <p class="text-muted card-subtitle ">@item.ReviewDateTime.Value.ToString("HH:mm") - @item.ReviewDateTime.Value.ToString("dd/MM/yyyy")</p>
                                             </div>
                                         </div>
                                     }

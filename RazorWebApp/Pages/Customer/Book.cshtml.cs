@@ -21,6 +21,7 @@ namespace WebAppRazor.Pages.Customer
         [BindProperty] public BookingRequestDto BookingRequestDto { get; set; }
         public string Message { get; set; }
         public int ClubId { get; set; }
+        public Club BookClub { get; set; }
         public ResponseClubDto Club { get; set; }
         public List<CourtType> CourtTypes { get; set; }
         public List<Slot> Slots { get; set; }
@@ -28,7 +29,8 @@ namespace WebAppRazor.Pages.Customer
 
         public void InitializeData()
         {
-            Club = _service.ClubService.GetClubById(ClubId).ToResponseClubDto();
+            BookClub = _service.ClubService.GetClubById(ClubId);
+            Club = BookClub.ToResponseClubDto();
             CourtTypes = _service.CourtTypeService.GetAllCourtTypes();
             Slots = _service.SlotService.GetAllSlot().Where(e => e.ClubId == ClubId).ToList();
             BookingTypes = _service.AvailableBookingTypeService.GetAvailableBookingTypesByClubId(ClubId)
@@ -59,6 +61,8 @@ namespace WebAppRazor.Pages.Customer
             ClubId = (int)id;
             InitializeData();
 
+            if (BookClub.Status == false) return RedirectToPage("/NotFound");
+
             return Page();
         }
 
@@ -75,14 +79,6 @@ namespace WebAppRazor.Pages.Customer
             try
             {
                 var bookClub = _service.ClubService.GetClubById(id);
-                var bookingDetail = _service.BookingDetailService.GetAllBookingDetails()
-                    .Where(e => e.BookDate == BookingRequestDto.BookDate);
-
-                if (bookingDetail.Count() > 0)
-                {
-                    TempData["Message"] = $"{MessagePrefix.ERROR}Đặt thất bại, bạn đã đặt lịch cho ngày hôm đó";
-                    return RedirectToPage("Book", new { id });
-                }
 
                 BookingRequestDto.ClubId = id;
                 BookingRequestDto.UserId = LoginedAccount.UserId;
@@ -90,6 +86,18 @@ namespace WebAppRazor.Pages.Customer
                     new TimeOnly(BookingRequestDto.StartTimeHour, BookingRequestDto.StartTimeMinute);
                 BookingRequestDto.EndTime = BookingRequestDto.StartTime.AddHours(BookingRequestDto.Duration);
                 BookingRequestDto.DefaultPrice = (int)bookClub.DefaultPricePerHour;
+
+                var bookingDetail = _service.BookingDetailService.GetAllBookingDetails()
+                    .Where(e => e.BookDate == BookingRequestDto.BookDate && e.Booking.UserId == LoginedAccount.UserId).OrderBy(e => e.StartTime).ToList();
+
+                foreach (var detail in bookingDetail)
+                {
+                    if (BookingRequestDto.StartTime < detail.EndTime && detail.EndTime < BookingRequestDto.EndTime)
+                    {
+                        TempData["Message"] = $"{MessagePrefix.ERROR}Đặt thất bại, bạn đã đặt lịch cho ngày hôm đó với giờ trùng nhau";
+                        return RedirectToPage("Book", new { id });
+                    }
+                }
 
                 if (BookingRequestDto.StartTime < bookClub.OpenTime || BookingRequestDto.EndTime > bookClub.CloseTime)
                 {

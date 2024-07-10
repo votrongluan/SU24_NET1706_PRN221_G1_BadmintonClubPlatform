@@ -64,7 +64,7 @@ public partial class BcbpContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Account__1788CC4CE105A138");
+            entity.HasKey(e => e.UserId).HasName("PK__Account__1788CC4C22C2012D");
 
             entity.ToTable("Account");
 
@@ -82,7 +82,7 @@ public partial class BcbpContext : DbContext
 
         modelBuilder.Entity<AvailableBookingType>(entity =>
         {
-            entity.HasKey(e => e.AvailableBookingTypeId).HasName("PK__Availabl__EA1E51E34E3A9275");
+            entity.HasKey(e => e.AvailableBookingTypeId).HasName("PK__Availabl__EA1E51E351EC4870");
 
             entity.ToTable("AvailableBookingType");
 
@@ -99,7 +99,7 @@ public partial class BcbpContext : DbContext
 
         modelBuilder.Entity<Booking>(entity =>
         {
-            entity.HasKey(e => e.BookingId).HasName("PK__Booking__73951AED24702203");
+            entity.HasKey(e => e.BookingId).HasName("PK__Booking__73951AEDDE1D2943");
 
             entity.ToTable("Booking");
 
@@ -120,7 +120,7 @@ public partial class BcbpContext : DbContext
 
         modelBuilder.Entity<BookingDetail>(entity =>
         {
-            entity.HasKey(e => e.BookingDetailId).HasName("PK__BookingD__8136D45AC3AF2353");
+            entity.HasKey(e => e.BookingDetailId).HasName("PK__BookingD__8136D45AF8080A27");
 
             entity.ToTable("BookingDetail");
 
@@ -139,21 +139,21 @@ public partial class BcbpContext : DbContext
 
         modelBuilder.Entity<BookingType>(entity =>
         {
-            entity.HasKey(e => e.BookingTypeId).HasName("PK__BookingT__649EC491073245C2");
+            entity.HasKey(e => e.BookingTypeId).HasName("PK__BookingT__649EC4914E954916");
 
             entity.ToTable("BookingType");
         });
 
         modelBuilder.Entity<City>(entity =>
         {
-            entity.HasKey(e => e.CityId).HasName("PK__City__F2D21B76A419632D");
+            entity.HasKey(e => e.CityId).HasName("PK__City__F2D21B76A2F7CA00");
 
             entity.ToTable("City");
         });
 
         modelBuilder.Entity<Club>(entity =>
         {
-            entity.HasKey(e => e.ClubId).HasName("PK__Club__D35058E77E3005D4");
+            entity.HasKey(e => e.ClubId).HasName("PK__Club__D35058E73B7EC9D8");
 
             entity.ToTable("Club");
 
@@ -173,7 +173,7 @@ public partial class BcbpContext : DbContext
 
         modelBuilder.Entity<Court>(entity =>
         {
-            entity.HasKey(e => e.CourtId).HasName("PK__Court__C3A67C9A327F343B");
+            entity.HasKey(e => e.CourtId).HasName("PK__Court__C3A67C9A19384575");
 
             entity.ToTable("Court");
 
@@ -190,14 +190,14 @@ public partial class BcbpContext : DbContext
 
         modelBuilder.Entity<CourtType>(entity =>
         {
-            entity.HasKey(e => e.CourtTypeId).HasName("PK__CourtTyp__FF339CB535EC9238");
+            entity.HasKey(e => e.CourtTypeId).HasName("PK__CourtTyp__FF339CB5DAE67B74");
 
             entity.ToTable("CourtType");
         });
 
         modelBuilder.Entity<District>(entity =>
         {
-            entity.HasKey(e => e.DistrictId).HasName("PK__District__85FDA4C622E362D6");
+            entity.HasKey(e => e.DistrictId).HasName("PK__District__85FDA4C6A0FB4FC7");
 
             entity.ToTable("District");
 
@@ -209,11 +209,11 @@ public partial class BcbpContext : DbContext
 
         modelBuilder.Entity<Match>(entity =>
         {
-            entity.HasKey(e => e.MatchId).HasName("PK__Match__4218C8174A92EE0E");
+            entity.HasKey(e => e.MatchId).HasName("PK__Match__4218C81712C29E55");
 
             entity.ToTable("Match");
 
-            entity.HasIndex(e => e.BookingId, "UQ__Match__73951AECCE8CD4D4").IsUnique();
+            entity.HasIndex(e => e.BookingId, "UQ__Match__73951AEC68563390").IsUnique();
 
             entity.HasOne(d => d.Booking).WithOne(p => p.Match)
                 .HasForeignKey<Match>(d => d.BookingId)
@@ -223,9 +223,11 @@ public partial class BcbpContext : DbContext
 
         modelBuilder.Entity<Review>(entity =>
         {
-            entity.HasKey(e => e.ReviewId).HasName("PK__Review__74BC79CEFF50AA68");
+            entity.HasKey(e => e.ReviewId).HasName("PK__Review__74BC79CE79E9E0BB");
 
             entity.ToTable("Review");
+
+            entity.Property(e => e.ReviewDateTime).HasColumnType("datetime");
 
             entity.HasOne(d => d.Club).WithMany(p => p.Reviews)
                 .HasForeignKey(d => d.ClubId)
@@ -240,7 +242,7 @@ public partial class BcbpContext : DbContext
 
         modelBuilder.Entity<Slot>(entity =>
         {
-            entity.HasKey(e => e.SlotId).HasName("PK__Slot__0A124AAF25EF18D7");
+            entity.HasKey(e => e.SlotId).HasName("PK__Slot__0A124AAF4C7A8509");
 
             entity.ToTable("Slot");
 

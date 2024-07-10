@@ -77,9 +77,9 @@ namespace WebAppRazor.Pages
 
             // Pagination logic
             page = page == 0 ? 1 : page;
-            CurrentPage = page;
-            TotalPages = (int)Math.Ceiling(FilterClubs.Count / (double)PageSize);
             FindCount = FilterClubs.Count;
+            TotalPages = (int)Math.Ceiling(FilterClubs.Count / (double)PageSize);
+            CurrentPage = page;
             FilterClubs = FilterClubs.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
         }
 

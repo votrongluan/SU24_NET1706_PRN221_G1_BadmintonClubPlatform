@@ -16,4 +16,7 @@ public interface IBookingService
     (bool status, int bookId) BookLichThiDau(BookingRequestDto dto);
     (bool status, int bookId) BookLichNgay(BookingRequestDto dto);
     (bool status, int bookId) BookLichCoDinh(BookingRequestDto dto);
+
+    (bool status, int bookId) BookLichOffline(DateOnly date, TimeOnly startTime, TimeOnly endTime, int courtId,
+        int clubId, int userId);
 }

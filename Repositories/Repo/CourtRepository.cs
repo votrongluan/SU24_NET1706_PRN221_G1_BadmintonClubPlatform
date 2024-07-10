@@ -14,7 +14,7 @@ public class CourtRepository : ICourtRepository
 
     public List<Court> GetAllCourts()
     {
-        return CourtDao.GetAll().Include(e => e.CourtType).Include(e => e.Club).OrderByDescending(e => e.CourtId).Where(e => e.Status != false).ToList();
+        return CourtDao.GetAll().Include(e => e.CourtType).Include(e => e.Club).Include(e => e.CourtType).OrderByDescending(e => e.CourtId).Where(e => e.Status != false).ToList();
     }
 
     public List<Court> GetCourtsByClubId(int id)
