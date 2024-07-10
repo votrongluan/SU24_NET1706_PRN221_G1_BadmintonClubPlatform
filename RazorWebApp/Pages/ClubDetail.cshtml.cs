@@ -27,12 +27,12 @@ namespace WebAppRazor.Pages
         public int TotalPages { get; set; }
         public string Services { get; set; }
 
-        public ClubDetailModel (IServiceManager service)
+        public ClubDetailModel(IServiceManager service)
         {
             _service = service;
         }
 
-        private void Paging (int page = 0)
+        private void Paging(int page = 0)
         {
             const int PageSize = 5;  // Set the number of items per page
 
@@ -67,7 +67,7 @@ namespace WebAppRazor.Pages
             FilterReviewList = ReviewList.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
         }
 
-        public IActionResult OnGet (int? id)
+        public IActionResult OnGet(int? id)
         {
             LoadAccountFromSession();
 
@@ -85,10 +85,12 @@ namespace WebAppRazor.Pages
                 Paging(page);
             }
 
+            if (Club.Status == false) return RedirectToPage("/NotFound");
+
             return Page();
         }
 
-        public IActionResult OnPost (int? id)
+        public IActionResult OnPost(int? id)
         {
             LoadAccountFromSession();
             InitialData(id.Value);
@@ -111,7 +113,7 @@ namespace WebAppRazor.Pages
             return RedirectToPage("./ClubDetail", new { id = id.Value });
         }
 
-        private void InitialData (int id)
+        private void InitialData(int id)
         {
             Club = _service.ClubService.GetClubById(id);
             ClubAverageRating = _service.ClubService.GetAverageRatingStar(id);

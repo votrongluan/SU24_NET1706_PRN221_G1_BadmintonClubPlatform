@@ -21,6 +21,7 @@ namespace WebAppRazor.Pages.Customer
         [BindProperty] public BookingRequestDto BookingRequestDto { get; set; }
         public string Message { get; set; }
         public int ClubId { get; set; }
+        public Club BookClub { get; set; }
         public ResponseClubDto Club { get; set; }
         public List<CourtType> CourtTypes { get; set; }
         public List<Slot> Slots { get; set; }
@@ -28,7 +29,8 @@ namespace WebAppRazor.Pages.Customer
 
         public void InitializeData()
         {
-            Club = _service.ClubService.GetClubById(ClubId).ToResponseClubDto();
+            BookClub = _service.ClubService.GetClubById(ClubId);
+            Club = BookClub.ToResponseClubDto();
             CourtTypes = _service.CourtTypeService.GetAllCourtTypes();
             Slots = _service.SlotService.GetAllSlot().Where(e => e.ClubId == ClubId).ToList();
             BookingTypes = _service.AvailableBookingTypeService.GetAvailableBookingTypesByClubId(ClubId)
@@ -58,6 +60,8 @@ namespace WebAppRazor.Pages.Customer
 
             ClubId = (int)id;
             InitializeData();
+
+            if (BookClub.Status == false) return RedirectToPage("/NotFound");
 
             return Page();
         }
