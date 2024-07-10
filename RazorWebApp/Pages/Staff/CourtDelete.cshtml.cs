@@ -44,6 +44,12 @@ namespace WebAppRazor.Pages.Staff
                 return RedirectToPage("CourtManage");
             }
 
+            if (DeleteCourt.ClubId != LoginedAccount.ClubManageId)
+            {
+                TempData["Message"] = $"{MessagePrefix.ERROR}Không tìm sân với id cần xóa";
+                return RedirectToPage("CourtManage");
+            }
+
             CourtDto = DeleteCourt.ToResponseCourtDto();
 
             return Page();

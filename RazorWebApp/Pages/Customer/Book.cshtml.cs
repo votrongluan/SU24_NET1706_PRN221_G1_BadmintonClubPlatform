@@ -87,21 +87,39 @@ namespace WebAppRazor.Pages.Customer
                 BookingRequestDto.EndTime = BookingRequestDto.StartTime.AddHours(BookingRequestDto.Duration);
                 BookingRequestDto.DefaultPrice = (int)bookClub.DefaultPricePerHour;
 
-                var bookingDetail = _service.BookingDetailService.GetAllBookingDetails()
-                    .Where(e => e.BookDate == BookingRequestDto.BookDate && e.Booking.UserId == LoginedAccount.UserId).OrderBy(e => e.StartTime).ToList();
-
-                foreach (var detail in bookingDetail)
+                if (BookingRequestDto.BookingTypeId == (int)BookingTypeEnum.LichNgay)
                 {
-                    if (BookingRequestDto.StartTime < detail.EndTime && detail.EndTime < BookingRequestDto.EndTime)
+                    BookingRequestDto.WeekCount = 1;
+                }
+
+                var date = BookingRequestDto.BookDate;
+
+                for (int i = 1; i <= BookingRequestDto.WeekCount; i++)
+                {
+                    var bookingDetail = _service.BookingDetailService.GetAllBookingDetails()
+                        .Where(e => e.BookDate == date && e.Booking.UserId == LoginedAccount.UserId).OrderBy(e => e.StartTime).ToList();
+
+                    foreach (var detail in bookingDetail)
                     {
-                        TempData["Message"] = $"{MessagePrefix.ERROR}Đặt thất bại, bạn đã đặt lịch cho ngày hôm đó với giờ trùng nhau";
-                        return RedirectToPage("Book", new { id });
+                        if (BookingRequestDto.StartTime < detail.EndTime && detail.EndTime < BookingRequestDto.EndTime)
+                        {
+                            TempData["Message"] = $"{MessagePrefix.ERROR}Đặt thất bại, bạn đã đặt lịch cho ngày hôm đó với giờ trùng nhau";
+                            return RedirectToPage("Book", new { id });
+                        }
                     }
+
+                    date = date.AddDays(7);
                 }
 
                 if (BookingRequestDto.StartTime < bookClub.OpenTime || BookingRequestDto.EndTime > bookClub.CloseTime)
                 {
                     TempData["Message"] = $"{MessagePrefix.ERROR}Đặt thất bại khung giờ bạn chọn club chưa mở cửa";
+                    return RedirectToPage("Book", new { id });
+                }
+
+                if (bookClub.DefaultPricePerHour == 0 || bookClub.DefaultPricePerHour == null)
+                {
+                    TempData["Message"] = $"{MessagePrefix.ERROR}Câu lạc bộ này chưa đăng ký giá";
                     return RedirectToPage("Book", new { id });
                 }
 

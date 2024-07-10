@@ -81,9 +81,11 @@ namespace WebAppRazor.Pages.Staff
 
         public IActionResult OnPostAddSlot()
         {
+            LoadAccountFromSession();
+
             NewSlot.EndTime = NewSlot.StartTime.Value.AddMinutes(Duration);
 
-            Slots = _serviceManager.SlotService.GetAllSlot();
+            Slots = _serviceManager.SlotService.GetAllSlot().Where(e => e.ClubId == LoginedAccount.ClubManageId).ToList();
 
             foreach (var slot in Slots)
             {

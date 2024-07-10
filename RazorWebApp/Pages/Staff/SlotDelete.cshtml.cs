@@ -3,6 +3,7 @@ using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Services.IService;
 using Services.Service;
+using System.Net;
 using WebAppRazor.Constants;
 
 namespace WebAppRazor.Pages.Staff
@@ -13,7 +14,7 @@ namespace WebAppRazor.Pages.Staff
 
         public SlotDeleteModel(IServiceManager _serviceManager)
         {
-           serviceManager = _serviceManager;
+            serviceManager = _serviceManager;
         }
         [BindProperty(SupportsGet = true)]
         public int Id { get; set; }
@@ -31,12 +32,19 @@ namespace WebAppRazor.Pages.Staff
 
             if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
 
-            // Code go from here
+            // Validate route id
+            if (Id == null) return RedirectToPage("/NotFound");
+
             Slot = serviceManager.SlotService.GetSlotById(Id);
 
             if (Slot == null)
             {
-                return NotFound();
+                return RedirectToPage("/NotFound");
+            }
+
+            if (Slot.ClubId != LoginedAccount.ClubManageId)
+            {
+                return RedirectToPage("/NotFound");
             }
 
             // Format the time slot as StartTime - EndTime
