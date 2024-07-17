@@ -1,4 +1,5 @@
-﻿using BusinessObjects.Entities;
+﻿using BusinessObjects.Dtos.Club;
+using BusinessObjects.Entities;
 using Repositories.IRepo;
 using Services.IService;
 
@@ -31,6 +32,11 @@ public class ClubService : IClubService
     public void AddClub(Club club)
     {
         _repo.Club.AddClub(club);
+    }
+
+    public Club GetClubByIdReal(int id)
+    {
+        return _repo.Club.GetClubByIdReal(id);
     }
 
     public void DeleteClub(int clubId)
@@ -71,5 +77,52 @@ public class ClubService : IClubService
     public double GetAverageRatingStar (int clubId)
     {
         return _repo.Club.GetAverageRatingStar(clubId);
+    }
+
+    public ClubDto ToDto(Club entity)
+    {
+        return new ClubDto
+        {
+            ClubId = entity.ClubId,
+            ClubName = entity.ClubName,
+            Address = entity.Address,
+            DistrictId = entity.DistrictId,
+            FanpageLink = entity.FanpageLink,
+            AvatarLink = entity.AvatarLink,
+            OpenTime = entity.OpenTime,
+            CloseTime = entity.CloseTime,
+            ClubEmail = entity.ClubEmail,
+            ClubPhone = entity.ClubPhone,
+            ClientId = entity.ClientId,
+            ApiKey = entity.ApiKey,
+            ChecksumKey = entity.ChecksumKey,
+            Status = entity.Status,
+            TotalStar = entity.TotalStar,
+            TotalReview = entity.TotalReview,
+            DefaultPricePerHour = entity.DefaultPricePerHour
+        };
+    }
+
+    public Club ToEntity(ClubDto dto)
+    {
+        return new Club
+        {
+            ClubName = dto.ClubName,
+            Address = dto.Address,
+            DistrictId = dto.DistrictId,
+            FanpageLink = dto.FanpageLink,
+            AvatarLink = dto.AvatarLink,
+            OpenTime = dto.OpenTime,
+            CloseTime = dto.CloseTime,
+            ClubEmail = dto.ClubEmail,
+            ClubPhone = dto.ClubPhone,
+            ClientId = dto.ClientId,
+            ApiKey = dto.ApiKey,
+            ChecksumKey = dto.ChecksumKey,
+            Status = dto.Status,
+            TotalStar = dto.TotalStar,
+            TotalReview = dto.TotalReview,
+            DefaultPricePerHour = dto.DefaultPricePerHour
+        };
     }
 }

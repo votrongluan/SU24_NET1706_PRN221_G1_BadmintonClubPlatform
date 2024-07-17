@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace BusinessObjects.Entities;
 
@@ -7,7 +8,7 @@ public partial class Club
 {
     public int ClubId { get; set; }
 
-    public string ClubName { get; set; } = null!;
+    public string ClubName { get; set; }
 
     public string Address { get; set; } = null!;
 

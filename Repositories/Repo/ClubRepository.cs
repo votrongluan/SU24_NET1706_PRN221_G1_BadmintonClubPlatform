@@ -22,6 +22,12 @@ public class ClubRepository : IClubRepository
         return GetAllClubs().Where(e => e.ClubId == id).FirstOrDefault();
     }
 
+    public Club GetClubByIdReal(int id) 
+    {
+        return ClubDao.GetAll().Include(x => x.District)
+            .Where(x => x.ClubId == id).FirstOrDefault();
+    }
+
     public Club GetDeActiveClubById (int id)
     {
         return ClubDao.FindByCondition(e => e.ClubId == id && e.Status == false).FirstOrDefault();

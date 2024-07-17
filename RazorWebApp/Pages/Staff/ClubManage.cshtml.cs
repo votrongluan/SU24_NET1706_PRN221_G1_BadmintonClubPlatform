@@ -1,9 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+using BusinessObjects.Dtos.Club;
 using BusinessObjects.Entities;
 using BusinessObjects.Enums;
+using DataAccessObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using Services.IService;
 using WebAppRazor.Constants;
 
@@ -19,7 +24,7 @@ namespace WebAppRazor.Pages.Staff
         }
 
         [BindProperty]
-        public Club Club { get; set; }
+        public ClubDto ClubDto { get; set; }
 
         public int c;
 
@@ -45,7 +50,10 @@ namespace WebAppRazor.Pages.Staff
             LoadAccountFromSession();
             var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Staff.ToString());
 
-            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+            if (!string.IsNullOrWhiteSpace(navigatePage))
+            {
+                return RedirectToPage(navigatePage);
+            }
 
             // Set and clear the message
             if (!string.IsNullOrWhiteSpace(Message))
@@ -64,12 +72,13 @@ namespace WebAppRazor.Pages.Staff
                 Value = bt.BookingTypeId.ToString(),
                 Text = bt.Description
             }).Where(e => e.Value != ((int)BookingTypeEnum.LichThiDau).ToString()).ToList();
+            
 
             if (LoginedAccount.ClubManageId != null)
             {
-                Club = _serviceManager.ClubService.GetClubById((int)LoginedAccount.ClubManageId);
-
-                if (Club == null)
+                int id = (int)LoginedAccount.ClubManageId;
+                var Club = _serviceManager.ClubService.GetClubByIdReal(id);
+                if (Club.Status == false)
                 {
                     TempData["Message"] = $"{MessagePrefix.INFO}Đơn đăng ký Club của bạn đang được xử lý";
 
@@ -87,18 +96,18 @@ namespace WebAppRazor.Pages.Staff
                     return Page();
                 }
 
+                ClubDto = _serviceManager.ClubService.ToDto(Club);
                 var cityService = _serviceManager.CityService.GetAllCities().ToList();
                 Cities = new SelectList(cityService, "CityId", "CityName");
                 CityId = Club.District.CityId; // Set the initial CityId
                 var districtService = _serviceManager.DistrictService.GetAllDistricts().ToList();
                 Districts = new SelectList(districtService.Where(d => d.CityId == CityId), "DistrictId", "DistrictName");
-                DistrictId = Club.DistrictId; // Set the initial DistrictId
-
+                DistrictId = ClubDto.DistrictId; // Set the initial DistrictId
 
                 SelectedBookingTypes = _serviceManager.AvailableBookingTypeService.GetAvailableBookingTypes()
-                .Where(abt => abt.ClubId == Club.ClubId)
-                .Select(abt => abt.BookingTypeId)
-                .ToList();
+                    .Where(abt => abt.ClubId == ClubDto.ClubId)
+                    .Select(abt => abt.BookingTypeId)
+                    .ToList();
             }
             else
             {
@@ -107,12 +116,12 @@ namespace WebAppRazor.Pages.Staff
 
                 var districtService = _serviceManager.DistrictService.GetAllDistricts().ToList();
                 Districts = new SelectList(districtService.Where(d => d.CityId == CityId), "DistrictId", "DistrictName");
+
                 // Fetch selected booking types for the club
                 SelectedBookingTypes = _serviceManager.AvailableBookingTypeService.GetAvailableBookingTypes()
                     .Select(abt => abt.BookingTypeId)
                     .ToList();
             }
-
 
             return Page();
         }
@@ -123,17 +132,20 @@ namespace WebAppRazor.Pages.Staff
             int id = (int)LoginedAccount.ClubManageId;
 
             // Update club properties with the values from the form
-            Club.ClubId = id;
+            ClubDto.ClubId = id;
 
             try
             {
                 var existingClub = _serviceManager.ClubService.GetClubById(id);
 
-                Club.TotalStar = existingClub.TotalStar;
-                Club.TotalReview = existingClub.TotalReview;
-                Club.DefaultPricePerHour = existingClub.DefaultPricePerHour;
+                ClubDto.TotalStar = existingClub.TotalStar;
+                ClubDto.TotalReview = existingClub.TotalReview;
+                ClubDto.DefaultPricePerHour = existingClub.DefaultPricePerHour;
 
-                _serviceManager.ClubService.UpdateClub(Club);
+                
+                var club = _serviceManager.ClubService.ToEntity(ClubDto);
+
+                _serviceManager.ClubService.UpdateClub(club);
 
                 // Delete existing booking types for the club
                 List<AvailableBookingType> availableBookingTypes = _serviceManager.AvailableBookingTypeService.GetAvailableBookingTypes()
@@ -159,16 +171,10 @@ namespace WebAppRazor.Pages.Staff
                 TempData["Message"] = $"{MessagePrefix.SUCCESS}Câu lạc bộ đã được cập nhật thành công.";
                 return RedirectToPage("ClubManage");
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!ClubExists(Club.ClubId))
-                {
-                    return RedirectToPage("/NotFound");
-                }
-                else
-                {
-                    throw;
-                }
+                TempData["Message"] = $"{MessagePrefix.ERROR}Có lỗi xảy ra khi cập nhật câu lạc bộ: {ex.Message}";
+                return Page();
             }
         }
 
@@ -195,13 +201,15 @@ namespace WebAppRazor.Pages.Staff
 
             try
             {
-                Club.Status = false;
-                Club.TotalReview = 0;
-                Club.TotalStar = 0;
-                _serviceManager.ClubService.AddClub(Club);
+                ClubDto.Status = false;
+                ClubDto.TotalReview = 0;
+                ClubDto.TotalStar = 0;
+
+                var club = _serviceManager.ClubService.ToEntity(ClubDto);
+                _serviceManager.ClubService.AddClub(club);
 
                 Account owner = LoginedAccount;
-                owner.ClubManageId = Club.ClubId;
+                owner.ClubManageId = club.ClubId;
                 _serviceManager.AccountService.UpdateStaffAccount(owner);
 
                 UpdateAccountSession(owner);
@@ -211,7 +219,7 @@ namespace WebAppRazor.Pages.Staff
                 {
                     var newAvailableBookingType = new AvailableBookingType
                     {
-                        ClubId = Club.ClubId,
+                        ClubId = ClubDto.ClubId,
                         BookingTypeId = bookingTypeId
                     };
                     _serviceManager.AvailableBookingTypeService.AddAvailableBookingType(newAvailableBookingType);
