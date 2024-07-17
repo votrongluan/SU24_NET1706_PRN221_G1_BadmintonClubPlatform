@@ -67,22 +67,79 @@
     </header>
     <main class="bg-light" style="padding-bottom: 2rem;min-height: 80vh;">
         <div class="container bg-light">
-            <div class="d-flex justify-content-center align-content-center">
-                <section style="width: 50%">
-                    <h2 class="fs-4 text-center">Đặt sân</h2>
+            <div class="d-flex justify-content-between align-content-center">
+                @* CHECK IF MESSAGE NOT NULL *@
+                @if (!string.IsNullOrEmpty(Model.Message))
+                {
+                    var messageClass = Model.Message.StartsWith(Constants.MessagePrefix.ERROR.ToString()) ? "alert-danger" :
+                    Model.Message.StartsWith(Constants.MessagePrefix.SUCCESS.ToString()) ? "alert-success" :
+                    Model.Message.StartsWith(Constants.MessagePrefix.WARNING.ToString()) ? "alert-warning" :
+                    "alert-info";
 
-                    @* CHECK IF MESSAGE NOT NULL *@
-                    @if (!string.IsNullOrEmpty(Model.Message))
-                    {
-                        var messageClass = Model.Message.StartsWith(Constants.MessagePrefix.ERROR.ToString()) ? "alert-danger" :
-                        Model.Message.StartsWith(Constants.MessagePrefix.SUCCESS.ToString()) ? "alert-success" :
-                        Model.Message.StartsWith(Constants.MessagePrefix.WARNING.ToString()) ? "alert-warning" :
-                        "alert-info";
-
-                        <div class="alert @messageClass" role="alert">
-                            <p class="m-0 p-1">@Model.Message.Substring(1)</p>
+                    <div class="alert @messageClass" role="alert">
+                        <p class="m-0 p-1">@Model.Message.Substring(1)</p>
+                    </div>
+                }
+                <section style="width: 30%">
+                    <div>
+                        <h3 class="mt-4 fs-5">Khung giờ và giá</h3>
+                        <div class="table-responsive border rounded bg-white" style="margin-top: 16px;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Khung giờ</th>
+                                        <th>Giá / giờ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Giá mặc định</td>
+                                        <td>@string.Format(CultureInfo.InvariantCulture, "{0:N0}", Model.BookClub.DefaultPricePerHour).Replace(",", ".") đồng</td>
+                                    </tr>
+                                    @if (Model.Slots != null && Model.Slots.Count > 0)
+                                    {
+                                        @foreach (var item in Model.Slots)
+                                        {
+                                            string formattedNumber = string.Format(CultureInfo.InvariantCulture, "{0:N0}", item.Price).Replace(",", ".");
+                                            var formatStartTime = item?.StartTime?.Hour.ToString("D2") + ":" + item?.StartTime?.Minute.ToString("D2");
+                                            var formatEndTime = item?.EndTime?.Hour.ToString("D2") + ":" + item?.EndTime?.Minute.ToString("D2");
+                                            <tr>
+                                                <td>@formatStartTime - @formatEndTime</td>
+                                                <td>@formattedNumber đồng</td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="2">Câu lạc bộ chưa có khung giờ</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
                         </div>
-                    }
+                    </div>
+
+                    <div>
+                        <h3 class="mt-4 fs-5">Lưu ý:</h3>
+                        <div>
+                            <p><strong>Ví dụ:</strong></p>
+                            <ul>
+                                <li>Câu lạc bộ A có giá mặc định là 10.000 đồng/giờ.</li>
+                                <li>Giá cho khung giờ từ 17h đến 22h là 15.000 đồng/giờ.</li>
+                            </ul>
+                            <p>Khách hàng đặt từ 16h đến 19h sẽ được tính tiền như sau:</p>
+                            <ul>
+                                <li>Từ 16h đến 17h theo giá mặc định: 10.000 đồng.</li>
+                                <li>Từ 17h đến 19h theo giá khung giờ: 15.000 đồng/giờ x 2 giờ = 30.000 đồng.</li>
+                            </ul>
+                            <p><strong>Tổng tiền phải trả là:</strong> 10.000 đồng + 30.000 đồng = 45.000 đồng.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="width: 60%">
+                    <h2 class="fs-4 text-center">Đặt sân</h2>
 
                     <form method="post">
                         <input type="hidden" name="id" value="@Model.ClubId" />
@@ -104,7 +161,6 @@
                         <div class="mt-4">
                             <p style="margin-top: 8px;" class="mt-4">Ngày</p>
                             <input id="date" asp-for="BookingRequestDto.BookDate" class="form-control" type="date">
-                            <p class="mt-2">Lưu ý: Ngày đặt tính từ 3 ngày sau</p>
                             <span asp-validation-for="BookingRequestDto.CourtTypeId" class="text-danger"></span>
                         </div>
 
@@ -121,10 +177,15 @@
 
                         <div class="mt-4">
                             <p style="margin-top: 8px;" class="mt-4">Giờ đặt sân</p>
+                            
+                            <p>
+                                Lưu ý: Câu lạc bộ hoạt động từ <strong>@Model.BookClub.OpenTime.Value.ToString("HH:mm")</strong> giờ đến
+                                <strong>@Model.BookClub.CloseTime.Value.ToString("HH:mm")</strong> giờ. Nếu đặt giờ lố hệ thống sẽ báo lỗi
+                            </p>
 
                             <div class="d-flex align-items-center">
                                 <div>
-                                    <input id="hour" asp-for="BookingRequestDto.StartTimeHour" class="form-control" type="number" min="6" max="20" step="1">
+                                    <input id="hour" asp-for="BookingRequestDto.StartTimeHour" class="form-control" type="number" min="@Model.MinHour" max="@Model.MaxHour" step="1">
                                     <span asp-validation-for="BookingRequestDto.StartTimeHour" class="text-danger"></span>
                                 </div>
                                 <div class="mx-4">:</div>
