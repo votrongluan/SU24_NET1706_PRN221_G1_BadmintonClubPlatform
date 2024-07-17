@@ -143,12 +143,12 @@
                     </div>
                     <div class="mt-4">
                         <p>Giờ mở cửa</p>
-                        <input class="form-control" type="time" asp-for="ClubDto.OpenTime">
+                        <input class="form-control" type="time" step="900" asp-for="ClubDto.OpenTime">
                         <span asp-validation-for="ClubDto.OpenTime" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
                         <p>Giờ đóng cửa</p>
-                        <input class="form-control" type="time" asp-for="ClubDto.CloseTime">
+                        <input class="form-control" type="time" step="900" asp-for="ClubDto.CloseTime">
                         <span asp-validation-for="ClubDto.CloseTime" class="text-danger"></span>
                     </div>
                     <div class="mt-4">

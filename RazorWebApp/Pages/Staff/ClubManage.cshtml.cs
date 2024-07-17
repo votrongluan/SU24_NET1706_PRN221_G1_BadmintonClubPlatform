@@ -205,6 +205,12 @@ namespace WebAppRazor.Pages.Staff
                 ClubDto.TotalReview = 0;
                 ClubDto.TotalStar = 0;
 
+                if (ClubDto.OpenTime >= ClubDto.CloseTime)
+                {
+                    TempData["Message"] = $"{MessagePrefix.ERROR} Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc.";
+                    return RedirectToPage("/Staff/ClubManage");
+                }
+
                 var club = _serviceManager.ClubService.ToEntity(ClubDto);
                 _serviceManager.ClubService.AddClub(club);
 
