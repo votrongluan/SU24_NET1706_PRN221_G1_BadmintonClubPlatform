@@ -19,9 +19,9 @@
 
     <style>
         .readonly-gray[readonly] {
-            background-color: #f0f0f0; 
-            color: #333; 
-            cursor: not-allowed; 
+            background-color: #f0f0f0;
+            color: #333;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -60,7 +60,7 @@
                 </div>
                 <div class="p-4 pb-2 pt-2">
                     <a href="/Staff/SlotManage"
-                       style="text-decoration: none;color: var(--bs-black);">Quản lý giờ, giá</a>
+                       style="text-decoration: none;color: var(--bs-black);">Quản lý giá theo khung giờ</a>
                 </div>
                 <div class="p-4 pb-2 pt-2">
                     <a href="/Staff/ClubBookManage"
@@ -80,7 +80,7 @@
                     </label>
                     <label class="form-label d-block mt-4">
                         Giá
-                        <input class="form-control mt-2" type="number" name="Price" value="@Model.Slot.Price">
+                        <input min="1000" max="500000" step="1000" class="form-control mt-2" type="number" name="Price" value="@Model.Slot.Price">
                     </label>
                     <div class="d-flex justify-content-between mt-4">
                         <a class="btn btn-secondary" role="button" href="./SlotManage">Quay lại</a>

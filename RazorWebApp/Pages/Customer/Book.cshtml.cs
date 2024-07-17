@@ -26,10 +26,14 @@ namespace WebAppRazor.Pages.Customer
         public List<CourtType> CourtTypes { get; set; }
         public List<Slot> Slots { get; set; }
         public List<BookingType> BookingTypes { get; set; }
+        public int MinHour { get; set; }
+        public int MaxHour { get; set; }
 
         public void InitializeData()
         {
             BookClub = _service.ClubService.GetClubById(ClubId);
+            MinHour = BookClub.OpenTime.Value.Hour + (BookClub.OpenTime.Value.Minute > 0 ? 1 : 0);
+            MaxHour = BookClub.CloseTime.Value.Hour - 1;
             Club = BookClub.ToResponseClubDto();
             CourtTypes = _service.CourtTypeService.GetAllCourtTypes();
             Slots = _service.SlotService.GetAllSlot().Where(e => e.ClubId == ClubId).ToList();
@@ -111,7 +115,7 @@ namespace WebAppRazor.Pages.Customer
                     date = date.AddDays(7);
                 }
 
-                if (BookingRequestDto.StartTime < bookClub.OpenTime || BookingRequestDto.EndTime > bookClub.CloseTime)
+                if (BookingRequestDto.StartTime < bookClub.OpenTime || BookingRequestDto.EndTime > bookClub.CloseTime || BookingRequestDto.EndTime < bookClub.OpenTime)
                 {
                     TempData["Message"] = $"{MessagePrefix.ERROR}Đặt thất bại khung giờ bạn chọn club chưa mở cửa";
                     return RedirectToPage("Book", new { id });

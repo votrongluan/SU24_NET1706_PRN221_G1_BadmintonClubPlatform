@@ -68,7 +68,7 @@
                 </div>
                 <div class="p-4 pb-2 pt-2 @((@Model.ClubDto != null && @Model.ClubDto.Status.GetValueOrDefault()) ? "" : "readonly-gray")">
                     <a href="/Staff/SlotManage"
-                       style="text-decoration: none;color: var(--bs-black);" @(Model.ClubDto != null && Model.ClubDto.Status.GetValueOrDefault() ? "" : "tabindex=-1 aria-disabled=true")>Quản lý giờ, giá</a>
+                       style="text-decoration: none;color: var(--bs-black);" @(Model.ClubDto != null && Model.ClubDto.Status.GetValueOrDefault() ? "" : "tabindex=-1 aria-disabled=true")>Quản lý giá theo khung giờ</a>
                 </div>
                 <div class="p-4 pb-2 pt-2 @((@Model.ClubDto != null && @Model.ClubDto.Status.GetValueOrDefault()) ? "" : "readonly-gray")">
                     <a href="/Staff/ClubBookManage"
@@ -95,7 +95,7 @@
                     </div>
                 }
 
-                <form method="post" asp-page-handler="@(Model.ClubDto == null ? "AddClub" : "SaveClub")">
+                <form id="serviceForm" method="post" asp-page-handler="@(Model.ClubDto == null ? "AddClub" : "SaveClub")">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="mt-4">
                         <p>Tên câu lạc bộ</p>
@@ -116,7 +116,7 @@
                     </div>
                     <div class="mt-4">
                         <p style="margin-top: 8px;">Quận / Huyện</p>
-                        <select id="District" class="form-select" asp-for="ClubDto.DistrictId">
+                        <select id="District" class="form-select" asp-for="ClubDto.DistrictId" asp-items="@Model.Districts">
                             <option value="">Chọn quận / huyện</option>
                         </select>
                         <span asp-validation-for="ClubDto.DistrictId" class="text-danger"></span>
@@ -153,7 +153,7 @@
                     </div>
                     <div class="mt-4">
                         <p>Giá mặc định</p>
-                        <input class="form-control" type="number" asp-for="ClubDto.DefaultPricePerHour" step="0.01">
+                        <input min="10000" max="200000" step="1000" class="form-control" type="number" asp-for="ClubDto.DefaultPricePerHour">
                         <span asp-validation-for="ClubDto.DefaultPricePerHour" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
@@ -178,7 +178,7 @@
                                 @foreach (var bookingType in Model.BookingTypes)
                                 {
                                     <div class="form-check">
-                                        <input type="checkbox" id="bookingType_@bookingType.Value" name="SelectedBookingTypes" value="@bookingType.Value"
+                                        <input type="checkbox" id="bookingType_@bookingType.Value" id="bookingType_@bookingType.Value" name="SelectedBookingTypes" value="@bookingType.Value"
                                                class="form-check-input"
                                         @(Model.SelectedBookingTypes != null && Model.SelectedBookingTypes.Contains(Convert.ToInt32(bookingType.Value)) ? "checked" : "") />
                                         <label class="form-check-label" for="bookingType_@bookingType.Value">@bookingType.Text</label>
@@ -209,6 +209,14 @@
     <script src="~/assets/js/Simple-Slider-swiper-bundle.min.js"></script>
     <script src="~/assets/js/Simple-Slider.js"></script>
     <script>
+        document.getElementById('serviceForm').addEventListener('submit', function (event) {
+            var checkboxes = document.querySelectorAll('input[name="SelectedBookingTypes"]:checked');
+            if (checkboxes.length === 0) {
+                event.preventDefault();
+                alert('Chọn ít nhất 1 loại hình dịch vụ');
+            }
+        });
+
         function fetchDistricts() {
             var cityId = document.getElementById("City").value;
 

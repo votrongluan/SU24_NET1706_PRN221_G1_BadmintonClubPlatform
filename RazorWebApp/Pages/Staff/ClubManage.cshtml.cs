@@ -140,7 +140,6 @@ namespace WebAppRazor.Pages.Staff
 
                 ClubDto.TotalStar = existingClub.TotalStar;
                 ClubDto.TotalReview = existingClub.TotalReview;
-                ClubDto.DefaultPricePerHour = existingClub.DefaultPricePerHour;
                 ClubDto.Status = true;
 
                 
@@ -226,7 +225,7 @@ namespace WebAppRazor.Pages.Staff
                 {
                     var newAvailableBookingType = new AvailableBookingType
                     {
-                        ClubId = ClubDto.ClubId,
+                        ClubId = club.ClubId,
                         BookingTypeId = bookingTypeId
                     };
                     _serviceManager.AvailableBookingTypeService.AddAvailableBookingType(newAvailableBookingType);

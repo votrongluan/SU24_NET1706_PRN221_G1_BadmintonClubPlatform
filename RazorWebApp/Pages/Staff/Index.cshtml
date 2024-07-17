@@ -71,7 +71,7 @@
                 </div>
                 <div class="p-4 pb-2 pt-2 @((@Model.Club != null && @Model.Club.Status.GetValueOrDefault()) ? "" : "readonly-gray")">
                     <a href="/Staff/SlotManage"
-                       style="text-decoration: none;color: var(--bs-black);" @(Model.Club != null && Model.Club.Status.GetValueOrDefault() ? "" : "tabindex=-1 aria-disabled=true")>Quản lý giờ, giá</a>
+                       style="text-decoration: none;color: var(--bs-black);" @(Model.Club != null && Model.Club.Status.GetValueOrDefault() ? "" : "tabindex=-1 aria-disabled=true")>Quản lý giá theo khung giờ</a>
                 </div>
                 <div class="p-4 pb-2 pt-2 @((@Model.Club != null && @Model.Club.Status.GetValueOrDefault()) ? "" : "readonly-gray")">
                     <a href="/Staff/ClubBookManage"

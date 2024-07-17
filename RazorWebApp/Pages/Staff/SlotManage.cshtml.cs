@@ -130,13 +130,13 @@ namespace WebAppRazor.Pages.Staff
 
             var club = _serviceManager.ClubService.GetClubById((int)LoginedAccount.ClubManageId);
 
-            if (NewSlot.StartTime <= club.OpenTime)
+            if (NewSlot.StartTime < club.OpenTime)
             {
                 TempData["Message"] = $"{MessagePrefix.ERROR} Thời gian bắt đầu lớn hơn thời gian mở cửa.";
                 return RedirectToPage("/Staff/SlotManage");
             }
 
-            if (NewSlot.EndTime >= club.CloseTime)
+            if (NewSlot.EndTime > club.CloseTime)
             {
                 TempData["Message"] = $"{MessagePrefix.ERROR} Thời gian kết thúc phải nhỏ hơn thời gian đóng cửa.";
                 return RedirectToPage("/Staff/SlotManage");

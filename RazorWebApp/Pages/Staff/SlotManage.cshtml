@@ -1,7 +1,7 @@
 ﻿@page
 @model WebAppRazor.Pages.Staff.SlotManageModel
 @{
-    ViewData["Title"] = "Quản lý giờ, giá";
+    ViewData["Title"] = "Quản lý giá theo khung giờ";
 }
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
@@ -51,7 +51,7 @@
                     <a href="/Staff/CourtManage" style="text-decoration: none;color: var(--bs-black);">Quản lý sân</a>
                 </div>
                 <div class="p-4 pb-2 pt-2">
-                    <a href="/Staff/SlotManage" style="text-decoration: none;color: var(--bs-black);">Quản lý giờ, giá</a>
+                    <a href="/Staff/SlotManage" style="text-decoration: none;color: var(--bs-black);">Quản lý giá theo khung giờ</a>
                 </div>
                 <div class="p-4 pb-2 pt-2">
                     <a href="/Staff/ClubBookManage" style="text-decoration: none;color: var(--bs-black);">Lịch đặt sân</a>
@@ -61,7 +61,7 @@
                 </div>
             </div>
             <div style="flex: 1;" class="p-4">
-                <h2 class="fs-4 text-center mt-0">Quản lý giờ, giá</h2>
+                <h2 class="fs-4 text-center mt-0">Quản lý giá theo khung giờ</h2>
                 @* CHECK IF MESSAGE NOT NULL *@
                 @if (!string.IsNullOrEmpty(Model.Message))
                 {
@@ -150,7 +150,7 @@
                             </label>
                             <label class="form-label mt-4" style="display: block;">
                                 Giá tiền
-                                <input name="NewSlot.Price" class="form-control mt-2" type="text" placeholder="Đơn vị: đồng">
+                                <input min="1000" max="500000" step="1000" name="NewSlot.Price" class="form-control mt-2" type="text" placeholder="Đơn vị: đồng">
                             </label>
                         </div>
                         <div class="modal-footer">

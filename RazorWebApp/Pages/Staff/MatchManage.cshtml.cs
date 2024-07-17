@@ -30,9 +30,9 @@ namespace WebAppRazor.Pages.Staff
         public string Message { get; set; }
         public int TotalFindMatch { get; set; }
 
-        private void InitializeData()
+        private void InitializeData(int id)
         {
-            Matches = _service.MatchService.GetAllMatches();
+            Matches = _service.MatchService.GetAllMatches().Where(e => e.Booking.ClubId == id).ToList();
             MatchesDto = Matches.Select(e => e.ToMatchResponseDto()).ToList();
             CourtTypes = _service.CourtTypeService.GetAllCourtTypes();
 
@@ -120,7 +120,9 @@ namespace WebAppRazor.Pages.Staff
             //-------------------------------
             // End of validate club is active
 
-            InitializeData();
+            var id = (int)LoginedAccount.ClubManageId;
+
+            InitializeData(id);
 
             int page = Convert.ToInt32(Request.Query["page"]);
             Paging(searchString, searchProperty, sortProperty, sortOrder, page);
