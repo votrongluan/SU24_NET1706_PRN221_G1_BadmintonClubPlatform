@@ -35,6 +35,24 @@ namespace WebAppRazor.Pages.Staff
             // Validate route id
             if (Id == null) return RedirectToPage("/NotFound");
 
+            // Validate club id is active
+            //-------------------------------
+            if (LoginedAccount.ClubManageId == null)
+            {
+                return RedirectToPage("/NotFound");
+            }
+
+            int validateClubId = (int)LoginedAccount.ClubManageId;
+
+            var isActiveClubById = serviceManager.ClubService.GetDeActiveClubById(validateClubId);
+
+            if (isActiveClubById != null)
+            {
+                return RedirectToPage("/NotFound");
+            }
+            //-------------------------------
+            // End of validate club is active
+
             Slot = serviceManager.SlotService.GetSlotById(Id);
 
             if (Slot == null)

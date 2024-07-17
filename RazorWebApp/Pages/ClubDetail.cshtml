@@ -99,7 +99,7 @@
 
                             </p>
                             <p style="margin-bottom: 4px;">Địa chỉ: <strong>@Model.Club.Address</strong></p>
-                            <p style="margin-bottom: 4px;">Giờ hoạt động: <strong>@Model.Club.OpenTime</strong></p>
+                            <p style="margin-bottom: 4px;">Giờ hoạt động: <strong>@Model.Club.OpenTime.Value.ToString("HH:mm") giờ - @Model.Club.CloseTime.Value.ToString("HH:mm") giờ</strong></p>
                             <p style="margin-bottom: 4px;">Email: <strong>@Model.Club.ClubEmail</strong></p>
                             <p style="margin-bottom: 4px;">Số điện thoại: <strong>@Model.Club.ClubPhone</strong></p>
                             <p style="margin-bottom: 4px;">Loại hình dịch vụ: <strong>@Model.Services</strong></p>

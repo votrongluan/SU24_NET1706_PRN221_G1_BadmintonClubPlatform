@@ -5,6 +5,7 @@ using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Services.IService;
+using Services.Service;
 using WebAppRazor.Constants;
 
 namespace WebAppRazor.Pages.Staff
@@ -47,7 +48,25 @@ namespace WebAppRazor.Pages.Staff
                 Message = TempData["Message"].ToString();
             }
 
-            int id = (int)LoginedAccount.ClubManageId;
+            // Validate club id is active
+            //-------------------------------
+            if (LoginedAccount.ClubManageId == null)
+            {
+                return RedirectToPage("/NotFound");
+            }
+
+            int validateClubId = (int)LoginedAccount.ClubManageId;
+
+            var isActiveClubById = _serviceManager.ClubService.GetDeActiveClubById(validateClubId);
+
+            if (isActiveClubById != null)
+            {
+                return RedirectToPage("/NotFound");
+            }
+            //-------------------------------
+            // End of validate club is active
+
+            var id = (int)LoginedAccount.ClubManageId;
 
             Slots = _serviceManager.SlotService.GetAllSlot().Where(e => e.ClubId == id).ToList();
 
@@ -97,13 +116,13 @@ namespace WebAppRazor.Pages.Staff
                 return RedirectToPage("/Staff/SlotManage");
             }
 
-            if (NewSlot.Price == null) 
+            if (NewSlot.Price == null)
             {
                 TempData["Message"] = $"{MessagePrefix.ERROR} Giá tiền không được để trống .";
                 return RedirectToPage("/Staff/SlotManage");
             }
 
-            if (NewSlot.StartTime >= NewSlot.EndTime) 
+            if (NewSlot.StartTime >= NewSlot.EndTime)
             {
                 TempData["Message"] = $"{MessagePrefix.ERROR} Thời gian bắt đầu nhỏ hơn thời gian kết thúc .";
                 return RedirectToPage("/Staff/SlotManage");
@@ -111,7 +130,7 @@ namespace WebAppRazor.Pages.Staff
 
             var club = _serviceManager.ClubService.GetClubById((int)LoginedAccount.ClubManageId);
 
-            if (NewSlot.StartTime <= club.OpenTime) 
+            if (NewSlot.StartTime <= club.OpenTime)
             {
                 TempData["Message"] = $"{MessagePrefix.ERROR} Thời gian bắt đầu lớn hơn thời gian mở cửa.";
                 return RedirectToPage("/Staff/SlotManage");
