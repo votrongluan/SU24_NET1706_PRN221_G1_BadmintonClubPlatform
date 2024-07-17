@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BusinessObjects.Dtos.Booking;
 using WebAppRazor.Constants;
+using Services.Service;
 
 namespace WebAppRazor.Pages.Staff
 {
@@ -63,6 +64,21 @@ namespace WebAppRazor.Pages.Staff
                 Message = TempData["Message"].ToString();
             }
 
+            // Validate club id
+            if (LoginedAccount.ClubManageId == null)
+            {
+                return RedirectToPage("/NotFound");
+            }
+
+            int id = (int)LoginedAccount.ClubManageId;
+
+            var isActiveClubById = serviceManager.ClubService.GetDeActiveClubById(id);
+
+            if (isActiveClubById != null)
+            {
+                return RedirectToPage("/NotFound");
+            }
+
             Bookings = GetBookings();
 
             int clubId = (int)LoginedAccount.ClubManageId;
@@ -97,6 +113,7 @@ namespace WebAppRazor.Pages.Staff
                 {
                     bookings.Add(new BookingViewModel
                     {
+                        Price = booking.TotalPrice ?? 0,
                         BookingId = booking.BookingId,
                         UserName = booking.User.Fullname,
                         Service = booking.BookingType.Description,
@@ -203,6 +220,7 @@ namespace WebAppRazor.Pages.Staff
 
         public class BookingViewModel
         {
+            public int Price { get; set; }
             public int BookingId { get; set; }
             public string UserName { get; set; }
             public string CourtId { get; set; }

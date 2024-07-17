@@ -81,6 +81,24 @@ namespace WebAppRazor.Pages.Staff
                 Message = TempData["Message"].ToString();
             }
 
+            // Validate club id is active
+            //-------------------------------
+            if (LoginedAccount.ClubManageId == null)
+            {
+                return RedirectToPage("/NotFound");
+            }
+
+            int validateClubId = (int)LoginedAccount.ClubManageId;
+
+            var isActiveClubById = _service.ClubService.GetDeActiveClubById(validateClubId);
+
+            if (isActiveClubById != null)
+            {
+                return RedirectToPage("/NotFound");
+            }
+            //-------------------------------
+            // End of validate club is active
+
             InitializeData();
 
             Filter(searchString, searchProperty, sortProperty, sortOrder);

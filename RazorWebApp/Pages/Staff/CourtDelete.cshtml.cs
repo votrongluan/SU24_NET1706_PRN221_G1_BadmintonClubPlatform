@@ -3,6 +3,7 @@ using BusinessObjects.Entities;
 using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Services.IService;
+using Services.Service;
 using WebAppRazor.Constants;
 using WebAppRazor.Mappers;
 
@@ -27,6 +28,24 @@ namespace WebAppRazor.Pages.Staff
             var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Staff.ToString());
 
             if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+
+            // Validate club id is active
+            //-------------------------------
+            if (LoginedAccount.ClubManageId == null)
+            {
+                return RedirectToPage("/NotFound");
+            }
+
+            int validateClubId = (int)LoginedAccount.ClubManageId;
+
+            var isActiveClubById = _service.ClubService.GetDeActiveClubById(validateClubId);
+
+            if (isActiveClubById != null)
+            {
+                return RedirectToPage("/NotFound");
+            }
+            //-------------------------------
+            // End of validate club is active
 
             if (id != null)
             {

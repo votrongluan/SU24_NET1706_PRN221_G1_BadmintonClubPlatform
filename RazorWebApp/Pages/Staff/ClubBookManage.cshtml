@@ -124,7 +124,8 @@
                                             <th scope="col">Số điện thoại</th>
                                             <th scope="col">Ngày đặt</th>
                                             <th scope="col">Giờ đặt</th>
-                                            <th scope="col">Trạng thái</th>
+                                            <th scope="col">Giá</th>
+                                            <th class="cen" scope="col">Trạng thái thanh toán online</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -138,6 +139,7 @@
                                                 <td>@booking.UserPhone</td>
                                                 <td>@(booking.BookDate.HasValue ? booking.BookDate.Value.ToString("dd/MM/yyyy") : "")</td>
                                                 <td>@(booking.StartTime.HasValue ? booking.StartTime.Value.ToString(@"hh\:mm") : "") - @(booking.EndTime.HasValue ? booking.EndTime.Value.ToString(@"hh\:mm") : "")</td>
+                                                <td>@booking.Price.ToString("N0")</td>
                                                 <td>
                                                     <span class="badge @(booking.PaymentStatus == "Đã thanh toán" ? "bg-success" : "bg-warning text-dark")">
                                                         @booking.PaymentStatus
