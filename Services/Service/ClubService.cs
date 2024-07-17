@@ -125,4 +125,28 @@ public class ClubService : IClubService
             DefaultPricePerHour = dto.DefaultPricePerHour
         };
     }
+
+    public Club ToUpdateEntity(ClubDto dto)
+    {
+        return new Club
+        {
+            ClubId = dto.ClubId,
+            ClubName = dto.ClubName,
+            Address = dto.Address,
+            DistrictId = dto.DistrictId,
+            FanpageLink = dto.FanpageLink,
+            AvatarLink = dto.AvatarLink,
+            OpenTime = dto.OpenTime,
+            CloseTime = dto.CloseTime,
+            ClubEmail = dto.ClubEmail,
+            ClubPhone = dto.ClubPhone,
+            ClientId = dto.ClientId,
+            ApiKey = dto.ApiKey,
+            ChecksumKey = dto.ChecksumKey,
+            Status = dto.Status,
+            TotalStar = dto.TotalStar,
+            TotalReview = dto.TotalReview,
+            DefaultPricePerHour = dto.DefaultPricePerHour
+        };
+    }
 }

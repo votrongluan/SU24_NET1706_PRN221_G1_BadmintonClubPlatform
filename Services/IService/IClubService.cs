@@ -20,4 +20,5 @@ public interface IClubService
     ClubDto ToDto(Club entity);
     Club ToEntity(ClubDto dto);
     Club GetClubByIdReal(int id);
+    Club ToUpdateEntity(ClubDto dto);
 }
