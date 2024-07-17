@@ -1,4 +1,5 @@
-﻿using BusinessObjects.Entities;
+﻿using BusinessObjects.Dtos.Club;
+using BusinessObjects.Entities;
 
 namespace Services.IService;
 
@@ -16,4 +17,7 @@ public interface IClubService
     List<Club> GetMostBookingClubs();
     List<Club> GetMostPopularClubs();
     double GetAverageRatingStar(int clubId);
+    ClubDto ToDto(Club entity);
+    Club ToEntity(ClubDto dto);
+    Club GetClubByIdReal(int id);
 }

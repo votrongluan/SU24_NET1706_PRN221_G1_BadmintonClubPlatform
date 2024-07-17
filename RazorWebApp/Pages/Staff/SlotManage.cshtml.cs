@@ -83,9 +83,45 @@ namespace WebAppRazor.Pages.Staff
         {
             LoadAccountFromSession();
 
-            NewSlot.EndTime = NewSlot.StartTime.Value.AddMinutes(Duration);
-
             Slots = _serviceManager.SlotService.GetAllSlot().Where(e => e.ClubId == LoginedAccount.ClubManageId).ToList();
+
+            if (NewSlot.StartTime == null)
+            {
+                TempData["Message"] = $"{MessagePrefix.ERROR} Thời gian bắt đầu không được để trống .";
+                return RedirectToPage("/Staff/SlotManage");
+            }
+
+            if (NewSlot.EndTime == null)
+            {
+                TempData["Message"] = $"{MessagePrefix.ERROR} Thời gian kết thúc không được để trống .";
+                return RedirectToPage("/Staff/SlotManage");
+            }
+
+            if (NewSlot.Price == null) 
+            {
+                TempData["Message"] = $"{MessagePrefix.ERROR} Giá tiền không được để trống .";
+                return RedirectToPage("/Staff/SlotManage");
+            }
+
+            if (NewSlot.StartTime >= NewSlot.EndTime) 
+            {
+                TempData["Message"] = $"{MessagePrefix.ERROR} Thời gian bắt đầu nhỏ hơn thời gian kết thúc .";
+                return RedirectToPage("/Staff/SlotManage");
+            }
+
+            var club = _serviceManager.ClubService.GetClubById((int)LoginedAccount.ClubManageId);
+
+            if (NewSlot.StartTime <= club.OpenTime) 
+            {
+                TempData["Message"] = $"{MessagePrefix.ERROR} Thời gian bắt đầu lớn hơn thời gian mở cửa.";
+                return RedirectToPage("/Staff/SlotManage");
+            }
+
+            if (NewSlot.EndTime >= club.CloseTime)
+            {
+                TempData["Message"] = $"{MessagePrefix.ERROR} Thời gian kết thúc phải nhỏ hơn thời gian đóng cửa.";
+                return RedirectToPage("/Staff/SlotManage");
+            }
 
             foreach (var slot in Slots)
             {
