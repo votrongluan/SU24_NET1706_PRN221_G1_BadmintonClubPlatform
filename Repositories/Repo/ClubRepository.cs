@@ -24,7 +24,7 @@ public class ClubRepository : IClubRepository
 
     public Club GetClubByIdReal(int id)
     {
-        return ClubDao.GetAll().Include(x => x.District)
+        return ClubDao.GetAll().Include(x => x.District).Include(e => e.AvailableBookingTypes).Include(e => e.District).Include(e => e.Bookings)
             .Where(x => x.ClubId == id).FirstOrDefault();
     }
 

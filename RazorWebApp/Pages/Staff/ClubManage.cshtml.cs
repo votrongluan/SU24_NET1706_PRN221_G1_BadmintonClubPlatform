@@ -141,9 +141,10 @@ namespace WebAppRazor.Pages.Staff
                 ClubDto.TotalStar = existingClub.TotalStar;
                 ClubDto.TotalReview = existingClub.TotalReview;
                 ClubDto.DefaultPricePerHour = existingClub.DefaultPricePerHour;
+                ClubDto.Status = true;
 
                 
-                var club = _serviceManager.ClubService.ToEntity(ClubDto);
+                var club = _serviceManager.ClubService.ToUpdateEntity(ClubDto);
 
                 _serviceManager.ClubService.UpdateClub(club);
 

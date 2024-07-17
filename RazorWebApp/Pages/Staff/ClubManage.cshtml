@@ -171,7 +171,23 @@
                         <input class="form-control" type="text" asp-for="ClubDto.ChecksumKey">
                         <span asp-validation-for="ClubDto.ChecksumKey" class="text-danger"></span>
                     </div>
-
+                    <div class="mt-4">
+                        <div class="form-group">
+                            <label class="control-label">Loại Hình Dịch Vụ</label>
+                            <div class="tag-checkboxes mt-2">
+                                @foreach (var bookingType in Model.BookingTypes)
+                                {
+                                    <div class="form-check">
+                                        <input type="checkbox" id="bookingType_@bookingType.Value" name="SelectedBookingTypes" value="@bookingType.Value"
+                                               class="form-check-input"
+                                        @(Model.SelectedBookingTypes != null && Model.SelectedBookingTypes.Contains(Convert.ToInt32(bookingType.Value)) ? "checked" : "") />
+                                        <label class="form-check-label" for="bookingType_@bookingType.Value">@bookingType.Text</label>
+                                    </div>
+                                }
+                            </div>
+                            <span asp-validation-for="SelectedBookingTypes" class="text-danger"></span>
+                        </div>
+                    </div>
                     <div class="mt-4">
                         @if (Model.ClubDto != null)
                         {
