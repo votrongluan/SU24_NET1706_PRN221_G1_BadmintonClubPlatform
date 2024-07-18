@@ -157,22 +157,22 @@
                     </div>
                     <div class="mt-4">
                         <p>Giá mặc định</p>
-                        <input min="10000" max="200000" step="1000" class="form-control" type="number" asp-for="ClubDto.DefaultPricePerHour">
+                        <input id="price" min="10000" max="200000" step="1000" class="form-control" type="number" asp-for="ClubDto.DefaultPricePerHour">
                         <span asp-validation-for="ClubDto.DefaultPricePerHour" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
                         <p>Client ID</p>
-                        <input class="form-control" type="text" asp-for="ClubDto.ClientId">
+                        <input id="clientId" class="form-control" type="text" asp-for="ClubDto.ClientId">
                         <span asp-validation-for="ClubDto.ClientId" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
                         <p>API Key</p>
-                        <input class="form-control" type="text" asp-for="ClubDto.ApiKey">
+                        <input id="apiKey" class="form-control" type="text" asp-for="ClubDto.ApiKey">
                         <span asp-validation-for="ClubDto.ApiKey" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
                         <p>Checksum Key</p>
-                        <input class="form-control" type="text" asp-for="ClubDto.ChecksumKey">
+                        <input id="checksumKey" class="form-control" type="text" asp-for="ClubDto.ChecksumKey">
                         <span asp-validation-for="ClubDto.ChecksumKey" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
@@ -218,6 +218,10 @@
             const closeTimeInput = document.getElementById("closeTime");
             const openTimeError = document.getElementById("openTimeError");
             const closeTimeError = document.getElementById("closeTimeError");
+            const price = document.getElementById("price");
+            const apiKey = document.getElementById("apiKey");
+            const clientId = document.getElementById("clientId");
+            const checksumKey = document.getElementById("checksumKey");
 
             function validateTime(input, minHour, maxHour, errorElement) {
                 const time = input.value;
@@ -238,6 +242,31 @@
                 }
             }
 
+            function validateRequiredFields() {
+                let isValid = true;
+
+                const priceValue = parseInt(price.value, 10);
+                if (isNaN(priceValue) || priceValue < 5000 || priceValue > 500000 || priceValue % 1000 !== 0) {
+                    alert('Giá phải là số nguyên, nằm trong khoảng từ 5000 đến 500000, và chia hết cho 1000');
+                    isValid = false;
+                }
+
+                if (!apiKey.value) {
+                    alert('API Key phải được điền vào');
+                    isValid = false;
+                }
+                if (!clientId.value) {
+                    alert('Client ID phải được điền vào');
+                    isValid = false;
+                }
+                if (!checksumKey.value) {
+                    alert('Checksum Key phải được điền vào');
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
             document.getElementById('serviceForm').addEventListener('submit', function (event) {
                 let isValid = true;
 
@@ -253,6 +282,11 @@
                 const checkboxes = document.querySelectorAll('input[name="SelectedBookingTypes"]:checked');
                 if (checkboxes.length === 0) {
                     alert('Chọn ít nhất 1 loại hình dịch vụ');
+                    isValid = false;
+                }
+
+                // Validate required fields
+                if (!validateRequiredFields()) {
                     isValid = false;
                 }
 
