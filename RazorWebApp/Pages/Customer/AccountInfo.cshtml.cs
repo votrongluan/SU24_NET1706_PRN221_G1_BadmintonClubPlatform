@@ -79,10 +79,11 @@ namespace WebAppRazor.Pages.Customer
 
             Account.Password = LoginedAccount.Password;
             Account.Username = LoginedAccount.Username;
-            Account.Fullname = LoginedAccount.Fullname;
             Account.Role = LoginedAccount.Role;
 
             _serviceManager.AccountService.UpdateAccount(Account);
+
+            UpdateAccountSession(Account);
 
             TabIndex = 1;
 

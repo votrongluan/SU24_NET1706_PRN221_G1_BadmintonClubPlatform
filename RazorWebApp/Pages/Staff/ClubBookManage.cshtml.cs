@@ -96,7 +96,7 @@ namespace WebAppRazor.Pages.Staff
         {
             var clubId = LoginedAccount.ClubManageId;
             var bookings = new List<BookingViewModel>();
-            var bookingEntities = serviceManager.BookingService.GetAllBookingsWithBookingDetails()
+            var bookingEntities = serviceManager.BookingService.GetAllBookings()
                 .Where(x => x.ClubId == clubId);
 
             if (!string.IsNullOrWhiteSpace(SearchTerm))
@@ -109,22 +109,28 @@ namespace WebAppRazor.Pages.Staff
 
             foreach (var booking in bookingEntities)
             {
+                List<DateOnly?> dateList = new();
+                var details = booking.BookingDetails.ElementAt(0);
+
                 foreach (var detail in booking.BookingDetails)
                 {
-                    bookings.Add(new BookingViewModel
-                    {
-                        Price = booking.TotalPrice ?? 0,
-                        BookingId = booking.BookingId,
-                        UserName = booking.User.Fullname,
-                        Service = booking.BookingType.Description,
-                        CourtId = detail.CourtId.ToString(),
-                        UserPhone = booking.User.UserPhone,
-                        BookDate = detail.BookDate?.ToDateTime(new TimeOnly(0, 0)),
-                        StartTime = detail.StartTime?.ToTimeSpan(),
-                        EndTime = detail.EndTime?.ToTimeSpan(),
-                        PaymentStatus = booking.PaymentStatus == true ? "Đã thanh toán" : "Chưa thanh toán"
-                    });
+                    dateList.Add(detail.BookDate);
                 }
+
+                bookings.Add(new BookingViewModel
+                {
+                    Price = booking.TotalPrice ?? 0,
+                    BookingId = booking.BookingId,
+                    UserName = booking.User.Fullname,
+                    Service = booking.BookingType.Description,
+                    CourtId = details.CourtId.ToString(),
+                    UserPhone = booking.User.UserPhone,
+                    BookDates = dateList,
+                    StartTime = details.StartTime?.ToTimeSpan(),
+                    EndTime = details.EndTime?.ToTimeSpan(),
+                    PaymentStatus = booking.PaymentStatus == true ? "Đã thanh toán" : "Chưa thanh toán"
+                });
+
             }
 
             return SortBookings(bookings);
@@ -139,9 +145,6 @@ namespace WebAppRazor.Pages.Staff
             {
                 case "BookingId":
                     bookings = SortOrder == "desc" ? bookings.OrderByDescending(x => x.BookingId).ToList() : bookings.OrderBy(x => x.BookingId).ToList();
-                    break;
-                case "BookDate":
-                    bookings = SortOrder == "desc" ? bookings.OrderByDescending(x => x.BookDate).ToList() : bookings.OrderBy(x => x.BookDate).ToList();
                     break;
                 case "StartTime":
                     bookings = SortOrder == "desc" ? bookings.OrderByDescending(x => x.StartTime).ToList() : bookings.OrderBy(x => x.StartTime).ToList();
@@ -227,7 +230,7 @@ namespace WebAppRazor.Pages.Staff
             public string Service { get; set; }
             public string CourtType { get; set; }
             public string UserPhone { get; set; }
-            public DateTime? BookDate { get; set; }
+            public List<DateOnly?> BookDates { get; set; }
             public TimeSpan? StartTime { get; set; }
             public TimeSpan? EndTime { get; set; }
             public string PaymentStatus { get; set; }
