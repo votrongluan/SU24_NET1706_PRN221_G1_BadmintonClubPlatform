@@ -143,12 +143,16 @@
                     </div>
                     <div class="mt-4">
                         <p>Giờ mở cửa</p>
-                        <input class="form-control" type="time" step="900" asp-for="ClubDto.OpenTime">
+                        <p>Lưu ý: giá trị cho phép: <strong>hh:00, hh:15, hh:30, hh:45</strong>; hh phải từ <strong>5 đến 10 am</strong>; <strong>không thể cập nhật</strong> lại khi đã đăng ký</p>
+                        <input id="openTime" class="form-control" type="time" step="900" min="05:00" max="10:00" asp-for="ClubDto.OpenTime">
+                        <span id="openTimeError" class="text-danger"></span>
                         <span asp-validation-for="ClubDto.OpenTime" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
                         <p>Giờ đóng cửa</p>
-                        <input class="form-control" type="time" step="900" asp-for="ClubDto.CloseTime">
+                        <p>Lưu ý: giá trị cho phép: <strong>hh:00, hh:15, hh:30, hh:45</strong>; hh phải từ <strong>5 đến 10 pm</strong>; <strong>không thể cập nhật</strong> lại khi đã đăng ký</p>
+                        <input id="closeTime" class="form-control" type="time" step="900" min="17:00" max="22:00" asp-for="ClubDto.CloseTime">
+                        <span id="closeTimeError" class="text-danger"></span>
                         <span asp-validation-for="ClubDto.CloseTime" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
@@ -209,12 +213,59 @@
     <script src="~/assets/js/Simple-Slider-swiper-bundle.min.js"></script>
     <script src="~/assets/js/Simple-Slider.js"></script>
     <script>
-        document.getElementById('serviceForm').addEventListener('submit', function (event) {
-            var checkboxes = document.querySelectorAll('input[name="SelectedBookingTypes"]:checked');
-            if (checkboxes.length === 0) {
-                event.preventDefault();
-                alert('Chọn ít nhất 1 loại hình dịch vụ');
+        document.addEventListener("DOMContentLoaded", function () {
+            const openTimeInput = document.getElementById("openTime");
+            const closeTimeInput = document.getElementById("closeTime");
+            const openTimeError = document.getElementById("openTimeError");
+            const closeTimeError = document.getElementById("closeTimeError");
+
+            function validateTime(input, minHour, maxHour, errorElement) {
+                const time = input.value;
+                const [hour, minute] = time.split(":").map(Number);
+
+                if (hour < minHour || hour > maxHour || ![0, 15, 30, 45].includes(minute)) {
+                    errorElement.textContent = `Giờ không hợp lệ. Phải từ ${minHour}:00 đến ${maxHour}:00 và phút phải là 0, 15, 30, 45.`;
+                    return false;
+                } else {
+                    errorElement.textContent = "";
+                    return true;
+                }
             }
+
+            function checkAndDisableInput(input) {
+                if (input.value) {
+                    input.disabled = true;
+                }
+            }
+
+            document.getElementById('serviceForm').addEventListener('submit', function (event) {
+                let isValid = true;
+
+                // Validate open and close times
+                if (!validateTime(openTimeInput, 5, 10, openTimeError)) {
+                    isValid = false;
+                }
+                if (!validateTime(closeTimeInput, 17, 22, closeTimeError)) {
+                    isValid = false;
+                }
+
+                // Validate checkboxes
+                const checkboxes = document.querySelectorAll('input[name="SelectedBookingTypes"]:checked');
+                if (checkboxes.length === 0) {
+                    alert('Chọn ít nhất 1 loại hình dịch vụ');
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    event.preventDefault();
+                }
+            });
+
+            // Initial validation
+            validateTime(openTimeInput, 5, 10, openTimeError);
+            validateTime(closeTimeInput, 17, 22, closeTimeError);
+            checkAndDisableInput(openTimeInput);
+            checkAndDisableInput(closeTimeInput);
         });
 
         function fetchDistricts() {
