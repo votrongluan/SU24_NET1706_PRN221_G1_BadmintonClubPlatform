@@ -144,14 +144,14 @@
                     <div class="mt-4">
                         <p>Giờ mở cửa</p>
                         <p>Lưu ý: giá trị cho phép: <strong>hh:00, hh:15, hh:30, hh:45</strong>; hh phải từ <strong>5 đến 10 am</strong>; <strong>không thể cập nhật</strong> lại khi đã đăng ký</p>
-                        <input id="openTime" class="form-control" type="time" step="900" min="05:00" max="10:00" asp-for="ClubDto.OpenTime">
+                        <input id="openTime" class="form-control" type="time" asp-for="ClubDto.OpenTime">
                         <span id="openTimeError" class="text-danger"></span>
                         <span asp-validation-for="ClubDto.OpenTime" class="text-danger"></span>
                     </div>
                     <div class="mt-4">
                         <p>Giờ đóng cửa</p>
                         <p>Lưu ý: giá trị cho phép: <strong>hh:00, hh:15, hh:30, hh:45</strong>; hh phải từ <strong>5 đến 10 pm</strong>; <strong>không thể cập nhật</strong> lại khi đã đăng ký</p>
-                        <input id="closeTime" class="form-control" type="time" step="900" min="17:00" max="22:00" asp-for="ClubDto.CloseTime">
+                        <input id="closeTime" class="form-control" type="time" asp-for="ClubDto.CloseTime">
                         <span id="closeTimeError" class="text-danger"></span>
                         <span asp-validation-for="ClubDto.CloseTime" class="text-danger"></span>
                     </div>
@@ -266,6 +266,14 @@
 
                 return isValid;
             }
+
+            openTimeInput.addEventListener("change", function () {
+                validateTime(openTimeInput, 5, 10, openTimeError);
+            });
+
+            closeTimeInput.addEventListener("change", function () {
+                validateTime(closeTimeInput, 17, 22, closeTimeError);
+            });
 
             document.getElementById('serviceForm').addEventListener('submit', function (event) {
                 let isValid = true;
