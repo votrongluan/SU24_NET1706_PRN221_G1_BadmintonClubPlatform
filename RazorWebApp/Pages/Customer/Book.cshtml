@@ -68,18 +68,6 @@
     <main class="bg-light" style="padding-bottom: 2rem;min-height: 80vh;">
         <div class="container bg-light">
             <div class="d-flex justify-content-between align-content-center">
-                @* CHECK IF MESSAGE NOT NULL *@
-                @if (!string.IsNullOrEmpty(Model.Message))
-                {
-                    var messageClass = Model.Message.StartsWith(Constants.MessagePrefix.ERROR.ToString()) ? "alert-danger" :
-                    Model.Message.StartsWith(Constants.MessagePrefix.SUCCESS.ToString()) ? "alert-success" :
-                    Model.Message.StartsWith(Constants.MessagePrefix.WARNING.ToString()) ? "alert-warning" :
-                    "alert-info";
-
-                    <div class="alert @messageClass" role="alert">
-                        <p class="m-0 p-1">@Model.Message.Substring(1)</p>
-                    </div>
-                }
                 <section style="width: 30%">
                     <div>
                         <h3 class="mt-4 fs-5">Khung giờ và giá</h3>
@@ -123,7 +111,6 @@
                     <div>
                         <h3 class="mt-4 fs-5">Lưu ý:</h3>
                         <div>
-                            <p><strong>Ví dụ:</strong></p>
                             <ul>
                                 <li>Câu lạc bộ A có giá mặc định là 10.000 đồng/giờ.</li>
                                 <li>Giá cho khung giờ từ 17h đến 22h là 15.000 đồng/giờ.</li>
@@ -140,6 +127,19 @@
 
                 <section style="width: 60%">
                     <h2 class="fs-4 text-center">Đặt sân</h2>
+                    
+                    @* CHECK IF MESSAGE NOT NULL *@
+                    @if (!string.IsNullOrEmpty(Model.Message))
+                    {
+                        var messageClass = Model.Message.StartsWith(Constants.MessagePrefix.ERROR.ToString()) ? "alert-danger" :
+                            Model.Message.StartsWith(Constants.MessagePrefix.SUCCESS.ToString()) ? "alert-success" :
+                            Model.Message.StartsWith(Constants.MessagePrefix.WARNING.ToString()) ? "alert-warning" :
+                            "alert-info";
+
+                        <div class="alert @messageClass" role="alert">
+                            <p class="m-0 p-1">@Model.Message.Substring(1)</p>
+                        </div>
+                    }
 
                     <form method="post">
                         <input type="hidden" name="id" value="@Model.ClubId" />
@@ -179,8 +179,9 @@
                             <p style="margin-top: 8px;" class="mt-4">Giờ đặt sân</p>
                             
                             <p>
-                                Lưu ý: Câu lạc bộ hoạt động từ <strong>@Model.BookClub.OpenTime.Value.ToString("HH:mm")</strong> giờ đến
-                                <strong>@Model.BookClub.CloseTime.Value.ToString("HH:mm")</strong> giờ. Nếu đặt giờ lố hệ thống sẽ báo lỗi
+                                Lưu ý: Câu lạc bộ hoạt động từ <strong>@Model.BookClub.OpenTime.Value.ToString("HH:mm") giờ</strong> đến
+                                <strong>@Model.BookClub.CloseTime.Value.ToString("HH:mm") giờ</strong>. Giờ có thể nhập được là từ <strong>@Model.MinHour đến @Model.MaxHour</strong>.
+                                Nếu đặt giờ lố hệ thống sẽ báo lỗi
                             </p>
 
                             <div class="d-flex align-items-center">

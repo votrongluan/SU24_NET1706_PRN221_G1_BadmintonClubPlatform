@@ -62,6 +62,19 @@ namespace WebAppRazor.Pages.Customer
                 Message = TempData["Message"].ToString();
             }
 
+            // Validate club id is active
+            //-------------------------------
+            int validateClubId = (int)id;
+
+            var isActiveClubById = _service.ClubService.GetDeActiveClubById(validateClubId);
+
+            if (isActiveClubById != null)
+            {
+                return RedirectToPage("/NotFound");
+            }
+            //-------------------------------
+            // End of validate club is active
+
             ClubId = (int)id;
             InitializeData();
 

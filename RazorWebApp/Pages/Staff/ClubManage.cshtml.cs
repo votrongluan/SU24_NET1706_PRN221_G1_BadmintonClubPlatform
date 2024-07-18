@@ -72,7 +72,7 @@ namespace WebAppRazor.Pages.Staff
                 Value = bt.BookingTypeId.ToString(),
                 Text = bt.Description
             }).Where(e => e.Value != ((int)BookingTypeEnum.LichThiDau).ToString()).ToList();
-            
+
 
             if (LoginedAccount.ClubManageId != null)
             {
@@ -140,9 +140,11 @@ namespace WebAppRazor.Pages.Staff
 
                 ClubDto.TotalStar = existingClub.TotalStar;
                 ClubDto.TotalReview = existingClub.TotalReview;
+                ClubDto.OpenTime = existingClub.OpenTime;
+                ClubDto.CloseTime = existingClub.CloseTime;
                 ClubDto.Status = true;
 
-                
+
                 var club = _serviceManager.ClubService.ToUpdateEntity(ClubDto);
 
                 _serviceManager.ClubService.UpdateClub(club);
