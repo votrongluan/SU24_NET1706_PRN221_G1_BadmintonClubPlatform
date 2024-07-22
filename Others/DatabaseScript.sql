@@ -292,10 +292,10 @@ VALUES
 -- Insert data into Club table
 INSERT INTO Club (ClubName, Address, DistrictId, FanpageLink, AvatarLink, OpenTime, CloseTime, ClubEmail, ClubPhone, ClientId, ApiKey, ChecksumKey, Status, TotalStar, TotalReview, DefaultPricePerHour)
 VALUES
-(N'Xuân Đông', N'23 đường Nguyễn Bình', 12, 'https://facebook.com/xuandong', 'https://i.pinimg.com/1200x/70/bb/1e/70bb1e22f39392a3c18f983749f79409.jpg', '07:00:00.0000000', '22:00:00.0000000', 'xuandong@gmail.com', '0944441231', 'e3d6d3ea-234b-450f-b6a7-bd50cd5d78d8', '39491ec9-d79e-466a-bd14-bf206c564492', '30eb12ef50dce4a960b7f9bfb18fc180f3d8ce3f12ccc3b9c4aabd0c0b2ab738', NULL, 0, 0, 5000),
-(N'Thu Hạ', N'25 đường Nguyễn Trãi', 14, 'https://facebook.com/thuha', 'https://i.pinimg.com/1200x/27/02/0e/27020ea41f73d5078ff4f0b71fcb04d5.jpg', '07:00:00.0000000', '22:00:00.0000000', 'xuandong@gmail.com', '0944441232', 'e3d6d3ea-234b-450f-b6a7-bd50cd5d78d8', '39491ec9-d79e-466a-bd14-bf206c564492', '30eb12ef50dce4a960b7f9bfb18fc180f3d8ce3f12ccc3b9c4aabd0c0b2ab738', NULL, 0, 0, 5000),
-(N'Hạ Chiu', N'27 đường Ngũ Lão', 22, 'https://facebook.com/hachiu', 'https://i.pinimg.com/1200x/e0/e6/30/e0e630de917d41d1952b8c446832ca36.jpg', '07:00:00.0000000', '22:00:00.0000000', 'xuandong@gmail.com', '0944441233', 'e3d6d3ea-234b-450f-b6a7-bd50cd5d78d8', '39491ec9-d79e-466a-bd14-bf206c564492', '30eb12ef50dce4a960b7f9bfb18fc180f3d8ce3f12ccc3b9c4aabd0c0b2ab738', NULL, 0, 0, 5000),
-(N'Đông Thu', N'84 đường Nguyễn Xỉn', 26, 'https://facebook.com/dongthu', 'https://i.pinimg.com/1200x/ad/e2/f0/ade2f0f4e6eda0ecc53eaf8bc31c3e86.jpg', '07:00:00.0000000', '22:00:00.0000000', 'xuandong@gmail.com', '0944441234', 'e3d6d3ea-234b-450f-b6a7-bd50cd5d78d8', '39491ec9-d79e-466a-bd14-bf206c564492', '30eb12ef50dce4a960b7f9bfb18fc180f3d8ce3f12ccc3b9c4aabd0c0b2ab738', NULL, 0, 0, 5000);
+(N'Xuân Đông', N'23 đường Nguyễn Bình', 12, 'https://facebook.com/xuandong', 'https://i.pinimg.com/1200x/70/bb/1e/70bb1e22f39392a3c18f983749f79409.jpg', '07:00:00.0000000', '22:00:00.0000000', 'xuandong@gmail.com', '0944441231', 'e3d6d3ea-234b-450f-b6a7-bd50cd5d78d8', '39491ec9-d79e-466a-bd14-bf206c564492', '30eb12ef50dce4a960b7f9bfb18fc180f3d8ce3f12ccc3b9c4aabd0c0b2ab738', 1, 0, 0, 5000),
+(N'Thu Hạ', N'25 đường Nguyễn Trãi', 14, 'https://facebook.com/thuha', 'https://i.pinimg.com/1200x/27/02/0e/27020ea41f73d5078ff4f0b71fcb04d5.jpg', '07:00:00.0000000', '22:00:00.0000000', 'xuandong@gmail.com', '0944441232', 'e3d6d3ea-234b-450f-b6a7-bd50cd5d78d8', '39491ec9-d79e-466a-bd14-bf206c564492', '30eb12ef50dce4a960b7f9bfb18fc180f3d8ce3f12ccc3b9c4aabd0c0b2ab738', 1, 0, 0, 5000),
+(N'Hạ Chiu', N'27 đường Ngũ Lão', 22, 'https://facebook.com/hachiu', 'https://i.pinimg.com/1200x/e0/e6/30/e0e630de917d41d1952b8c446832ca36.jpg', '07:00:00.0000000', '22:00:00.0000000', 'xuandong@gmail.com', '0944441233', 'e3d6d3ea-234b-450f-b6a7-bd50cd5d78d8', '39491ec9-d79e-466a-bd14-bf206c564492', '30eb12ef50dce4a960b7f9bfb18fc180f3d8ce3f12ccc3b9c4aabd0c0b2ab738', 1, 0, 0, 5000),
+(N'Đông Thu', N'84 đường Nguyễn Xỉn', 26, 'https://facebook.com/dongthu', 'https://i.pinimg.com/1200x/ad/e2/f0/ade2f0f4e6eda0ecc53eaf8bc31c3e86.jpg', '07:00:00.0000000', '22:00:00.0000000', 'xuandong@gmail.com', '0944441234', 'e3d6d3ea-234b-450f-b6a7-bd50cd5d78d8', '39491ec9-d79e-466a-bd14-bf206c564492', '30eb12ef50dce4a960b7f9bfb18fc180f3d8ce3f12ccc3b9c4aabd0c0b2ab738', 1, 0, 0, 5000);
 
 -- Insert data into AvailableBookingType table
 INSERT INTO AvailableBookingType (ClubId, BookingTypeId)
@@ -337,9 +337,9 @@ VALUES
 -- Insert data into Users table
 INSERT INTO Account (Username, Password, Fullname, Email, UserPhone, AvatarLink, Role, ClubManageId)
 VALUES
-('admin', '1', N'Anh A', NULL, NULL, 'https://i.pinimg.com/1200x/2d/2a/bc/2d2abcceb7d190475adb3549f8f8d91e.jpg', 'Admin', NULL),
-('owner1', '1', N'Chủ sân 1', NULL, NULL, 'https://i.pinimg.com/1200x/2d/2a/bc/2d2abcceb7d190475adb3549f8f8d91e.jpg', 'Staff', 1),
-('user', '1', N'Luân Võ Trọng', 'trongluan115@gmail.com', '0971781333', 'https://i.pinimg.com/1200x/2d/2a/bc/2d2abcceb7d190475adb3549f8f8d91e.jpg', 'Customer', NULL),
-('owner2', '1', N'Chủ sân 2', NULL, NULL, 'https://i.pinimg.com/1200x/2d/2a/bc/2d2abcceb7d190475adb3549f8f8d91e.jpg', 'Staff', 2),
-('owner3', '1', N'Chủ sân 3', NULL, NULL, 'https://i.pinimg.com/1200x/2d/2a/bc/2d2abcceb7d190475adb3549f8f8d91e.jpg', 'Staff', 3),
-('owner4', '1', N'Chủ sân 4', NULL, NULL, 'https://i.pinimg.com/1200x/2d/2a/bc/2d2abcceb7d190475adb3549f8f8d91e.jpg', 'Staff', 4);
+('admin', '1', N'Quản Thống Trị', 'admin@bacol.com', '0971781331', 'https://i.pinimg.com/1200x/2d/2a/bc/2d2abcceb7d190475adb3549f8f8d91e.jpg', 'Admin', NULL),
+('owner1', '1', N'Nguyễn Sân Nhất', 'owner1@bacol.com', '0971781332', 'https://i.pinimg.com/1200x/2d/2a/bc/2d2abcceb7d190475adb3549f8f8d91e.jpg', 'Staff', 1),
+('user', '1', N'Võ Trọng Luân', 'trongluan115@gmail.com', '0971781333', 'https://i.pinimg.com/1200x/2d/2a/bc/2d2abcceb7d190475adb3549f8f8d91e.jpg', 'Customer', NULL),
+('owner2', '1', N'Nguyễn Sân Nhì', 'owner2@bacol.com', '0971781334', 'https://i.pinimg.com/1200x/2d/2a/bc/2d2abcceb7d190475adb3549f8f8d91e.jpg', 'Staff', 2),
+('owner3', '1', N'Nguyễn Sân Tam', 'owner3@bacol.com', '0971781335', 'https://i.pinimg.com/1200x/2d/2a/bc/2d2abcceb7d190475adb3549f8f8d91e.jpg', 'Staff', 3),
+('owner4', '1', N'Nguyễn Sân Tứ', 'owner4@bacol.com', '0971781336', 'https://i.pinimg.com/1200x/2d/2a/bc/2d2abcceb7d190475adb3549f8f8d91e.jpg', 'Staff', 4);
