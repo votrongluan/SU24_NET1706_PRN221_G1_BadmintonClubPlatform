@@ -7,14 +7,21 @@ namespace WebAppRazor.Pages.Admin
     {
         public IActionResult OnGet()
         {
-            LoadAccountFromSession();
-            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Admin.ToString());
+            try
+            {
+                LoadAccountFromSession();
+                var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Admin.ToString());
 
-            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+                if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
 
-            // Code go from here
+                // Code go from here
 
-            return Page();
+                return Page();
+            }
+            catch (Exception)
+            {
+                return RedirectToPage("/Error");
+            }
         }
     }
 }

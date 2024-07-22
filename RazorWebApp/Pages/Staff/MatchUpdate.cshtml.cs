@@ -8,27 +8,29 @@ using Services.IService;
 using WebAppRazor.Constants;
 using WebAppRazor.Mappers;
 
-namespace WebAppRazor.Pages.Staff
+namespace WebAppRazor.Pages.Staff;
+
+public class MatchUpdateModel : AuthorPageServiceModel
 {
-    public class MatchUpdateModel : AuthorPageServiceModel
+    private readonly IServiceManager _service;
+    [BindProperty] public MatchCreateDto UpdatedMatch { get; set; } = new();
+    public Match Match { get; set; }
+    public List<CourtType> CourtTypes { get; set; }
+
+    private void InitializeData(int id)
     {
-        private readonly IServiceManager _service;
-        [BindProperty] public MatchCreateDto UpdatedMatch { get; set; } = new();
-        public Match Match { get; set; }
-        public List<CourtType> CourtTypes { get; set; }
+        Match = _service.MatchService.GetMatchById(id);
+        CourtTypes = _service.CourtTypeService.GetAllCourtTypes();
+    }
 
-        private void InitializeData(int id)
-        {
-            Match = _service.MatchService.GetMatchById(id);
-            CourtTypes = _service.CourtTypeService.GetAllCourtTypes();
-        }
+    public MatchUpdateModel(IServiceManager service)
+    {
+        _service = service;
+    }
 
-        public MatchUpdateModel(IServiceManager service)
-        {
-            _service = service;
-        }
-
-        public IActionResult OnGet(int? id)
+    public IActionResult OnGet(int? id)
+    {
+        try
         {
             // Authorize
             LoadAccountFromSession();
@@ -73,8 +75,15 @@ namespace WebAppRazor.Pages.Staff
 
             return Page();
         }
+        catch (Exception)
+        {
+            return RedirectToPage("/Error");
+        }
+    }
 
-        public IActionResult OnPost(int id, int bookingId)
+    public IActionResult OnPost(int id, int bookingId)
+    {
+        try
         {
             LoadAccountFromSession();
 
@@ -132,6 +141,10 @@ namespace WebAppRazor.Pages.Staff
                 TempData["Message"] = $"{MessagePrefix.ERROR}Lỗi từ phía hệ thống";
                 return RedirectToPage("MatchManage");
             }
+        }
+        catch (Exception)
+        {
+            return RedirectToPage("/Error");
         }
     }
 }

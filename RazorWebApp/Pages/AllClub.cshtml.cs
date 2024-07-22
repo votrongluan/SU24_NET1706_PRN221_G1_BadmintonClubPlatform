@@ -85,21 +85,28 @@ namespace WebAppRazor.Pages
 
         public IActionResult OnGet(int cityId, int districtId, string searchString, string searchProperty, string sortProperty, int sortOrder)
         {
-            LoadAccountFromSession();
-
-            if (LoginedAccount != null)
+            try
             {
-                var role = (string)LoginedAccount.Role;
-                if (role == AccountRoleEnum.Admin.ToString()) return RedirectToPage("/Admin/Index");
-                if (role == AccountRoleEnum.Staff.ToString()) return RedirectToPage("/Staff/Index");
+                LoadAccountFromSession();
+
+                if (LoginedAccount != null)
+                {
+                    var role = (string)LoginedAccount.Role;
+                    if (role == AccountRoleEnum.Admin.ToString()) return RedirectToPage("/Admin/Index");
+                    if (role == AccountRoleEnum.Staff.ToString()) return RedirectToPage("/Staff/Index");
+                }
+
+                InitializeData();
+
+                int page = Convert.ToInt32(Request.Query["page"]);
+                Paging(searchString, searchProperty, sortProperty, sortOrder, page, cityId: cityId, districtId: districtId);
+
+                return Page();
             }
-
-            InitializeData();
-
-            int page = Convert.ToInt32(Request.Query["page"]);
-            Paging(searchString, searchProperty, sortProperty, sortOrder, page, cityId: cityId, districtId: districtId);
-
-            return Page();
+            catch (Exception)
+            {
+                return RedirectToPage("/Error");
+            }
         }
 
         public JsonResult OnGetDistrictsByCityId(int cityId)

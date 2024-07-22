@@ -81,69 +81,83 @@ namespace WebAppRazor.Pages.Admin
 
         public IActionResult OnGet(string searchString, string searchProperty, string sortProperty, int sortOrder)
         {
-            // Authorize
-            LoadAccountFromSession();
-            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Admin.ToString());
-
-            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
-
-            // Set and clear the message
-            if (!string.IsNullOrWhiteSpace(Message))
+            try
             {
-                Message = string.Empty;
-            }
+                // Authorize
+                LoadAccountFromSession();
+                var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Admin.ToString());
 
-            if (TempData.ContainsKey("Message"))
+                if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+
+                // Set and clear the message
+                if (!string.IsNullOrWhiteSpace(Message))
+                {
+                    Message = string.Empty;
+                }
+
+                if (TempData.ContainsKey("Message"))
+                {
+                    Message = TempData["Message"].ToString();
+                }
+
+                InitializeData();
+
+                int page = Convert.ToInt32(Request.Query["page"]);
+                Paging(searchString, searchProperty, sortProperty, sortOrder, page);
+
+                return Page();
+            }
+            catch (Exception)
             {
-                Message = TempData["Message"].ToString();
+                return RedirectToPage("/Error");
             }
-
-            InitializeData();
-
-            int page = Convert.ToInt32(Request.Query["page"]);
-            Paging(searchString, searchProperty, sortProperty, sortOrder, page);
-
-            return Page();
         }
 
         public IActionResult OnPost()
         {
-            Message = string.Empty;
-
-            if (!ModelState.IsValid)
-            {
-                // Build the error message from ModelState
-                var errorMessages = ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage);
-
-                var combinedErrorMessage = string.Join("\n", errorMessages);
-
-                // Set the message with the error prefix and combined error messages
-                TempData["Message"] = $"{MessagePrefix.ERROR} Dữ liệu bạn nhập có lỗi:\n{combinedErrorMessage}";
-                return RedirectToPage("AllClubManage");
-            }
-
             try
             {
-                var result = _service.ClubService.CheckPhoneExisted(CreatedClub.ClubPhone);
-                if (result == false)
-                {
-                    _service.ClubService.AddClub(CreatedClub.ToClub());
+                Message = string.Empty;
 
-                    TempData["Message"] = $"{MessagePrefix.SUCCESS}Tạo mới câu lạc bộ thành công";
+                if (!ModelState.IsValid)
+                {
+                    // Build the error message from ModelState
+                    var errorMessages = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage);
+
+                    var combinedErrorMessage = string.Join("\n", errorMessages);
+
+                    // Set the message with the error prefix and combined error messages
+                    TempData["Message"] = $"{MessagePrefix.ERROR} Dữ liệu bạn nhập có lỗi:\n{combinedErrorMessage}";
                     return RedirectToPage("AllClubManage");
                 }
-                else
+
+                try
                 {
-                    TempData["Message"] = $"{MessagePrefix.ERROR}Số điện thoại đã tồn tại trong hệ thống";
+                    var result = _service.ClubService.CheckPhoneExisted(CreatedClub.ClubPhone);
+                    if (result == false)
+                    {
+                        _service.ClubService.AddClub(CreatedClub.ToClub());
+
+                        TempData["Message"] = $"{MessagePrefix.SUCCESS}Tạo mới câu lạc bộ thành công";
+                        return RedirectToPage("AllClubManage");
+                    }
+                    else
+                    {
+                        TempData["Message"] = $"{MessagePrefix.ERROR}Số điện thoại đã tồn tại trong hệ thống";
+                        return RedirectToPage("AllClubManage");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    TempData["Message"] = $"{MessagePrefix.ERROR}Câu lạc bộ không được tạo do lỗi hệ thống vui lòng liên hệ đội ngũ hỗ trợ";
                     return RedirectToPage("AllClubManage");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                TempData["Message"] = $"{MessagePrefix.ERROR}Câu lạc bộ không được tạo do lỗi hệ thống vui lòng liên hệ đội ngũ hỗ trợ";
-                return RedirectToPage("AllClubManage");
+                return RedirectToPage("/Error");
             }
         }
 

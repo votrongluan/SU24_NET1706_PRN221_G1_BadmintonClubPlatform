@@ -75,44 +75,57 @@ namespace WebAppRazor.Pages.Admin
 
         public IActionResult OnGet(string searchString, string searchProperty, string sortProperty, int sortOrder)
         {
-            LoadAccountFromSession();
-            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Admin.ToString());
-
-            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
-
-            // Code go from here
-            InitialData();
-
-            int page = Convert.ToInt32(Request.Query["page"]);
-            Paging(searchString, searchProperty, sortProperty, sortOrder, page);
-
-            return Page();
-        }
-
-        // POST FOR ADD ACCOUNT
-        public IActionResult OnPostAddAccount()
-        {
-            InitialData();
-            if (!ModelState.IsValid)
+            try
             {
+                LoadAccountFromSession();
+                var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Admin.ToString());
+
+                if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+
+                // Code go from here
+                InitialData();
+
+                int page = Convert.ToInt32(Request.Query["page"]);
+                Paging(searchString, searchProperty, sortProperty, sortOrder, page);
+
                 return Page();
             }
+            catch (Exception)
+            {
+                return RedirectToPage("/Error");
+            }
+        }
 
-            List<bool> checkingCondition = new List<bool>
+        public IActionResult OnPostAddAccount()
+        {
+            try
+            {
+                InitialData();
+                if (!ModelState.IsValid)
+                {
+                    return Page();
+                }
+
+                List<bool> checkingCondition = new List<bool>
                 {
                     _service.AccountService.CheckUsernameExisted(AddAccount.Username),
                 };
 
-            if (checkingCondition.Any(c => c == true))
-            {
-                ErrorMessage.Add("Tên tài khoản đã tồn tại");
-                ShowAddAccountModal = true;
-                return Page();
-            }
-            _service.AccountService.AddStaffAccount(AddAccount.ToAccount());
-            TempData["SuccessMessage"] = "Thêm tài khoản thành công!";
+                if (checkingCondition.Any(c => c == true))
+                {
+                    ErrorMessage.Add("Tên tài khoản đã tồn tại");
+                    ShowAddAccountModal = true;
+                    return Page();
+                }
+                _service.AccountService.AddStaffAccount(AddAccount.ToAccount());
+                TempData["SuccessMessage"] = "Thêm tài khoản thành công!";
 
-            return RedirectToPage("./AccountManage");
+                return RedirectToPage("./AccountManage");
+            }
+            catch (Exception)
+            {
+                return RedirectToPage("/Error");
+            }
         }
 
         public void InitialData()

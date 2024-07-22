@@ -82,61 +82,75 @@ namespace WebAppRazor.Pages.Admin
 
         public IActionResult OnGet(string searchString, string searchProperty, string sortProperty, int sortOrder)
         {
-            // Authorize
-            LoadAccountFromSession();
-            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Admin.ToString());
-
-            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
-
-            // Set and clear the message
-            if (!string.IsNullOrWhiteSpace(Message))
+            try
             {
-                Message = string.Empty;
-            }
+                // Authorize
+                LoadAccountFromSession();
+                var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Admin.ToString());
 
-            if (TempData.ContainsKey("Message"))
+                if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+
+                // Set and clear the message
+                if (!string.IsNullOrWhiteSpace(Message))
+                {
+                    Message = string.Empty;
+                }
+
+                if (TempData.ContainsKey("Message"))
+                {
+                    Message = TempData["Message"].ToString();
+                }
+
+                InitializeData();
+
+                int page = Convert.ToInt32(Request.Query["page"]);
+                Paging(searchString, searchProperty, sortProperty, sortOrder, page);
+
+                return Page();
+            }
+            catch (Exception)
             {
-                Message = TempData["Message"].ToString();
+                return RedirectToPage("/Error");
             }
-
-            InitializeData();
-
-            int page = Convert.ToInt32(Request.Query["page"]);
-            Paging(searchString, searchProperty, sortProperty, sortOrder, page);
-
-            return Page();
         }
 
         public IActionResult OnGetActive(int id)
         {
-            // Authorize
-            LoadAccountFromSession();
-            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Admin.ToString());
-
-            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
-
             try
             {
-                var existingClub = _service.ClubService.GetDeActiveClubById(id);
+                // Authorize
+                LoadAccountFromSession();
+                var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Admin.ToString());
 
-                if (existingClub == null)
+                if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+
+                try
                 {
-                    TempData["Message"] = $"{MessagePrefix.ERROR}Không tìm thấy câu lạc bộ với mã {id}";
+                    var existingClub = _service.ClubService.GetDeActiveClubById(id);
+
+                    if (existingClub == null)
+                    {
+                        TempData["Message"] = $"{MessagePrefix.ERROR}Không tìm thấy câu lạc bộ với mã {id}";
+                        return RedirectToPage("DeactiveClubs");
+                    }
+
+                    existingClub.Status = true;
+
+                    _service.ClubService.UpdateClub(existingClub);
+
+                    TempData["Message"] = $"{MessagePrefix.SUCCESS}Câu lạc bộ với mã {id} được kích hoạt thành công";
                     return RedirectToPage("DeactiveClubs");
                 }
-
-                existingClub.Status = true;
-
-                _service.ClubService.UpdateClub(existingClub);
-
-                TempData["Message"] = $"{MessagePrefix.SUCCESS}Câu lạc bộ với mã {id} được kích hoạt thành công";
-                return RedirectToPage("DeactiveClubs");
+                catch (Exception)
+                {
+                    TempData["Message"] =
+                        $"{MessagePrefix.ERROR}Lỗi từ phía server vui lòng liên hệ đội ngũ phát triển để được hỗ trợ";
+                    return RedirectToPage("DeactiveClubs");
+                }
             }
             catch (Exception)
             {
-                TempData["Message"] =
-                    $"{MessagePrefix.ERROR}Lỗi từ phía server vui lòng liên hệ đội ngũ phát triển để được hỗ trợ";
-                return RedirectToPage("DeactiveClubs");
+                return RedirectToPage("/Error");
             }
         }
     }

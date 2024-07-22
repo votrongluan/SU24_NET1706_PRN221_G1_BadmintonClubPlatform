@@ -7,22 +7,24 @@ using Services.Service;
 using WebAppRazor.Constants;
 using WebAppRazor.Mappers;
 
-namespace WebAppRazor.Pages.Staff
+namespace WebAppRazor.Pages.Staff;
+
+public class CourtDeleteModel : AuthorPageServiceModel
 {
-    public class CourtDeleteModel : AuthorPageServiceModel
+    private readonly IServiceManager _service;
+    public Court DeleteCourt { get; set; }
+    public ResponseCourtDto CourtDto { get; set; }
+    public List<CourtType> CourtTypes { get; set; }
+    public List<Club> Clubs { get; set; }
+
+    public CourtDeleteModel(IServiceManager service)
     {
-        private readonly IServiceManager _service;
-        public Court DeleteCourt { get; set; }
-        public ResponseCourtDto CourtDto { get; set; }
-        public List<CourtType> CourtTypes { get; set; }
-        public List<Club> Clubs { get; set; }
+        _service = service;
+    }
 
-        public CourtDeleteModel(IServiceManager service)
-        {
-            _service = service;
-        }
-
-        public IActionResult OnGet(int? id)
+    public IActionResult OnGet(int? id)
+    {
+        try
         {
             LoadAccountFromSession();
             var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Staff.ToString());
@@ -73,21 +75,25 @@ namespace WebAppRazor.Pages.Staff
 
             return Page();
         }
-
-        public IActionResult OnPost(int courtId)
+        catch (Exception)
         {
-            try
-            {
-                _service.CourtService.DeleteCourt(courtId);
+            return RedirectToPage("/Error");
+        }
+    }
 
-                TempData["Message"] = $"{MessagePrefix.SUCCESS}Xóa câu lạc bộ với mã {courtId} thành công";
-                return RedirectToPage("CourtManage");
-            }
-            catch (Exception)
-            {
-                TempData["Message"] = $"{MessagePrefix.ERROR}Xóa câu lạc bộ thất bại vui lòng liên hệ đội ngũ để được hỗ trợ";
-                return RedirectToPage("CourtManage");
-            }
+    public IActionResult OnPost(int courtId)
+    {
+        try
+        {
+            _service.CourtService.DeleteCourt(courtId);
+
+            TempData["Message"] = $"{MessagePrefix.SUCCESS}Xóa câu lạc bộ với mã {courtId} thành công";
+            return RedirectToPage("CourtManage");
+        }
+        catch (Exception)
+        {
+            TempData["Message"] = $"{MessagePrefix.ERROR}Xóa câu lạc bộ thất bại vui lòng liên hệ đội ngũ để được hỗ trợ";
+            return RedirectToPage("CourtManage");
         }
     }
 }
