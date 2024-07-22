@@ -127,7 +127,9 @@ namespace WebAppRazor.Pages.Customer
 
                         foreach (var detail in bookingDetail)
                         {
-                            if (BookingRequestDto.StartTime < detail.EndTime && detail.EndTime <= BookingRequestDto.EndTime)
+                            if ((BookingRequestDto.StartTime < detail.EndTime && BookingRequestDto.EndTime > detail.StartTime) ||
+                                (BookingRequestDto.EndTime > detail.StartTime && BookingRequestDto.EndTime <= detail.EndTime) ||
+                                (BookingRequestDto.StartTime <= detail.StartTime && BookingRequestDto.EndTime >= detail.EndTime))
                             {
                                 TempData["Message"] = $"{MessagePrefix.ERROR}Đặt thất bại, bạn đã đặt lịch cho ngày hôm đó với giờ trùng nhau";
                                 return RedirectToPage("Book", new { id });
