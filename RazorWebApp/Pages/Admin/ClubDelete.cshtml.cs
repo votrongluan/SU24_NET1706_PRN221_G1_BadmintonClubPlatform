@@ -22,45 +22,59 @@ namespace WebAppRazor.Pages.Admin
 
         public IActionResult OnGet(int? id)
         {
-            LoadAccountFromSession();
-            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Admin.ToString());
-
-            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
-
-            if (id != null)
+            try
             {
-                DeleteClub = _service.ClubService.GetClubById(id ?? -1);
+                LoadAccountFromSession();
+                var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Admin.ToString());
+
+                if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+
+                if (id != null)
+                {
+                    DeleteClub = _service.ClubService.GetClubById(id ?? -1);
+                }
+                else
+                {
+                    TempData["Message"] = $"{MessagePrefix.ERROR}Không tìm thấy câu lạc bộ với id cần xóa";
+                    return RedirectToPage("AllClubManage");
+                }
+
+                if (DeleteClub == null)
+                {
+                    TempData["Message"] = $"{MessagePrefix.ERROR}Không tìm thấy câu lạc bộ với id cần xóa";
+                    return RedirectToPage("AllClubManage");
+                }
+
+                ClubDto = DeleteClub.ToResponseClubDto();
+
+                return Page();
             }
-            else
+            catch (Exception)
             {
-                TempData["Message"] = $"{MessagePrefix.ERROR}Không tìm thấy câu lạc bộ với id cần xóa";
-                return RedirectToPage("AllClubManage");
+                return RedirectToPage("/Error");
             }
-
-            if (DeleteClub == null)
-            {
-                TempData["Message"] = $"{MessagePrefix.ERROR}Không tìm thấy câu lạc bộ với id cần xóa";
-                return RedirectToPage("AllClubManage");
-            }
-
-            ClubDto = DeleteClub.ToResponseClubDto();
-
-            return Page();
         }
 
         public IActionResult OnPost(int clubId)
         {
             try
             {
-                _service.ClubService.DeleteClub(clubId);
-                TempData["Message"] = $"{MessagePrefix.SUCCESS}Xóa câu lạc bộ với mã {clubId} thành công";
-            }
-            catch (Exception ex)
-            {
-                TempData["Message"] = $"{MessagePrefix.ERROR}Xóa câu lạc bộ thất bại do lỗi hệ thống liên hệ đội ngũ để được hỗ trợ";
-            }
+                try
+                {
+                    _service.ClubService.DeleteClub(clubId);
+                    TempData["Message"] = $"{MessagePrefix.SUCCESS}Xóa câu lạc bộ với mã {clubId} thành công";
+                }
+                catch (Exception)
+                {
+                    TempData["Message"] = $"{MessagePrefix.ERROR}Xóa câu lạc bộ thất bại do lỗi hệ thống liên hệ đội ngũ để được hỗ trợ";
+                }
 
-            return RedirectToPage("AllClubManage");
+                return RedirectToPage("AllClubManage");
+            }
+            catch (Exception)
+            {
+                return RedirectToPage("/Error");
+            }
         }
     }
 }

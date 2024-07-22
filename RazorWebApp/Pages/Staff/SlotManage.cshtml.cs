@@ -8,29 +8,31 @@ using Services.IService;
 using Services.Service;
 using WebAppRazor.Constants;
 
-namespace WebAppRazor.Pages.Staff
+namespace WebAppRazor.Pages.Staff;
+
+public class SlotManageModel : AuthorPageServiceModel
 {
-    public class SlotManageModel : AuthorPageServiceModel
+    private readonly IServiceManager _serviceManager;
+
+    public SlotManageModel(IServiceManager serviceManager)
     {
-        private readonly IServiceManager _serviceManager;
+        _serviceManager = serviceManager;
+    }
 
-        public SlotManageModel(IServiceManager serviceManager)
-        {
-            _serviceManager = serviceManager;
-        }
+    [BindProperty]
+    public List<Slot> Slots { get; set; }
 
-        [BindProperty]
-        public List<Slot> Slots { get; set; }
+    [BindProperty]
+    public Slot NewSlot { get; set; }
 
-        [BindProperty]
-        public Slot NewSlot { get; set; }
+    [BindProperty]
+    public int Duration { get; set; }
 
-        [BindProperty]
-        public int Duration { get; set; }
+    public string Message { get; set; }
 
-        public string Message { get; set; }
-
-        public async Task<IActionResult> OnGet(string sortProperty = "Hour", int sortOrder = 0)
+    public async Task<IActionResult> OnGet(string sortProperty = "Hour", int sortOrder = 0)
+    {
+        try
         {
             LoadAccountFromSession();
             var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Staff.ToString());
@@ -97,8 +99,15 @@ namespace WebAppRazor.Pages.Staff
 
             return Page();
         }
+        catch (Exception)
+        {
+            return RedirectToPage("/Error");
+        }
+    }
 
-        public IActionResult OnPostAddSlot()
+    public IActionResult OnPostAddSlot()
+    {
+        try
         {
             LoadAccountFromSession();
 
@@ -165,6 +174,10 @@ namespace WebAppRazor.Pages.Staff
 
             TempData["Message"] = $"{MessagePrefix.SUCCESS}Câu lạc bộ đã được cập nhật thành công.";
             return RedirectToPage("/Staff/SlotManage");
+        }
+        catch (Exception)
+        {
+            return RedirectToPage("/Error");
         }
     }
 }

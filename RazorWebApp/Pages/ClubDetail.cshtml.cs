@@ -70,51 +70,65 @@ namespace WebAppRazor.Pages
 
         public IActionResult OnGet(int? id)
         {
-            LoadAccountFromSession();
-
-            if (LoginedAccount != null)
+            try
             {
-                var role = (string)LoginedAccount.Role;
-                if (role == AccountRoleEnum.Admin.ToString()) return RedirectToPage("/Admin/Index");
-                if (role == AccountRoleEnum.Staff.ToString()) return RedirectToPage("/Staff/Index");
+                LoadAccountFromSession();
+
+                if (LoginedAccount != null)
+                {
+                    var role = (string)LoginedAccount.Role;
+                    if (role == AccountRoleEnum.Admin.ToString()) return RedirectToPage("/Admin/Index");
+                    if (role == AccountRoleEnum.Staff.ToString()) return RedirectToPage("/Staff/Index");
+                }
+
+                // Validate route id
+                if (id == null) return RedirectToPage("/NotFound");
+
+                if (id.HasValue)
+                {
+                    InitialData(id.Value);
+                    int page = Convert.ToInt32(Request.Query["page"]);
+                    Paging(page);
+                }
+
+                if (Club.Status == false) return RedirectToPage("/NotFound");
+
+                return Page();
             }
-
-            // Validate route id
-            if (id == null) return RedirectToPage("/NotFound");
-
-            if (id.HasValue)
+            catch (Exception)
             {
-                InitialData(id.Value);
-                int page = Convert.ToInt32(Request.Query["page"]);
-                Paging(page);
+                return RedirectToPage("/Error");
             }
-
-            if (Club.Status == false) return RedirectToPage("/NotFound");
-
-            return Page();
         }
 
         public IActionResult OnPost(int? id)
         {
-            LoadAccountFromSession();
-            InitialData(id.Value);
-            CreateReview.UserId = LoginedAccount.UserId;
-            CreateReview.ClubId = id.Value;
-            CreateReview.ReviewDateTime = DateTime.Now;
-
-            if (!ModelState.IsValid)
+            try
             {
-                return Page();
+                LoadAccountFromSession();
+                InitialData(id.Value);
+                CreateReview.UserId = LoginedAccount.UserId;
+                CreateReview.ClubId = id.Value;
+                CreateReview.ReviewDateTime = DateTime.Now;
+
+                if (!ModelState.IsValid)
+                {
+                    return Page();
+                }
+
+                _service.ReviewService.AddReview(CreateReview.ToReview());
+                var existedClub = _service.ClubService.GetClubById(id.Value);
+                existedClub.TotalReview += 1;
+                existedClub.TotalStar += CreateReview.Star;
+
+                _service.ClubService.UpdateClub(existedClub);
+
+                return RedirectToPage("./ClubDetail", new { id = id.Value });
             }
-
-            _service.ReviewService.AddReview(CreateReview.ToReview());
-            var existedClub = _service.ClubService.GetClubById(id.Value);
-            existedClub.TotalReview += 1;
-            existedClub.TotalStar += CreateReview.Star;
-
-            _service.ClubService.UpdateClub(existedClub);
-
-            return RedirectToPage("./ClubDetail", new { id = id.Value });
+            catch (Exception)
+            {
+                return RedirectToPage("/Error");
+            }
         }
 
         private void InitialData(int id)

@@ -12,41 +12,42 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Services.IService;
 using WebAppRazor.Constants;
 
-namespace WebAppRazor.Pages.Staff
+namespace WebAppRazor.Pages.Staff;
+
+public class ClubManageModel : AuthorPageServiceModel
 {
-    public class ClubManageModel : AuthorPageServiceModel
+    private readonly IServiceManager _serviceManager;
+
+    public ClubManageModel(IServiceManager serviceManager)
     {
-        private readonly IServiceManager _serviceManager;
+        _serviceManager = serviceManager;
+    }
 
-        public ClubManageModel(IServiceManager serviceManager)
+    [BindProperty]
+    public ClubDto ClubDto { get; set; }
+
+    public int c;
+
+    [BindProperty]
+    public int CityId { get; set; }
+
+    [BindProperty]
+    public int DistrictId { get; set; }
+
+    public SelectList Cities { get; set; }
+    public SelectList Districts { get; set; }
+
+    public string Message { get; set; }
+
+    [BindProperty]
+    public List<int> SelectedBookingTypes { get; set; }
+
+    public List<SelectListItem> BookingTypes { get; set; }
+
+    public async Task<IActionResult> OnGetAsync()
+    {
+        try
         {
-            _serviceManager = serviceManager;
-        }
-
-        [BindProperty]
-        public ClubDto ClubDto { get; set; }
-
-        public int c;
-
-        [BindProperty]
-        public int CityId { get; set; }
-
-        [BindProperty]
-        public int DistrictId { get; set; }
-
-        public SelectList Cities { get; set; }
-        public SelectList Districts { get; set; }
-
-        public string Message { get; set; }
-
-        [BindProperty]
-        public List<int> SelectedBookingTypes { get; set; }
-
-        public List<SelectListItem> BookingTypes { get; set; }
-
-        public async Task<IActionResult> OnGetAsync()
-        {
-            // Authorize
             LoadAccountFromSession();
             var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Staff.ToString());
 
@@ -125,8 +126,15 @@ namespace WebAppRazor.Pages.Staff
 
             return Page();
         }
+        catch (Exception)
+        {
+            return RedirectToPage("/Error");
+        }
+    }
 
-        public async Task<IActionResult> OnPostSaveClubAsync()
+    public async Task<IActionResult> OnPostSaveClubAsync()
+    {
+        try
         {
             LoadAccountFromSession();
             int id = (int)LoginedAccount.ClubManageId;
@@ -179,67 +187,71 @@ namespace WebAppRazor.Pages.Staff
                 return Page();
             }
         }
-
-        public async Task<JsonResult> OnGetGetDistricts(int cityId)
+        catch (Exception)
         {
-            var districtService = _serviceManager.DistrictService.GetAllDistricts().ToList();
-            var districts = districtService.Where(d => d.CityId == cityId).Select(d => new SelectListItem
-            {
-                Value = d.DistrictId.ToString(),
-                Text = d.DistrictName
-            });
-
-            return new JsonResult(districts);
+            return RedirectToPage("/Error");
         }
+    }
 
-        private bool ClubExists(int id)
+    public async Task<JsonResult> OnGetGetDistricts(int cityId)
+    {
+        var districtService = _serviceManager.DistrictService.GetAllDistricts().ToList();
+        var districts = districtService.Where(d => d.CityId == cityId).Select(d => new SelectListItem
         {
-            return _serviceManager.ClubService.GetAllClubs().Any(e => e.ClubId == id);
-        }
+            Value = d.DistrictId.ToString(),
+            Text = d.DistrictName
+        });
 
-        public async Task<IActionResult> OnPostAddClubAsync()
+        return new JsonResult(districts);
+    }
+
+    private bool ClubExists(int id)
+    {
+        return _serviceManager.ClubService.GetAllClubs().Any(e => e.ClubId == id);
+    }
+
+    public async Task<IActionResult> OnPostAddClubAsync()
+    {
+        try
         {
             LoadAccountFromSession();
 
-            try
+            ClubDto.Status = false;
+            ClubDto.TotalReview = 0;
+            ClubDto.TotalStar = 0;
+
+            if (ClubDto.OpenTime >= ClubDto.CloseTime)
             {
-                ClubDto.Status = false;
-                ClubDto.TotalReview = 0;
-                ClubDto.TotalStar = 0;
-
-                if (ClubDto.OpenTime >= ClubDto.CloseTime)
-                {
-                    TempData["Message"] = $"{MessagePrefix.ERROR} Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc.";
-                    return RedirectToPage("/Staff/ClubManage");
-                }
-
-                var club = _serviceManager.ClubService.ToEntity(ClubDto);
-                _serviceManager.ClubService.AddClub(club);
-
-                Account owner = LoginedAccount;
-                owner.ClubManageId = club.ClubId;
-                _serviceManager.AccountService.UpdateStaffAccount(owner);
-
-                UpdateAccountSession(owner);
-
-                // Add booking types for the new club
-                foreach (var bookingTypeId in SelectedBookingTypes)
-                {
-                    var newAvailableBookingType = new AvailableBookingType
-                    {
-                        ClubId = club.ClubId,
-                        BookingTypeId = bookingTypeId
-                    };
-                    _serviceManager.AvailableBookingTypeService.AddAvailableBookingType(newAvailableBookingType);
-                }
-
-                return RedirectToPage("ClubManage");
+                TempData["Message"] = $"{MessagePrefix.ERROR} Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc.";
+                return RedirectToPage("/Staff/ClubManage");
             }
-            catch (Exception ex)
+
+            var club = _serviceManager.ClubService.ToEntity(ClubDto);
+            _serviceManager.ClubService.AddClub(club);
+
+            Account owner = LoginedAccount;
+            owner.ClubManageId = club.ClubId;
+            _serviceManager.AccountService.UpdateStaffAccount(owner);
+
+            UpdateAccountSession(owner);
+
+            // Add booking types for the new club
+            foreach (var bookingTypeId in SelectedBookingTypes)
             {
-                TempData["Message"] = $"{MessagePrefix.ERROR}Có lỗi xảy ra khi đăng ký câu lạc bộ: {ex.Message}";
-                return Page();
+                var newAvailableBookingType = new AvailableBookingType
+                {
+                    ClubId = club.ClubId,
+                    BookingTypeId = bookingTypeId
+                };
+                _serviceManager.AvailableBookingTypeService.AddAvailableBookingType(newAvailableBookingType);
             }
+
+            return RedirectToPage("ClubManage");
+        }
+        catch (Exception ex)
+        {
+            TempData["Message"] = $"{MessagePrefix.ERROR}Có lỗi xảy ra khi đăng ký câu lạc bộ: {ex.Message}";
+            return Page();
         }
     }
 }

@@ -38,32 +38,39 @@ namespace WebAppRazor.Pages.Customer
         }
         public IActionResult OnGet(string searchString, string searchProperty, string sortProperty, int sortOrder, DateOnly? bookingDate)
         {
-            LoadAccountFromSession();
-            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Customer.ToString());
-            int page = Convert.ToInt32(Request.Query["page"]);
-
-            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
-
-            _logger.LogInformation("OnGet called with: searchString={SearchString}, searchProperty={SearchProperty}, sortProperty={SortProperty}, sortOrder={SortOrder}, page={Page}, bookingDate={BookingDate}",
-                searchString, searchProperty, sortProperty, sortOrder, page, bookingDate);
-
-            if (!string.IsNullOrWhiteSpace(Message))
+            try
             {
-                Message = string.Empty;
-            }
+                LoadAccountFromSession();
+                var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Customer.ToString());
+                int page = Convert.ToInt32(Request.Query["page"]);
 
-            if (TempData.ContainsKey("Message"))
+                if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+
+                _logger.LogInformation("OnGet called with: searchString={SearchString}, searchProperty={SearchProperty}, sortProperty={SortProperty}, sortOrder={SortOrder}, page={Page}, bookingDate={BookingDate}",
+                    searchString, searchProperty, sortProperty, sortOrder, page, bookingDate);
+
+                if (!string.IsNullOrWhiteSpace(Message))
+                {
+                    Message = string.Empty;
+                }
+
+                if (TempData.ContainsKey("Message"))
+                {
+                    Message = TempData["Message"].ToString();
+                }
+
+                InitializeData();
+                Paging(searchString, searchProperty, sortProperty, sortOrder, page, bookingDate: bookingDate);
+
+                _logger.LogInformation("After Paging: FilterBookings count = {FilterBookingsCount}, currentPage={CurrentPage}, totalPage={TotalPage}",
+                    FilterBookings.Count, currentPage, totalPages);
+
+                return Page();
+            }
+            catch (Exception)
             {
-                Message = TempData["Message"].ToString();
+                return RedirectToPage("/Error");
             }
-
-            InitializeData();
-            Paging(searchString, searchProperty, sortProperty, sortOrder, page, bookingDate : bookingDate);
-
-            _logger.LogInformation("After Paging: FilterBookings count = {FilterBookingsCount}, currentPage={CurrentPage}, totalPage={TotalPage}",
-                FilterBookings.Count, currentPage, totalPages);
-
-            return Page();
         }
 
         private void Paging(string searchString, string searchProperty, string sortProperty, int sortOrder, int page = 0, DateOnly? bookingDate = null)

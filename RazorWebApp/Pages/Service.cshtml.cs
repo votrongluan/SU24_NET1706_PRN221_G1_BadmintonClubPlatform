@@ -7,16 +7,23 @@ namespace WebAppRazor.Pages
     {
         public IActionResult OnGet()
         {
-            LoadAccountFromSession();
-
-            if (LoginedAccount != null)
+            try
             {
-                var role = (string)LoginedAccount.Role;
-                if (role == AccountRoleEnum.Admin.ToString()) return RedirectToPage("/Admin/Index");
-                if (role == AccountRoleEnum.Staff.ToString()) return RedirectToPage("/Staff/Index");
-            }
+                LoadAccountFromSession();
 
-            return Page();
+                if (LoginedAccount != null)
+                {
+                    var role = (string)LoginedAccount.Role;
+                    if (role == AccountRoleEnum.Admin.ToString()) return RedirectToPage("/Admin/Index");
+                    if (role == AccountRoleEnum.Staff.ToString()) return RedirectToPage("/Staff/Index");
+                }
+
+                return Page();
+            }
+            catch (Exception)
+            {
+                return RedirectToPage("/Error");
+            }
         }
     }
 }

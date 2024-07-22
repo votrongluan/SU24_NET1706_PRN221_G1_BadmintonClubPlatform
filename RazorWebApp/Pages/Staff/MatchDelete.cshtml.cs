@@ -7,31 +7,33 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Services.IService;
 using WebAppRazor.Constants;
 
-namespace WebAppRazor.Pages.Staff
+namespace WebAppRazor.Pages.Staff;
+
+public class MatchDeleteModel : AuthorPageServiceModel
 {
-    public class MatchDeleteModel : AuthorPageServiceModel
+    private readonly IServiceManager _service;
+    [BindProperty] public MatchCreateDto DeletedMatch { get; set; } = new();
+    public Match Match { get; set; }
+    public List<CourtType> CourtTypes { get; set; }
+    public string CourtName { get; set; }
+
+    private void InitializeData(int id)
     {
-        private readonly IServiceManager _service;
-        [BindProperty] public MatchCreateDto DeletedMatch { get; set; } = new();
-        public Match Match { get; set; }
-        public List<CourtType> CourtTypes { get; set; }
-        public string CourtName { get; set; }
+        Match = _service.MatchService.GetMatchById(id);
+        CourtTypes = _service.CourtTypeService.GetAllCourtTypes();
+        CourtName = CourtTypes
+            .Where(e => e.CourtTypeId == Match.Booking.BookingDetails.ElementAt(0).Court.CourtTypeId)
+            .FirstOrDefault().TypeName;
+    }
 
-        private void InitializeData(int id)
-        {
-            Match = _service.MatchService.GetMatchById(id);
-            CourtTypes = _service.CourtTypeService.GetAllCourtTypes();
-            CourtName = CourtTypes
-                .Where(e => e.CourtTypeId == Match.Booking.BookingDetails.ElementAt(0).Court.CourtTypeId)
-                .FirstOrDefault().TypeName;
-        }
+    public MatchDeleteModel(IServiceManager service)
+    {
+        _service = service;
+    }
 
-        public MatchDeleteModel(IServiceManager service)
-        {
-            _service = service;
-        }
-
-        public IActionResult OnGet(int? id)
+    public IActionResult OnGet(int? id)
+    {
+        try
         {
             // Authorize
             LoadAccountFromSession();
@@ -76,25 +78,28 @@ namespace WebAppRazor.Pages.Staff
 
             return Page();
         }
+        catch (Exception)
+        {
+            return RedirectToPage("/Error");
+        }
+    }
 
-        public IActionResult OnPost(int id, int bookingId)
+    public IActionResult OnPost(int id, int bookingId)
+    {
+        try
         {
             LoadAccountFromSession();
+            _service.BookingService.DeleteBookingDetail(bookingId);
+            _service.MatchService.DeleteMatch(id);
+            _service.BookingService.DeleteBooking(bookingId);
 
-            try
-            {
-                _service.BookingService.DeleteBookingDetail(bookingId);
-                _service.MatchService.DeleteMatch(id);
-                _service.BookingService.DeleteBooking(bookingId);
-
-                TempData["Message"] = $"{MessagePrefix.SUCCESS}Lịch thi đấu đã được xóa thành công";
-                return RedirectToPage("MatchManage");
-            }
-            catch
-            {
-                TempData["Message"] = $"{MessagePrefix.ERROR}Lỗi từ phía hệ thống";
-                return RedirectToPage("MatchManage");
-            }
+            TempData["Message"] = $"{MessagePrefix.SUCCESS}Lịch thi đấu đã được xóa thành công";
+            return RedirectToPage("MatchManage");
+        }
+        catch
+        {
+            TempData["Message"] = $"{MessagePrefix.ERROR}Lỗi từ phía hệ thống";
+            return RedirectToPage("MatchManage");
         }
     }
 }

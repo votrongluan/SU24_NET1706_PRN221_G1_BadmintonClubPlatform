@@ -10,39 +10,53 @@ namespace WebAppRazor.Pages.Admin
         private readonly IServiceManager _service;
         public Account Account { get; set; }
 
-        public AccountDeleteModel (IServiceManager service)
+        public AccountDeleteModel(IServiceManager service)
         {
             _service = service;
         }
-        public IActionResult OnGet (int? id)
+        public IActionResult OnGet(int? id)
         {
-            LoadAccountFromSession();
-            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Admin.ToString());
-
-            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
-
-            // Code go from here
-            if (id == null)
+            try
             {
-                return RedirectToPage("/NotFound");
+                LoadAccountFromSession();
+                var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Admin.ToString());
+
+                if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+
+                // Code go from here
+                if (id == null)
+                {
+                    return RedirectToPage("/NotFound");
+                }
+
+                Account = _service.AccountService.GetStaffAccountById(id.Value);
+
+                return Page();
             }
-
-            Account = _service.AccountService.GetStaffAccountById(id.Value);
-
-            return Page();
+            catch (Exception)
+            {
+                return RedirectToPage("/Error");
+            }
         }
 
-        public IActionResult OnPost (int? id)
+        public IActionResult OnPost(int? id)
         {
-            if (id == null)
+            try
             {
-                return RedirectToPage("/NotFound");
+                if (id == null)
+                {
+                    return RedirectToPage("/NotFound");
+                }
+
+                _service.AccountService.DeleteAccount(id.Value);
+                TempData["SuccessMessage"] = "Xoá tài khoản thành công!";
+
+                return RedirectToPage("./AccountManage");
             }
-
-            _service.AccountService.DeleteAccount(id.Value);
-            TempData["SuccessMessage"] = "Xoá tài khoản thành công!";
-
-            return RedirectToPage("./AccountManage");
+            catch (Exception)
+            {
+                return RedirectToPage("/Error");
+            }
         }
     }
 }

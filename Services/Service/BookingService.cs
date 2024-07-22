@@ -57,7 +57,7 @@ public class BookingService : IBookingService
         _repo.Booking.UpdateBooking(booking);
     }
 
-    public (bool status, int bookId) BookLichOffline(DateOnly date, TimeOnly startTime, TimeOnly endTime, int courtId, int clubId, int userId)
+    public (bool status, int bookId, int price) BookLichOffline(DateOnly date, TimeOnly startTime, TimeOnly endTime, int courtId, int clubId, int userId)
     {
         var club = _repo.Club.GetClubById(clubId);
         var courtSchedule = _repo.BookingDetail.GetAllBookingDetails().Where(e =>
@@ -121,10 +121,10 @@ public class BookingService : IBookingService
 
             _repo.BookingDetail.AddBookingDetail(bookingDetail);
 
-            return (true, booking.BookingId);
+            return (true, booking.BookingId, booking.TotalPrice ?? 0);
         }
 
-        return (false, -1);
+        return (false, -1, 0);
     }
 
     public (bool status, int bookId) BookLichThiDau(BookingRequestDto dto)

@@ -37,69 +37,83 @@ namespace WebAppRazor.Pages.Customer
 
         public IActionResult OnGet()
         {
-            LoadAccountFromSession();
-            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Customer.ToString());
-
-            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
-
-            if (!string.IsNullOrWhiteSpace(Message))
+            try
             {
-                Message = string.Empty;
-            }
+                LoadAccountFromSession();
+                var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Customer.ToString());
 
-            if (TempData.ContainsKey("Message"))
+                if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+
+                if (!string.IsNullOrWhiteSpace(Message))
+                {
+                    Message = string.Empty;
+                }
+
+                if (TempData.ContainsKey("Message"))
+                {
+                    Message = TempData["Message"].ToString();
+                }
+
+                Account = _serviceManager.AccountService.GetAccountById(LoginedAccount.UserId);
+                if (Request.Query.ContainsKey("selectedTabIndex"))
+                {
+                    TabIndex = int.Parse(Request.Query["selectedTabIndex"]);
+                }
+
+                return Page();
+            }
+            catch (Exception)
             {
-                Message = TempData["Message"].ToString();
+                return RedirectToPage("/Error");
             }
-
-            Account = _serviceManager.AccountService.GetAccountById(LoginedAccount.UserId);
-            if (Request.Query.ContainsKey("selectedTabIndex"))
-            {
-                TabIndex = int.Parse(Request.Query["selectedTabIndex"]);
-            }
-
-            return Page();
         }
 
         public IActionResult OnPost()
         {
-            LoadAccountFromSession();
-
-            if (!ValidatePhoneNumber(Account.UserPhone))
+            try
             {
-                Message = $"{MessagePrefix.ERROR} Số điện thoại không hợp lệ.";
-                return Page();
-            }
+                LoadAccountFromSession();
 
-            if (!ValidateEmail(Account.Email))
+                if (!ValidatePhoneNumber(Account.UserPhone))
+                {
+                    Message = $"{MessagePrefix.ERROR} Số điện thoại không hợp lệ.";
+                    return Page();
+                }
+
+                if (!ValidateEmail(Account.Email))
+                {
+                    Message = $"{MessagePrefix.ERROR} Email không hợp lệ.";
+                    return Page();
+                }
+
+                Account.Password = LoginedAccount.Password;
+                Account.Username = LoginedAccount.Username;
+                Account.Role = LoginedAccount.Role;
+
+                _serviceManager.AccountService.UpdateAccount(Account);
+
+                UpdateAccountSession(Account);
+
+                TabIndex = 1;
+
+                var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Customer.ToString());
+
+                if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+
+                Account = _serviceManager.AccountService.GetAccountById(LoginedAccount.UserId);
+                if (Request.Query.ContainsKey("selectedTabIndex"))
+                {
+                    TabIndex = int.Parse(Request.Query["selectedTabIndex"]);
+                }
+
+                TempData["Message"] = $"{MessagePrefix.SUCCESS}Thông tin cá nhân đã cập nhật thành công.";
+
+                return RedirectToPage("./AccountInfo");
+            }
+            catch (Exception)
             {
-                Message = $"{MessagePrefix.ERROR} Email không hợp lệ.";
-                return Page();
+                return RedirectToPage("/Error");
             }
-
-            Account.Password = LoginedAccount.Password;
-            Account.Username = LoginedAccount.Username;
-            Account.Role = LoginedAccount.Role;
-
-            _serviceManager.AccountService.UpdateAccount(Account);
-
-            UpdateAccountSession(Account);
-
-            TabIndex = 1;
-
-            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Customer.ToString());
-
-            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
-
-            Account = _serviceManager.AccountService.GetAccountById(LoginedAccount.UserId);
-            if (Request.Query.ContainsKey("selectedTabIndex"))
-            {
-                TabIndex = int.Parse(Request.Query["selectedTabIndex"]);
-            }
-
-            TempData["Message"] = $"{MessagePrefix.SUCCESS}Thông tin cá nhân đã cập nhật thành công.";
-
-            return RedirectToPage("./AccountInfo");
         }
 
         private bool ValidatePhoneNumber(string phoneNumber)
@@ -123,51 +137,58 @@ namespace WebAppRazor.Pages.Customer
 
         public IActionResult OnPostUpdatePassword()
         {
-            LoadAccountFromSession();
-            TabIndex = 2;
-            Account = _serviceManager.AccountService.GetAccountById(LoginedAccount.UserId);
-
-            if (OldPassword.Equals(Account.Password))
+            try
             {
-                if (InputNewPassword.Equals(InputAgainNewPassword))
-                {
-                    Account.Password = InputNewPassword;
-                    Account.Username = LoginedAccount.Username;
-                    Account.Fullname = LoginedAccount.Fullname;
-                    Account.Email = LoginedAccount.Email;
-                    Account.UserPhone = LoginedAccount.UserPhone;
-                    Account.Role = LoginedAccount.Role;
+                LoadAccountFromSession();
+                TabIndex = 2;
+                Account = _serviceManager.AccountService.GetAccountById(LoginedAccount.UserId);
 
-                    _serviceManager.AccountService.UpdateAccount(Account);
+                if (OldPassword.Equals(Account.Password))
+                {
+                    if (InputNewPassword.Equals(InputAgainNewPassword))
+                    {
+                        Account.Password = InputNewPassword;
+                        Account.Username = LoginedAccount.Username;
+                        Account.Fullname = LoginedAccount.Fullname;
+                        Account.Email = LoginedAccount.Email;
+                        Account.UserPhone = LoginedAccount.UserPhone;
+                        Account.Role = LoginedAccount.Role;
+
+                        _serviceManager.AccountService.UpdateAccount(Account);
+                    }
+                    else
+                    {
+                        Message = $"{MessagePrefix.ERROR} Mật khẩu mới không giống nhau.";
+                        return Page();
+                    }
                 }
                 else
                 {
-                    Message = $"{MessagePrefix.ERROR} Mật khẩu mới không giống nhau.";
+                    Message = $"{MessagePrefix.ERROR} Mật khẩu cũ không đúng.";
                     return Page();
                 }
-            }
-            else
-            {
-                Message = $"{MessagePrefix.ERROR} Mật khẩu cũ không đúng.";
+                LoadAccountFromSession();
+                var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Customer.ToString());
+
+                if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
+                Account = _serviceManager.AccountService.GetAccountById(LoginedAccount.UserId);
+                if (Request.Query.ContainsKey("selectedTabIndex"))
+                {
+                    TabIndex = int.Parse(Request.Query["selectedTabIndex"]);
+                }
+                TempData["Message"] = $"{MessagePrefix.SUCCESS}Mật khẩu đã cập nhật thành công.";
+
+                if (TempData.ContainsKey("Message"))
+                {
+                    Message = TempData["Message"].ToString();
+                }
+
                 return Page();
             }
-            LoadAccountFromSession();
-            var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Customer.ToString());
-
-            if (!string.IsNullOrWhiteSpace(navigatePage)) return RedirectToPage(navigatePage);
-            Account = _serviceManager.AccountService.GetAccountById(LoginedAccount.UserId);
-            if (Request.Query.ContainsKey("selectedTabIndex"))
+            catch (Exception)
             {
-                TabIndex = int.Parse(Request.Query["selectedTabIndex"]);
+                return RedirectToPage("/Error");
             }
-            TempData["Message"] = $"{MessagePrefix.SUCCESS}Mật khẩu đã cập nhật thành công.";
-
-            if (TempData.ContainsKey("Message"))
-            {
-                Message = TempData["Message"].ToString();
-            }
-
-            return Page();
         }
     }
 }

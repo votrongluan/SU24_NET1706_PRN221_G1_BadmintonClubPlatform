@@ -3,22 +3,24 @@ using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Services.IService;
 
-namespace WebAppRazor.Pages.Staff
+namespace WebAppRazor.Pages.Staff;
+
+public class IndexModel : AuthorPageServiceModel
 {
-    public class IndexModel : AuthorPageServiceModel
+
+    private readonly IServiceManager _serviceManager;
+
+    public IndexModel(IServiceManager serviceManager)
     {
+        _serviceManager = serviceManager;
+    }
 
-        private readonly IServiceManager _serviceManager;
+    [BindProperty]
+    public Club Club { get; set; }
 
-        public IndexModel(IServiceManager serviceManager)
-        {
-            _serviceManager = serviceManager;
-        }
-
-        [BindProperty]
-        public Club Club { get; set; }
-
-        public IActionResult OnGet()
+    public IActionResult OnGet()
+    {
+        try
         {
             LoadAccountFromSession();
             var navigatePage = GetNavigatePageByAllowedRole(AccountRoleEnum.Staff.ToString());
@@ -30,9 +32,13 @@ namespace WebAppRazor.Pages.Staff
             {
                 Club = _serviceManager.ClubService.GetClubById((int)LoginedAccount.ClubManageId);
 
-            }    
+            }
 
-                return Page();
+            return Page();
+        }
+        catch (Exception)
+        {
+            return RedirectToPage("/Error");
         }
     }
 }

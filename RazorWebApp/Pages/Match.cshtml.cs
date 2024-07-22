@@ -123,25 +123,32 @@ namespace WebAppRazor.Pages
 
         public IActionResult OnGet(string searchString, string searchProperty, string sortProperty, int sortOrder, int cityId, int districtId, DateOnly? matchDate)
         {
-            LoadAccountFromSession();
-
-            if (LoginedAccount != null)
+            try
             {
-                var role = (string)LoginedAccount.Role;
-                if (role == AccountRoleEnum.Admin.ToString()) return RedirectToPage("/Admin/Index");
-                if (role == AccountRoleEnum.Staff.ToString()) return RedirectToPage("/Staff/Index");
-            }
+                LoadAccountFromSession();
 
-            if (TempData.ContainsKey("Message"))
+                if (LoginedAccount != null)
+                {
+                    var role = (string)LoginedAccount.Role;
+                    if (role == AccountRoleEnum.Admin.ToString()) return RedirectToPage("/Admin/Index");
+                    if (role == AccountRoleEnum.Staff.ToString()) return RedirectToPage("/Staff/Index");
+                }
+
+                if (TempData.ContainsKey("Message"))
+                {
+                    Message = TempData["Message"].ToString();
+                }
+
+                InitializeData();
+                int page = Convert.ToInt32(Request.Query["page"]);
+                Paging(searchString, searchProperty, sortProperty, sortOrder, page, cityId: cityId, districtId: districtId, matchDate: matchDate);
+
+                return Page();
+            }
+            catch (Exception)
             {
-                Message = TempData["Message"].ToString();
+                return RedirectToPage("/Error");
             }
-
-            InitializeData();
-            int page = Convert.ToInt32(Request.Query["page"]);
-            Paging(searchString, searchProperty, sortProperty, sortOrder, page, cityId: cityId, districtId: districtId, matchDate : matchDate);
-
-            return Page();
         }
         public JsonResult OnGetDistrictsByCityId(int cityId)
         {
